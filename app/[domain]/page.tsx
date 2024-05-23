@@ -41,7 +41,7 @@ export default async function Page({
         v.value && v.value.startsWith("http") && v.value.includes(`.${domain}`)
     )
     .map((v) => ({
-      value: new URL(v.value).hostname,
+      value: new URL(v.value || "").hostname,
     }))
     .filter((v, i, a) => a.findIndex((t) => t.value === v.value) === i);
 

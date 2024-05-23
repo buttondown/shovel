@@ -75,7 +75,7 @@ const SPF_RULE = (record: DNSRecord): string | null => {
   if (record.type !== "TXT") {
     return null;
   }
-  if (record.value.includes("v=spf1") !== -1) {
+  if (record.value.includes("v=spf1")) {
     return "This domain has an SPF record.";
   }
   return null;
