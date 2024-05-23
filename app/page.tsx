@@ -18,8 +18,8 @@ export default function Home() {
         <br />
         <br />
         We developed it at Buttondown to help us understand the technical
-        details of our customers' websites, and we're excited to share it with
-        you.
+        details of our customers&apos; websites, and we are excited to share it
+        with you.
         <br />
         <br />
         Get started by entering a domain in the URL bar, like:
