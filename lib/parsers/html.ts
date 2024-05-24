@@ -1,9 +1,5 @@
-type Note = {
-  label: string;
-  metadata: Record<string, string>;
-};
-
-type Rule = (record: string) => Note | null;
+import { parse as parseHTML } from "node-html-parser";
+import { Note, Parser } from "./types";
 
 const SUBSTRING_TO_PROVIDER = {
   "cdn.usefathom.com": "Fathom",
@@ -44,10 +40,12 @@ const TWITTER_RULE = (html: string) => {
   const match = html.match(/<a href="https:\/\/twitter.com\/([^\/"]+)"/);
   if (match) {
     const username = match[1];
-    return {
-      label: "Twitter",
-      metadata: { username },
-    };
+    return [
+      {
+        label: "Twitter",
+        metadata: { username },
+      },
+    ];
   }
 
   // Also check for `rel="me"` links that have twitter in them, like:
@@ -57,12 +55,14 @@ const TWITTER_RULE = (html: string) => {
   );
   if (match2) {
     const username = match2[1];
-    return {
-      label: "Twitter",
-      metadata: { username },
-    };
+    return [
+      {
+        label: "Twitter",
+        metadata: { username },
+      },
+    ];
   }
-  return null;
+  return [];
 };
 
 const EMAIL_ADDRESS_RULE = (html: string) => {
@@ -70,45 +70,108 @@ const EMAIL_ADDRESS_RULE = (html: string) => {
   const match = html.match(/<a href="mailto:(.+?)"/);
   if (match) {
     const username = match[1];
-    return {
-      label: "Email",
-      metadata: { username },
-    };
+    return [
+      {
+        label: "Email",
+        metadata: { username },
+      },
+    ];
   }
-  return null;
+  return [];
 };
 
-const RULES: Rule[] = [
+const JSONLD_RULE = (html: string) => {
+  const tag = parseHTML(html).querySelector(
+    "script[type='application/ld+json']"
+  );
+  if (tag) {
+    const text = tag.text;
+    return [
+      {
+        label: "JSON+LD",
+        metadata: { value: text },
+      },
+    ];
+  }
+  return [];
+};
+
+const RSS_RULE = (html: string) => {
+  const tag = parseHTML(html).querySelector("link[type='application/rss+xml']");
+  if (tag) {
+    const href = tag.getAttribute("href");
+    return [
+      {
+        label: "RSS",
+        metadata: { href },
+      },
+    ];
+  }
+  return [];
+};
+
+const SUBDOMAIN_RULE = (html: string, domain: string) => {
+  const subdomains = parseHTML(html)
+    .querySelectorAll("a")
+    .map((a) => ({
+      value: a.getAttribute("href"),
+    }))
+    .filter(
+      (v) =>
+        v.value && v.value.startsWith("http") && v.value.includes(`.${domain}`)
+    )
+    .map((v) => ({
+      value: new URL(v.value || "").hostname,
+    }))
+    .filter((v, i, a) => a.findIndex((t) => t.value === v.value) === i);
+  return subdomains.map((subdomain) => ({
+    label: "SUBDOMAIN",
+    metadata: {
+      value: subdomain.value,
+    },
+  }));
+};
+
+const RULES = [
   ...Object.entries(SUBSTRING_TO_PROVIDER).map(([substring, provider]) => {
     return (html: string) => {
       if (html.includes(substring)) {
-        return {
-          label: provider,
-          metadata: {},
-        };
+        return [
+          {
+            label: provider,
+            metadata: {},
+          },
+        ];
       }
-      return null;
+      return [];
     };
   }),
   TWITTER_RULE,
   EMAIL_ADDRESS_RULE,
+  RSS_RULE,
+  JSONLD_RULE,
+  SUBDOMAIN_RULE,
 ];
 
 const filterToUnique = (values: Note[]): Note[] => {
   const seen = new Set<string>();
   return values.filter((value) => {
-    if (seen.has(value.label)) {
+    const key = JSON.stringify(value);
+    if (seen.has(key)) {
       return false;
     }
-    seen.add(value.label);
+    seen.add(key);
     return true;
   });
 };
 
-const run = (html: string): Note[] => {
-  return filterToUnique(
-    RULES.map((rule) => rule(html)).filter(Boolean) as Note[]
-  );
+const parse: Parser = (data) => {
+  const domain = data.find((datum) => datum.label === "URL")?.data[0].value;
+  const html = data.find((datum) => datum.label === "HTML")?.data[0].value;
+  if (!domain || !html) {
+    return [];
+  }
+  return RULES.flatMap((rule) => rule(html, domain));
 };
-
-export default { run };
+const exports = { parse };
+export default exports;
