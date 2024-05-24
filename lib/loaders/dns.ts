@@ -20,6 +20,7 @@ const TYPE_TO_MUNGING_FUNCTION: {
 } = {
   MX: ({ exchange, priority }: { exchange: string; priority: number }) =>
     `${exchange} (priority: ${priority})`,
+  TXT: (record: string[]) => record.join(""),
 };
 
 const load: Loader = async (domain: string) => {

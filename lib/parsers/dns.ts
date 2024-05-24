@@ -84,15 +84,24 @@ const CNAME_RULE = (record: Record): Note[] => {
   );
 };
 
+const extractURLsOrIPsFromSPF = (record: string): string[] => {
+  return record
+    .split(" ")
+    .filter((part) => part.includes("include:") || part.includes("ip4:"))
+    .map((part) => part.split(":")[1]);
+};
+
 const SPF_RULE = (record: Record): Note[] => {
   if (record.type !== "TXT") {
     return [];
   }
-  if (record.value.includes("v=spf1")) {
+  if (record.value.startsWith("v=spf1")) {
     return [
       {
         label: "SPF",
-        metadata: {},
+        metadata: {
+          value: extractURLsOrIPsFromSPF(record.value).join(", "),
+        },
       },
     ];
   }
