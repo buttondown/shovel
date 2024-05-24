@@ -2,9 +2,11 @@ import dns from "@/lib/loaders/dns";
 import html from "@/lib/loaders/html";
 import records from "@/lib/parsers/dns";
 import htmlRecords from "@/lib/parsers/html";
+import netlify from "@/lib/parsers/netlify";
+import webflow from "@/lib/parsers/webflow";
 
 const LOADERS = [dns, html];
-const PARSERS = [records, htmlRecords];
+const PARSERS = [records, htmlRecords, netlify, webflow];
 
 const fetch = async (domain: string) => {
   const data = [

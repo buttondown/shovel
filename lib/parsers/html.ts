@@ -32,6 +32,9 @@ const SUBSTRING_TO_PROVIDER = {
   "revue-form": "Revue",
   'action="https://tinyletter.com': "TinyLetter",
   GoogleAnalyticsObject: "Google Analytics",
+  "fast.wistia.com": "Wistia",
+  "hs-banner.com": "HubSpot",
+  "ahrefs-site-verification": "Ahrefs",
 };
 
 const TWITTER_RULE = (html: string) => {
