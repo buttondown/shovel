@@ -21,6 +21,7 @@ const MX_VALUE_TO_PROVIDER = {
   "mx1.emailsrvr.com": "Rackspace",
   "work-mx.app.hey.com": "Hey",
   "mx2.zoho.com": "Zoho",
+  "mx.zoho.eu": "Zoho",
 };
 
 const NAMESERVER_RULE = (record: DNSRecord): string | null => {

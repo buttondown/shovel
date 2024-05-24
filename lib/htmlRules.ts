@@ -40,9 +40,23 @@ const SUBSTRING_TO_PROVIDER = {
 
 const TWITTER_RULE = (html: string) => {
   // Match on `<a href="https://twitter.com/username"> and pull out the username.
-  const match = html.match(/<a href="https?:\/\/twitter.com\/(.+?)"/);
+  // Make sure to avoid matching on twitter.com/intent.
+  const match = html.match(/<a href="https:\/\/twitter.com\/([^\/"]+)"/);
   if (match) {
     const username = match[1];
+    return {
+      label: "Twitter",
+      metadata: { username },
+    };
+  }
+
+  // Also check for `rel="me"` links that have twitter in them, like:
+  // <link rel="me" href="https://twitter.com/username" />
+  const match2 = html.match(
+    /<link rel="me" href="https:\/\/twitter.com\/([^\/"]+)"/
+  );
+  if (match2) {
+    const username = match2[1];
     return {
       label: "Twitter",
       metadata: { username },
