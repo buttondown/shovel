@@ -35,6 +35,7 @@ const SUBSTRING_TO_PROVIDER = {
   "fast.wistia.com": "Wistia",
   "hs-banner.com": "HubSpot",
   "ahrefs-site-verification": "Ahrefs",
+  "code.jquery.com": "jQuery",
 };
 
 const TWITTER_RULE = (html: string) => {
