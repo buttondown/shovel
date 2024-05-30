@@ -28,6 +28,16 @@ export default async function Page({
         </header>
       </nav>
       <div className="p-4">
+        <h2 className="font-bold mt-4 text-gray-400">About</h2>
+        <p>
+          <a
+            href={`https://${params.domain}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {params.domain}
+          </a>
+        </p>
         <h2 className="font-bold mt-4 text-gray-400">DNS Records</h2>
         <table>
           {data.data
@@ -41,6 +51,30 @@ export default async function Page({
               ))
             )}
         </table>
+        <h2 className="font-bold mt-4 text-gray-400">DMARC</h2>
+        <ul>
+          {data.data
+            .filter((datum) => datum.label === "DMARC")
+            .flatMap((datum) =>
+              datum.data.map((record) => (
+                <li key={record.value}>{record.value}</li>
+              ))
+            )}
+          <ul className="only:block hidden opacity-50">
+            No DMARC record found
+          </ul>
+        </ul>
+        <h2 className="font-bold mt-4 text-gray-400">BIMI</h2>
+        <ul>
+          {data.data
+            .filter((datum) => datum.label === "BIMI")
+            .flatMap((datum) =>
+              datum.data.map((record) => (
+                <li key={record.value}>{record.value}</li>
+              ))
+            )}
+          <ul className="only:block hidden opacity-50">No BIMI record found</ul>
+        </ul>
         <h2 className="font-bold mt-4 text-gray-400">DNS Notes</h2>
         <ul>
           {data.notes.map((note, i) => (

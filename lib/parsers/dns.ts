@@ -11,6 +11,7 @@ const NAMESERVER_VALUE_TO_PROVIDER = {
 const CNAME_VALUE_TO_PROVIDER = {
   "target.substack-custom-domains.com": "Substack",
   "cname.vercel-dns.com": "Vercel",
+  "pr-suspensions.go.co": "Suspended",
 };
 
 const MX_VALUE_TO_PROVIDER = {
@@ -84,11 +85,19 @@ const CNAME_RULE = (record: Record): Note[] => {
   );
 };
 
+const SPF_URL_TO_PROVIDER: {
+  [key: string]: string;
+} = {
+  "_spf.google.com": "Google",
+  "_spf.createsend.com": "Campaign Monitor",
+};
+
 const extractURLsOrIPsFromSPF = (record: string): string[] => {
   return record
     .split(" ")
     .filter((part) => part.includes("include:") || part.includes("ip4:"))
-    .map((part) => part.split(":")[1]);
+    .map((part) => part.split(":")[1])
+    .map((part) => SPF_URL_TO_PROVIDER[part] || part);
 };
 
 const SPF_RULE = (record: Record): Note[] => {
@@ -96,14 +105,12 @@ const SPF_RULE = (record: Record): Note[] => {
     return [];
   }
   if (record.value.startsWith("v=spf1")) {
-    return [
-      {
-        label: "SPF",
-        metadata: {
-          value: extractURLsOrIPsFromSPF(record.value).join(", "),
-        },
+    return extractURLsOrIPsFromSPF(record.value).map((value) => ({
+      label: "SPF",
+      metadata: {
+        value,
       },
-    ];
+    }));
   }
   return [];
 };

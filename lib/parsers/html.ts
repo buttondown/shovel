@@ -36,6 +36,8 @@ const SUBSTRING_TO_PROVIDER = {
   "hs-banner.com": "HubSpot",
   "ahrefs-site-verification": "Ahrefs",
   "code.jquery.com": "jQuery",
+  "ns1.digitaloceanspaces.com": "DigitalOcean",
+  "simplecastcdn.com": "Simplecast",
 };
 
 const TWITTER_RULE = (html: string) => {
@@ -46,8 +48,8 @@ const TWITTER_RULE = (html: string) => {
     const username = match[1];
     return [
       {
-        label: "Twitter",
-        metadata: { username },
+        label: "SOCIAL_MEDIA",
+        metadata: { username, service: "Twitter" },
       },
     ];
   }
@@ -100,10 +102,10 @@ const JSONLD_RULE = (html: string) => {
   return [];
 };
 
-const RSS_RULE = (html: string) => {
+const RSS_RULE = (html: string): Note[] => {
   const tag = parseHTML(html).querySelector("link[type='application/rss+xml']");
   if (tag) {
-    const href = tag.getAttribute("href");
+    const href = tag.getAttribute("href") || "";
     return [
       {
         label: "RSS",
@@ -136,14 +138,16 @@ const SUBDOMAIN_RULE = (html: string, domain: string) => {
   }));
 };
 
-const RULES = [
+const RULES: ((html: string, domain: string) => Note[])[] = [
   ...Object.entries(SUBSTRING_TO_PROVIDER).map(([substring, provider]) => {
     return (html: string) => {
       if (html.includes(substring)) {
         return [
           {
-            label: provider,
-            metadata: {},
+            label: "SERVICE",
+            metadata: {
+              value: provider,
+            },
           },
         ];
       }
@@ -156,18 +160,6 @@ const RULES = [
   JSONLD_RULE,
   SUBDOMAIN_RULE,
 ];
-
-const filterToUnique = (values: Note[]): Note[] => {
-  const seen = new Set<string>();
-  return values.filter((value) => {
-    const key = JSON.stringify(value);
-    if (seen.has(key)) {
-      return false;
-    }
-    seen.add(key);
-    return true;
-  });
-};
 
 const parse: Parser = (data) => {
   const domain = data.find((datum) => datum.label === "URL")?.data[0].value;
