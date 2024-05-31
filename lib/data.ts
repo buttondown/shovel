@@ -1,3 +1,4 @@
+import atproto from "@/lib/loaders/atproto";
 import bimi from "@/lib/loaders/bimi";
 import dmarc from "@/lib/loaders/dmarc";
 import dns from "@/lib/loaders/dns";
@@ -10,7 +11,7 @@ import netlify from "@/lib/parsers/netlify";
 import php from "@/lib/parsers/php";
 import webflow from "@/lib/parsers/webflow";
 
-const LOADERS = [dns, html, dmarc, bimi];
+const LOADERS = [dns, html, dmarc, bimi, atproto];
 const PARSERS = [records, htmlRecords, netlify, webflow, php, fly, heroku];
 
 const fetch = async (domain: string) => {

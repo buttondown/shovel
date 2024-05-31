@@ -1,6 +1,17 @@
 import { Record } from "../loaders/types";
 import { Note, Parser } from "./types";
 
+const TXT_VALUE_TO_PROVIDER = {
+  "paddle-verification": "Paddle",
+  "google-site-verification": "Google Webmaster Tools",
+  "ahrefs-site-verification": "Ahrefs",
+  "h1-domain-verification": "HackerOne",
+  "facebook-domain-verification": "Facebook",
+  "loom-verification": "Loom",
+  "mixpanel-domain-verify": "Mixpanel",
+  "whimsical=": "Whimsical",
+};
+
 const NAMESERVER_VALUE_TO_PROVIDER = {
   "ns.cloudflare.com": "Cloudflare",
   "dnsimple.com": "DNSimple",
@@ -12,6 +23,8 @@ const CNAME_VALUE_TO_PROVIDER = {
   "target.substack-custom-domains.com": "Substack",
   "cname.vercel-dns.com": "Vercel",
   "pr-suspensions.go.co": "Suspended",
+  "pages.github.com": "GitHub",
+  "gitbook.io": "GitBook",
 };
 
 const MX_VALUE_TO_PROVIDER = {
@@ -43,6 +56,25 @@ const NAMESERVER_RULE = (record: Record): Note[] => {
       return [];
     }
   );
+};
+
+const TXT_RULE = (record: Record): Note[] => {
+  if (record.type !== "TXT") {
+    return [];
+  }
+  return Object.entries(TXT_VALUE_TO_PROVIDER).flatMap(([value, provider]) => {
+    if (record.value.includes(value)) {
+      return [
+        {
+          label: "TXT",
+          metadata: {
+            value: provider,
+          },
+        },
+      ];
+    }
+    return [];
+  });
 };
 
 const MX_RULE = (record: Record): Note[] => {
@@ -115,7 +147,7 @@ const SPF_RULE = (record: Record): Note[] => {
   return [];
 };
 
-const RULES = [NAMESERVER_RULE, MX_RULE, SPF_RULE, CNAME_RULE];
+const RULES = [NAMESERVER_RULE, MX_RULE, SPF_RULE, CNAME_RULE, TXT_RULE];
 
 const filterToUnique = (values: Note[]): Note[] => {
   const seen = new Set<string>();

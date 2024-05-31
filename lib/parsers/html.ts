@@ -38,6 +38,9 @@ const SUBSTRING_TO_PROVIDER = {
   "code.jquery.com": "jQuery",
   "ns1.digitaloceanspaces.com": "DigitalOcean",
   "simplecastcdn.com": "Simplecast",
+  "h,o,t,j,a,r": "Hotjar",
+  "c,l,a,r,i,t,y": "Microsoft Clarity",
+  "assets.apollo.io": "Apollo",
 };
 
 const TWITTER_RULE = (html: string) => {

@@ -98,6 +98,19 @@ export default async function Page({
             )}
           <ul className="only:block hidden opacity-50">No BIMI record found</ul>
         </ul>
+        <h2 className="font-bold mt-4 text-gray-400">ATPROTO</h2>
+        <ul>
+          {data.data
+            .filter((datum) => datum.label === "ATPROTO")
+            .flatMap((datum) =>
+              datum.data.map((record) => (
+                <li key={record.value}>{record.value}</li>
+              ))
+            )}
+          <ul className="only:block hidden opacity-50">
+            No ATPROTO record found
+          </ul>
+        </ul>
         <h2 className="font-bold mt-4 text-gray-400">JSON+LD</h2>
         <ul>
           {data.notes.find((datum) => datum.label === "JSON+LD")?.metadata && (
