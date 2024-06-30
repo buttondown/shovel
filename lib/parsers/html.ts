@@ -47,26 +47,42 @@ const SUBSTRING_TO_PROVIDER = {
   "Wix.com Website Builder": "Wix",
 };
 
-const PATREON_RULE = (html: string) => {
-  // Match on `<a href="https://twitter.com/username"> and pull out the username.
-  // Make sure to avoid matching on twitter.com/intent.
-  const match = html.match(/href="https:\/\/www.patreon.com\/([^\/"]+)"/);
-  if (match) {
-    const username = match[1];
-    return [
-      {
-        label: "SOCIAL_MEDIA",
-        metadata: { username, service: "Patreon" },
-      },
-    ];
-  }
-  return [];
+const URL_TO_PROVIDER = {
+  "patreon.com": "Patreon",
+  "twitter.com": "Twitter",
+  "instagram.com": "Instagram",
+  "github.com": "GitHub",
+};
+
+const GENERIC_SOCIAL_MEDIA_PROVIDER = (html: string) => {
+  const socialMediaProviders = Object.keys(URL_TO_PROVIDER);
+  const potentialMatches = socialMediaProviders.filter((provider) =>
+    html.includes(provider)
+  );
+  return potentialMatches.flatMap((potentialMatch) => {
+    const match = html.match(
+      new RegExp(`href="https://${potentialMatch}/([^/"]+)"`)
+    );
+    if (match) {
+      const username = match[1];
+      return [
+        {
+          label: "SOCIAL_MEDIA",
+          metadata: {
+            username,
+            service:
+              URL_TO_PROVIDER[potentialMatch as keyof typeof URL_TO_PROVIDER],
+          },
+        },
+      ];
+    }
+  });
 };
 
 const TWITTER_RULE = (html: string) => {
   // Match on `<a href="https://twitter.com/username"> and pull out the username.
   // Make sure to avoid matching on twitter.com/intent.
-  const match = html.match(/<a href="https:\/\/twitter.com\/([^\/"]+)"/);
+  const match = html.match(/href="https:\/\/twitter.com\/([^\/"]+)"/);
   if (match) {
     const username = match[1];
     // Also remove query parameters from the username.
@@ -117,7 +133,7 @@ const SAME_AS_URL_TO_SOCIAL_MEDIA_SERVICE: {
   [key: string]: string;
 } = {
   "www.facebook.com": "Facebook",
-  "twitter.com": "Twitter",
+  "www.twitter.com": "Twitter",
   "www.instagram.com": "Instagram",
   "www.linkedin.com": "LinkedIn",
   "www.pinterest.com": "Pinterest",
@@ -225,7 +241,7 @@ const RULES: ((html: string, domain: string) => Note[])[] = [
     };
   }),
   TWITTER_RULE,
-  PATREON_RULE,
+  GENERIC_SOCIAL_MEDIA_PROVIDER,
   EMAIL_ADDRESS_RULE,
   RSS_RULE,
   JSONLD_RULE,

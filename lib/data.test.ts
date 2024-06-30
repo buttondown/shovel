@@ -16,6 +16,18 @@ const DOMAIN_TO_EXPECTED_DATA = {
       metadata: { value: "Rewardful" },
     },
   ],
+  "buttondown.email": [
+    {
+      label: "SOCIAL_MEDIA",
+      metadata: { username: "buttondown", service: "Twitter" },
+    },
+  ],
+  "zed.dev": [
+    {
+      label: "SOCIAL_MEDIA",
+      metadata: { username: "zeddotdev", service: "Twitter" },
+    },
+  ],
 };
 
 describe("fetching", () => {
