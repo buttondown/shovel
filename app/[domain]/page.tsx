@@ -66,6 +66,8 @@ export default async function Page({
         <ul>
           {data.notes
             .filter((note) => note.label !== "JSON+LD")
+            .filter((note) => note.label !== "SOCIAL_MEDIA")
+            .filter((note) => note.label !== "SERVICE")
             .map((note, i) => (
               <li key={i}>
                 <ServicePill service={note.label} />{" "}
@@ -73,6 +75,33 @@ export default async function Page({
                   JSON.stringify(note.metadata)}
               </li>
             ))}
+        </ul>
+        <h2 className="font-bold mt-4 text-gray-400">SERVICES</h2>
+        <ul>
+          {data.notes
+            .filter((datum) => datum.label === "SERVICE")
+            .map((note, i) => (
+              <li key={i}>
+                <ServicePill service={note.metadata.value} />
+              </li>
+            ))}
+          <ul className="only:block hidden opacity-50">
+            No social media accounts found
+          </ul>
+        </ul>
+        <h2 className="font-bold mt-4 text-gray-400">SOCIAL MEDIA</h2>
+        <ul>
+          {data.notes
+            .filter((datum) => datum.label === "SOCIAL_MEDIA")
+            .map((note, i) => (
+              <li key={i}>
+                <ServicePill service={note.metadata.service} />:{" "}
+                {note.metadata.username} {note.metadata.count}
+              </li>
+            ))}
+          <ul className="only:block hidden opacity-50">
+            No social media accounts found
+          </ul>
         </ul>
         <h2 className="font-bold mt-4 text-gray-400">DMARC</h2>
         <ul>

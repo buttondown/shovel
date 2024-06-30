@@ -17,11 +17,13 @@ const SUBSTRING_TO_PROVIDER = {
   "plausible.io/js": "Plausible",
   'name="generator" content="Ghost': "Ghost",
   'name="generator" content="Gatsby': "Gatsby",
+  "view.flodesk.com": "Flodesk",
   "content='blogger' name='generator'": "Blogger",
   "cdn.shopify.com": "Shopify",
   "data-beehiiv": "Beehiiv",
   "wp-content/plugins": "WordPress",
   "/convertkit/": "ConvertKit",
+  "static.mailerlite.com": "MailerLite",
   "filekitcdn.com": "ConvertKit",
   "list-manage.com": "Mailchimp",
   bubble_page_load_id: "Bubble",
@@ -41,6 +43,23 @@ const SUBSTRING_TO_PROVIDER = {
   "h,o,t,j,a,r": "Hotjar",
   "c,l,a,r,i,t,y": "Microsoft Clarity",
   "assets.apollo.io": "Apollo",
+  "Wix.com Website Builder": "Wix",
+};
+
+const PATREON_RULE = (html: string) => {
+  // Match on `<a href="https://twitter.com/username"> and pull out the username.
+  // Make sure to avoid matching on twitter.com/intent.
+  const match = html.match(/href="https:\/\/www.patreon.com\/([^\/"]+)"/);
+  if (match) {
+    const username = match[1];
+    return [
+      {
+        label: "SOCIAL_MEDIA",
+        metadata: { username, service: "Patreon" },
+      },
+    ];
+  }
+  return [];
 };
 
 const TWITTER_RULE = (html: string) => {
@@ -66,8 +85,8 @@ const TWITTER_RULE = (html: string) => {
     const username = match2[1];
     return [
       {
-        label: "Twitter",
-        metadata: { username },
+        label: "SOCIAL_MEDIA",
+        metadata: { username, service: "Twitter" },
       },
     ];
   }
@@ -89,18 +108,49 @@ const EMAIL_ADDRESS_RULE = (html: string) => {
   return [];
 };
 
+const SAME_AS_URL_TO_SOCIAL_MEDIA_SERVICE: {
+  [key: string]: string;
+} = {
+  "www.facebook.com": "Facebook",
+  "twitter.com": "Twitter",
+  "www.instagram.com": "Instagram",
+  "www.linkedin.com": "LinkedIn",
+  "www.pinterest.com": "Pinterest",
+  "www.youtube.com": "YouTube",
+  "www.snapchat.com": "Snapchat",
+  "www.tiktok.com": "TikTok",
+};
+
 const JSONLD_RULE = (html: string) => {
   const tag = parseHTML(html).querySelector(
     "script[type='application/ld+json']"
   );
   if (tag) {
     const text = tag.text;
-    return [
+    const baseRule = [
       {
         label: "JSON+LD",
         metadata: { value: text },
       },
+      ...(JSON.parse(text)
+        ["@graph"]?.filter((i: { sameAs: string[] }) => i.sameAs)
+        .flatMap((i: any) => {
+          return i.sameAs.flatMap((url: string) => {
+            const service =
+              SAME_AS_URL_TO_SOCIAL_MEDIA_SERVICE[new URL(url).hostname];
+            if (!service) {
+              return [];
+            }
+            return [
+              {
+                label: "SOCIAL_MEDIA",
+                metadata: { service, username: url },
+              },
+            ];
+          });
+        }) || []),
     ];
+    return baseRule;
   }
   return [];
 };
@@ -158,6 +208,7 @@ const RULES: ((html: string, domain: string) => Note[])[] = [
     };
   }),
   TWITTER_RULE,
+  PATREON_RULE,
   EMAIL_ADDRESS_RULE,
   RSS_RULE,
   JSONLD_RULE,

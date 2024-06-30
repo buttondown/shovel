@@ -17,6 +17,7 @@ const NAMESERVER_VALUE_TO_PROVIDER = {
   "dnsimple.com": "DNSimple",
   "dreamhost.com": "DreamHost",
   "vercel-dns.com": "Vercel",
+  "wixdns.net": "Wix",
 };
 
 const CNAME_VALUE_TO_PROVIDER = {

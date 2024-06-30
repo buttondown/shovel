@@ -27,6 +27,7 @@ const fetch = async (domain: string) => {
       ],
     },
   ];
+
   const notes = PARSERS.flatMap((parser) => parser.parse(data));
   return {
     domain,
