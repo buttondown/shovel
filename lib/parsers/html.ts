@@ -4,6 +4,7 @@ import { Note, Parser } from "./types";
 const SUBSTRING_TO_PROVIDER = {
   "cdn.usefathom.com": "Fathom",
   "data-rewardful": "Rewardful",
+  ".getrewardful.com": "Rewardful",
   "cdn.segment.com": "Segment",
   "omappapi.com": "OptinMonster",
   "_next/static/": "Next.js",
@@ -68,10 +69,12 @@ const TWITTER_RULE = (html: string) => {
   const match = html.match(/<a href="https:\/\/twitter.com\/([^\/"]+)"/);
   if (match) {
     const username = match[1];
+    // Also remove query parameters from the username.
+    const usernameWithoutQuery = username.split("?")[0];
     return [
       {
         label: "SOCIAL_MEDIA",
-        metadata: { username, service: "Twitter" },
+        metadata: { username: usernameWithoutQuery, service: "Twitter" },
       },
     ];
   }
@@ -83,10 +86,12 @@ const TWITTER_RULE = (html: string) => {
   );
   if (match2) {
     const username = match2[1];
+    // Also remove query parameters from the username.
+    const usernameWithoutQuery = username.split("?")[0];
     return [
       {
         label: "SOCIAL_MEDIA",
-        metadata: { username, service: "Twitter" },
+        metadata: { username: usernameWithoutQuery, service: "Twitter" },
       },
     ];
   }
@@ -162,10 +167,22 @@ const RSS_RULE = (html: string): Note[] => {
     return [
       {
         label: "RSS",
-        metadata: { href },
+        metadata: { url: href },
       },
     ];
   }
+
+  const tag2 = parseHTML(html).querySelector("a[href*='feed.xml']");
+  if (tag2) {
+    const href = tag2.getAttribute("href") || "";
+    return [
+      {
+        label: "RSS",
+        metadata: { url: href },
+      },
+    ];
+  }
+
   return [];
 };
 
