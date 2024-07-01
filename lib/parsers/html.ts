@@ -9,9 +9,18 @@ const SUBSTRING_TO_PROVIDER = {
   "omappapi.com": "OptinMonster",
   "_next/static/": "Next.js",
   "nr-data.net": "New Relic",
+  "termly.io": "Termly",
+  "data-drip": "Drip",
+  "chatbase.co/embed.min.js": "Chatbase",
   "cloudfront.net": "AWS CloudFront",
+  "app.loops.so": "Loops",
   "js.stripe.com": "Stripe",
+  "gaug.es": "Gauges",
   "Built with Framer": "Framer",
+  "profitwell.com/js/profitwell": "ProfitWell",
+  _vwo_code: "Visual Website Optimizer",
+  "f.fbq": "Facebook Pixel",
+  TiktokAnalyticsObject: "TikTok Pixel",
   "googletagmanager.com": "Google Tag Manager",
   "assets.squarespace.com": "Squarespace",
   'rel="webmention"': "Webmention",
@@ -47,11 +56,19 @@ const SUBSTRING_TO_PROVIDER = {
   "Wix.com Website Builder": "Wix",
 };
 
-const URL_TO_PROVIDER = {
+const URL_TO_PROVIDER: {
+  [key: string]: string;
+} = {
   "patreon.com": "Patreon",
   "twitter.com": "Twitter",
   "instagram.com": "Instagram",
   "github.com": "GitHub",
+  "facebook.com": "Facebook",
+  "linkedin.com": "LinkedIn",
+  "pinterest.com": "Pinterest",
+  "youtube.com": "YouTube",
+  "snapchat.com": "Snapchat",
+  "tiktok.com": "TikTok",
 };
 
 const GENERIC_SOCIAL_MEDIA_PROVIDER = (html: string) => {
@@ -61,10 +78,12 @@ const GENERIC_SOCIAL_MEDIA_PROVIDER = (html: string) => {
   );
   return potentialMatches.flatMap((potentialMatch) => {
     const match = html.match(
-      new RegExp(`href="https://${potentialMatch}/([^/"]+)"`)
+      new RegExp(
+        `href=["']https?://(www\.)?${potentialMatch}/([^/"^%]+?)/?["']`
+      )
     );
     if (match) {
-      const username = match[1];
+      const username = match[match.length - 1];
       return [
         {
           label: "SOCIAL_MEDIA",
@@ -76,6 +95,7 @@ const GENERIC_SOCIAL_MEDIA_PROVIDER = (html: string) => {
         },
       ];
     }
+    return [];
   });
 };
 
@@ -129,19 +149,6 @@ const EMAIL_ADDRESS_RULE = (html: string) => {
   return [];
 };
 
-const SAME_AS_URL_TO_SOCIAL_MEDIA_SERVICE: {
-  [key: string]: string;
-} = {
-  "www.facebook.com": "Facebook",
-  "www.twitter.com": "Twitter",
-  "www.instagram.com": "Instagram",
-  "www.linkedin.com": "LinkedIn",
-  "www.pinterest.com": "Pinterest",
-  "www.youtube.com": "YouTube",
-  "www.snapchat.com": "Snapchat",
-  "www.tiktok.com": "TikTok",
-};
-
 const JSONLD_RULE = (html: string) => {
   const tag = parseHTML(html).querySelector(
     "script[type='application/ld+json']"
@@ -157,8 +164,7 @@ const JSONLD_RULE = (html: string) => {
         ["@graph"]?.filter((i: { sameAs: string[] }) => i.sameAs)
         .flatMap((i: any) => {
           return i.sameAs.flatMap((url: string) => {
-            const service =
-              SAME_AS_URL_TO_SOCIAL_MEDIA_SERVICE[new URL(url).hostname];
+            const service = URL_TO_PROVIDER[new URL(url).hostname];
             if (!service) {
               return [];
             }

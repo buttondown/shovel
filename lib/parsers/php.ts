@@ -7,8 +7,9 @@ const parse: Parser = (data) => {
     ?.value.includes("PHPSESSID")
     ? [
         {
-          label: "BACKEND",
+          label: "SERVICE",
           metadata: {
+            genre: "backend",
             value: "PHP",
           },
         },

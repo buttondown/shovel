@@ -10,6 +10,7 @@ import htmlRecords from "@/lib/parsers/html";
 import netlify from "@/lib/parsers/netlify";
 import php from "@/lib/parsers/php";
 import webflow from "@/lib/parsers/webflow";
+import { unique } from "@/lib/utils";
 
 const LOADERS = [dns, html, dmarc, bimi, atproto];
 const PARSERS = [records, htmlRecords, netlify, webflow, php, fly, heroku];
@@ -31,8 +32,8 @@ const fetch = async (domain: string) => {
   const notes = PARSERS.flatMap((parser) => parser.parse(data));
   return {
     domain,
-    data,
-    notes,
+    data: unique(data),
+    notes: unique(notes),
   };
 };
 

@@ -1,3 +1,4 @@
+import Icon from "@/components/Icon";
 import fetch from "@/lib/data";
 
 export const metadata = {
@@ -5,10 +6,72 @@ export const metadata = {
   description: "A tool to help you dig into the details of a website.",
 };
 
+const SERVICE_TO_ICON = {
+  Twitter: <Icon.Twitter className="size-6" />,
+  TikTok: <Icon.TikTok className="size-6" />,
+  Instagram: <Icon.Instagram className="size-6" />,
+  Facebook: <Icon.Facebook className="size-6" />,
+  LinkedIn: <Icon.LinkedIn className="size-6" />,
+  Pinterest: <Icon.Pinterest className="size-6" />,
+  GitHub: <Icon.GitHub className="size-6" />,
+  YouTube: <Icon.YouTube className="size-6" />,
+};
+
+const SERVICE_TO_URL = {
+  Drip: "drip.com",
+  "AWS CloudFront": "aws.amazon.com/cloudfront",
+  "Facebook Pixel": "facebook.com/business",
+  "Google Analytics": "google.com",
+  "Google Webmaster Tools": "google.com/webmasters",
+  Heroku: "heroku.com",
+  Webflow: "webflow.com",
+  "Google Tag Manager": "google.com/tagmanager",
+  Loops: "loops.so",
+  Netlify: "netlify.com",
+  Fathom: "usefathom.com",
+  PHP: "php.net",
+  Shopify: "shopify.com",
+  "Next.js": "nextjs.org",
+  Klaviyo: "klaviyo.com",
+  Zendesk: "zendesk.com",
+};
+
+const SERVICE_TO_GENRE = {
+  "AWS CloudFront": "CDN",
+  Stripe: "Payments",
+  Gauges: "Analytics",
+  ProfitWell: "Analytics",
+  Webflow: "Hosting",
+  Plausible: "Analytics",
+  "Google Webmaster Tools": "Analytics",
+  Ghost: "Hosting",
+  Loops: "Email",
+  "Google Tag Manager": "Analytics",
+  Fathom: "Analytics",
+  "Next.js": "Framework",
+  Shopify: "E-commerce",
+  Klaviyo: "Email",
+  Zendesk: "Customer Support",
+  Facebook: "Social Media",
+};
+
 const ServicePill = ({ service }: { service: string }) => (
   <div className="inline-flex items-center">
-    <div className="text-white">{service}</div>
+    {SERVICE_TO_ICON[service] ||
+      (SERVICE_TO_URL[service] ? (
+        <img
+          src={`https://icon.horse/icon/${SERVICE_TO_URL[service] || service}`}
+          alt={service}
+          className="w-6 h-6"
+        />
+      ) : (
+        <span>{service}</span>
+      ))}
   </div>
+);
+
+const SectionHeader = ({ children }: { children: React.ReactNode }) => (
+  <h2 className="font-bold mt-4 text-gray-400">{children}</h2>
 );
 
 export default async function Page({
@@ -49,7 +112,7 @@ export default async function Page({
         </a>
       </nav>
       <div className="p-8 pt-0 overflow-x-scroll max-w-screen">
-        <h2 className="font-bold mt-4 text-gray-400">DNS Records</h2>
+        <SectionHeader>DNS Records</SectionHeader>
         <table className="">
           {data.data
             .filter((datum) => datum.label === "DNS")
@@ -62,48 +125,67 @@ export default async function Page({
               ))
             )}
         </table>
-        <h2 className="font-bold mt-4 text-gray-400">Notes</h2>
-        <ul>
+        <SectionHeader>Subdomains</SectionHeader>
+        <ul className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mt-2">
           {data.notes
-            .filter((note) => note.label !== "JSON+LD")
-            .filter((note) => note.label !== "SOCIAL_MEDIA")
-            .filter((note) => note.label !== "SERVICE")
+            .filter((datum) => datum.label === "SUBDOMAIN")
             .map((note, i) => (
-              <li key={i}>
-                <ServicePill service={note.label} />{" "}
-                {Object.keys(note.metadata).length > 0 &&
-                  JSON.stringify(note.metadata)}
+              <li
+                key={i}
+                className="flex flex-col items-center p-4 bg-white/10 rounded-lg shadow-md border border-white/15 hover:bg-white/15 hover:border-white/20 transition-colors duration-200"
+              >
+                <div className="font-bold">{note.metadata.value}</div>
               </li>
             ))}
+          <ul className="only:block hidden opacity-50">
+            No social media accounts found
+          </ul>
         </ul>
-        <h2 className="font-bold mt-4 text-gray-400">SERVICES</h2>
-        <ul>
+        <SectionHeader>Services</SectionHeader>
+        <ul className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mt-2">
           {data.notes
             .filter((datum) => datum.label === "SERVICE")
             .map((note, i) => (
-              <li key={i}>
+              <li
+                key={i}
+                className="flex flex-col items-center p-4 bg-white/10 rounded-lg shadow-md border border-white/15 hover:bg-white/15 hover:border-white/20 transition-colors duration-200"
+              >
                 <ServicePill service={note.metadata.value} />
+                <div className="mt-2 font-bold">{note.metadata.value}</div>
+                {(note.metadata.genre ||
+                  SERVICE_TO_GENRE[note.metadata.value]) && (
+                  <div className="text-xs capitalize text-gray-400">
+                    {note.metadata.genre ||
+                      SERVICE_TO_GENRE[note.metadata.value]}
+                  </div>
+                )}
               </li>
             ))}
           <ul className="only:block hidden opacity-50">
             No social media accounts found
           </ul>
         </ul>
-        <h2 className="font-bold mt-4 text-gray-400">SOCIAL MEDIA</h2>
-        <ul>
+        <SectionHeader>Social media</SectionHeader>
+        <ul className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mt-2">
           {data.notes
             .filter((datum) => datum.label === "SOCIAL_MEDIA")
             .map((note, i) => (
-              <li key={i}>
-                <ServicePill service={note.metadata.service} />:{" "}
-                {note.metadata.username} {note.metadata.count}
+              <li
+                key={i}
+                className="flex flex-col items-center p-4 bg-white/10 rounded-lg shadow-md border border-white/15 hover:bg-white/15 hover:border-white/20 transition-colors duration-200"
+              >
+                <ServicePill service={note.metadata.service} />
+                <div className="mt-2 font-bold">{note.metadata.username}</div>
+                <div className="text-xs text-gray-400">
+                  {note.metadata.service}
+                </div>
               </li>
             ))}
           <ul className="only:block hidden opacity-50">
             No social media accounts found
           </ul>
         </ul>
-        <h2 className="font-bold mt-4 text-gray-400">DMARC</h2>
+        <SectionHeader>DMARC</SectionHeader>
         <ul>
           {data.data
             .filter((datum) => datum.label === "DMARC")
@@ -116,7 +198,7 @@ export default async function Page({
             No DMARC record found
           </ul>
         </ul>
-        <h2 className="font-bold mt-4 text-gray-400">BIMI</h2>
+        <SectionHeader>BIMI</SectionHeader>
         <ul>
           {data.data
             .filter((datum) => datum.label === "BIMI")
@@ -127,7 +209,7 @@ export default async function Page({
             )}
           <ul className="only:block hidden opacity-50">No BIMI record found</ul>
         </ul>
-        <h2 className="font-bold mt-4 text-gray-400">ATPROTO</h2>
+        <SectionHeader>ATPROTO</SectionHeader>
         <ul>
           {data.data
             .filter((datum) => datum.label === "ATPROTO")
@@ -140,7 +222,7 @@ export default async function Page({
             No ATPROTO record found
           </ul>
         </ul>
-        <h2 className="font-bold mt-4 text-gray-400">JSON+LD</h2>
+        <SectionHeader>JSON+LD</SectionHeader>
         <ul>
           {data.notes.find((datum) => datum.label === "JSON+LD")?.metadata && (
             <pre className="whitespace-pre max-w-full overflow-x-scroll">
@@ -156,6 +238,24 @@ export default async function Page({
           )}
           <ul className="only:block hidden opacity-50">
             No JSON+LD record found
+          </ul>
+        </ul>
+        <SectionHeader>Notes</SectionHeader>
+        <ul>
+          {data.notes
+            .filter((note) => note.label !== "JSON+LD")
+            .filter((note) => note.label !== "SOCIAL_MEDIA")
+            .filter((note) => note.label !== "SERVICE")
+            .filter((note) => note.label !== "SUBDOMAIN")
+            .map((note, i) => (
+              <li key={i}>
+                <ServicePill service={note.label} />{" "}
+                {Object.keys(note.metadata).length > 0 &&
+                  JSON.stringify(note.metadata)}
+              </li>
+            ))}
+          <ul className="only:block hidden opacity-50">
+            No additional notes found
           </ul>
         </ul>
       </div>

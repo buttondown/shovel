@@ -10,6 +10,9 @@ const TXT_VALUE_TO_PROVIDER = {
   "loom-verification": "Loom",
   "mixpanel-domain-verify": "Mixpanel",
   "whimsical=": "Whimsical",
+  "stripe-verification=": "Stripe",
+  "klaviyo-site-verification": "Klaviyo",
+  "mail.zendesk.com": "Zendesk",
 };
 
 const NAMESERVER_VALUE_TO_PROVIDER = {
@@ -67,9 +70,10 @@ const TXT_RULE = (record: Record): Note[] => {
     if (record.value.includes(value)) {
       return [
         {
-          label: "TXT",
+          label: "SERVICE",
           metadata: {
             value: provider,
+            via: "TXT",
           },
         },
       ];

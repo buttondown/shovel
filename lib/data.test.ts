@@ -28,6 +28,16 @@ const DOMAIN_TO_EXPECTED_DATA = {
       metadata: { username: "zeddotdev", service: "Twitter" },
     },
   ],
+  "bytereview.co.uk": [
+    {
+      label: "SOCIAL_MEDIA",
+      metadata: { username: "@bytereview", service: "TikTok" },
+    },
+    {
+      label: "SOCIAL_MEDIA",
+      metadata: { username: "bytereview", service: "Twitter" },
+    },
+  ],
 };
 
 describe("fetching", () => {
@@ -40,5 +50,10 @@ describe("fetching", () => {
         expect(notes).toContainEqual(data);
       });
     });
+  });
+
+  test("deduping identical records", async () => {
+    const { notes } = await fetch("zed.dev");
+    expect(notes.filter((n) => n.label === "SOCIAL_MEDIA")).toHaveLength(1);
   });
 });

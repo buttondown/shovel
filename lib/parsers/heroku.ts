@@ -8,8 +8,9 @@ const parse: Parser = (data) => {
     )
     ? [
         {
-          label: "BACKEND",
+          label: "SERVICE",
           metadata: {
+            genre: "backend",
             value: "Heroku",
           },
         },

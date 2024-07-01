@@ -6,8 +6,9 @@ const parse: Parser = (data) => {
     .find((d) => d.type === "text/headers/fly-request-id")
     ? [
         {
-          label: "BACKEND",
+          label: "SERVICE",
           metadata: {
+            genre: "backend",
             value: "Fly.io",
           },
         },

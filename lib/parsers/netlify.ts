@@ -6,9 +6,10 @@ const parse: Parser = (data) => {
     .find((d) => d.type === "text/headers/server")?.value === "Netlify"
     ? [
         {
-          label: "HOST",
+          label: "SERVICE",
           metadata: {
             value: "Netlify",
+            genre: "backend",
           },
         },
       ]

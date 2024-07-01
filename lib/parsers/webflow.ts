@@ -7,9 +7,10 @@ const parse: Parser = (data) => {
     "x-wf-forwarded-proto"
     ? [
         {
-          label: "HOST",
+          label: "SERVICE",
           metadata: {
             value: "Netlify",
+            genre: "backend",
           },
         },
       ]
