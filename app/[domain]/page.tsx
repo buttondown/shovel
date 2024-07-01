@@ -6,7 +6,9 @@ export const metadata = {
   description: "A tool to help you dig into the details of a website.",
 };
 
-const SERVICE_TO_ICON = {
+const SERVICE_TO_ICON: {
+  [key: string]: React.ReactNode;
+} = {
   Twitter: <Icon.Twitter className="size-6" />,
   TikTok: <Icon.TikTok className="size-6" />,
   Instagram: <Icon.Instagram className="size-6" />,
@@ -17,7 +19,9 @@ const SERVICE_TO_ICON = {
   YouTube: <Icon.YouTube className="size-6" />,
 };
 
-const SERVICE_TO_URL = {
+const SERVICE_TO_URL: {
+  [key: string]: string;
+} = {
   Drip: "drip.com",
   "AWS CloudFront": "aws.amazon.com/cloudfront",
   "Facebook Pixel": "facebook.com/business",
@@ -36,7 +40,9 @@ const SERVICE_TO_URL = {
   Zendesk: "zendesk.com",
 };
 
-const SERVICE_TO_GENRE = {
+const SERVICE_TO_GENRE: {
+  [key: string]: string;
+} = {
   "AWS CloudFront": "CDN",
   Stripe: "Payments",
   Gauges: "Analytics",
