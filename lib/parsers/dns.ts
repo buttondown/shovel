@@ -29,6 +29,7 @@ const CNAME_VALUE_TO_PROVIDER = {
   "pr-suspensions.go.co": "Suspended",
   "pages.github.com": "GitHub",
   "gitbook.io": "GitBook",
+  "boards.consider.com": "Consider",
 };
 
 const MX_VALUE_TO_PROVIDER = {
@@ -110,9 +111,10 @@ const CNAME_RULE = (record: Record): Note[] => {
       if (record.value.includes(value)) {
         return [
           {
-            label: "CNAME",
+            label: "SERVICE",
             metadata: {
               value: provider,
+              via: "CNAME",
             },
           },
         ];
@@ -127,6 +129,15 @@ const SPF_URL_TO_PROVIDER: {
 } = {
   "_spf.google.com": "Google",
   "_spf.createsend.com": "Campaign Monitor",
+  "mailgun.org": "Mailgun",
+  "servers.mcsv.net": "Mailchimp",
+  "_spf.salesforce.com": "Salesforce",
+  "spf.happyfox.com": "HappyFox",
+  "spf.smtp2go.com": "SMTP2GO",
+  "mktomail.com": "Marketo",
+  "aspmx.pardot.com": "Pardot",
+  "spfhost.messageprovider.com": "Markmonitor",
+  "spf.protection.outlook.com": "Outlook",
 };
 
 const extractURLsOrIPsFromSPF = (record: string): string[] => {
@@ -137,17 +148,29 @@ const extractURLsOrIPsFromSPF = (record: string): string[] => {
     .map((part) => SPF_URL_TO_PROVIDER[part] || part);
 };
 
+const isIPAddress = (value: string): boolean => {
+  return value.match(/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/) !== null;
+};
+
 const SPF_RULE = (record: Record): Note[] => {
   if (record.type !== "TXT") {
     return [];
   }
   if (record.value.startsWith("v=spf1")) {
-    return extractURLsOrIPsFromSPF(record.value).map((value) => ({
-      label: "SPF",
-      metadata: {
-        value,
-      },
-    }));
+    return extractURLsOrIPsFromSPF(record.value).flatMap((value) => {
+      if (isIPAddress(value)) {
+        return [];
+      }
+      return [
+        {
+          label: "SERVICE",
+          metadata: {
+            value,
+            via: "SPF",
+          },
+        },
+      ];
+    });
   }
   return [];
 };

@@ -54,6 +54,20 @@ const SUBSTRING_TO_PROVIDER = {
   "c,l,a,r,i,t,y": "Microsoft Clarity",
   "assets.apollo.io": "Apollo",
   "Wix.com Website Builder": "Wix",
+  "cdn.outseta.com": "Outseta",
+  "klaviyo.init": "Klaviyo",
+  __sveltekit__: "Svelte",
+  "js.afterpay.com": "Afterpay",
+  "zdassets.com": "Zendesk",
+  "cookiefirst.com": "CookieFirst",
+  livewireScriptConfig: "Laravel",
+  "buttondown.email/api": "Buttondown",
+  "hs-script-loader": "HubSpot",
+  "cdn.yottaa.com": "Yottaa",
+  intercomSettings: "Intercom",
+  _rollbarConfig: "Rollbar",
+  "posthog.init": "PostHog",
+  "e.amplitude": "Amplitude",
 };
 
 const URL_TO_PROVIDER: {
@@ -61,14 +75,20 @@ const URL_TO_PROVIDER: {
 } = {
   "patreon.com": "Patreon",
   "twitter.com": "Twitter",
+  "x.com": "Twitter",
   "instagram.com": "Instagram",
   "github.com": "GitHub",
   "facebook.com": "Facebook",
+  "facebook.com/groups": "Facebook",
   "linkedin.com": "LinkedIn",
+  "linkedin.com/company": "LinkedIn",
+  "linkedin.com/school": "LinkedIn",
   "pinterest.com": "Pinterest",
   "youtube.com": "YouTube",
+  "youtube.com/c": "YouTube",
   "snapchat.com": "Snapchat",
   "tiktok.com": "TikTok",
+  "reddit.com/r": "Reddit",
 };
 
 const GENERIC_SOCIAL_MEDIA_PROVIDER = (html: string) => {
@@ -171,7 +191,7 @@ const JSONLD_RULE = (html: string) => {
             return [
               {
                 label: "SOCIAL_MEDIA",
-                metadata: { service, username: url },
+                metadata: { service, username: url.split("/").pop() },
               },
             ];
           });

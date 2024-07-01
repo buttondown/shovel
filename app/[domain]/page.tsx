@@ -1,5 +1,6 @@
 import Icon from "@/components/Icon";
 import fetch from "@/lib/data";
+import Link from "next/link";
 
 export const metadata = {
   title: "shovel.report",
@@ -38,6 +39,28 @@ const SERVICE_TO_URL: {
   "Next.js": "nextjs.org",
   Klaviyo: "klaviyo.com",
   Zendesk: "zendesk.com",
+  Stripe: "stripe.com",
+  WordPress: "wordpress.org",
+  Plausible: "plausible.io",
+  "Microsoft Clarity": "microsoft.com",
+  Laravel: "laravel.com",
+  Buttondown: "buttondown.email",
+  Intercom: "intercom.com",
+  CookieFirst: "cookiefirst.com",
+  Hotjar: "hotjar.com",
+  Mailgun: "mailgun.com",
+  Mailchimp: "mailchimp.com",
+  "Campaign Monitor": "campaignmonitor.com",
+  Google: "google.com",
+  Rollbar: "rollbar.com",
+  PostHog: "posthog.com",
+  Amplitude: "amplitude.com",
+  Marketo: "marketo.com",
+  Wordpress: "wordpress.org",
+  SMTP2GO: "smtp2go.com",
+  Salesforce: "salesforce.com",
+  HappyFox: "happyfox.com",
+  Consider: "consider.com",
 };
 
 const SERVICE_TO_GENRE: {
@@ -59,6 +82,26 @@ const SERVICE_TO_GENRE: {
   Klaviyo: "Email",
   Zendesk: "Customer Support",
   Facebook: "Social Media",
+  Laravel: "Framework",
+  Buttondown: "Email",
+  Intercom: "Customer Support",
+  CookieFirst: "GDPR",
+  Hotjar: "Analytics",
+  "Microsoft Clarity": "Analytics",
+  Mailgun: "Email",
+  Mailchimp: "Email",
+  "Campaign Monitor": "Email",
+  Google: "Lots of stuff",
+  "Google Analytics": "Analytics",
+  Rollbar: "Error Tracking",
+  PostHog: "Analytics",
+  Amplitude: "Analytics",
+  Marketo: "Marketing",
+  Wordpress: "CMS",
+  SMTP2GO: "Email",
+  Salesforce: "CRM",
+  HappyFox: "Customer Support",
+  Consider: "Hiring",
 };
 
 const ServicePill = ({ service }: { service: string }) => (
@@ -112,7 +155,8 @@ export default async function Page({
         <a
           href={`https://${params.domain}`}
           target="_blank"
-          rel="noopener noreferrer inline-block"
+          rel="noopener noreferrer"
+          className="inline-block hover:bg-white/20 transition-colors"
         >
           {params.domain}
         </a>
@@ -136,15 +180,14 @@ export default async function Page({
           {data.notes
             .filter((datum) => datum.label === "SUBDOMAIN")
             .map((note, i) => (
-              <li
-                key={i}
-                className="flex flex-col items-center p-4 bg-white/10 rounded-lg shadow-md border border-white/15 hover:bg-white/15 hover:border-white/20 transition-colors duration-200"
-              >
-                <div className="font-bold">{note.metadata.value}</div>
-              </li>
+              <Link href={`/${note.metadata.value}`} key={i}>
+                <li className="flex flex-col whitespace-nowrap items-center p-4 bg-white/10 rounded-lg shadow-md border border-white/15 hover:bg-white/15 hover:border-white/20 transition-colors duration-200">
+                  <div className="font-bold">{note.metadata.value}</div>
+                </li>
+              </Link>
             ))}
-          <ul className="only:block hidden opacity-50">
-            No social media accounts found
+          <ul className="only:block hidden opacity-50 col-span-2">
+            No subdomains found
           </ul>
         </ul>
         <SectionHeader>Services</SectionHeader>
@@ -167,8 +210,8 @@ export default async function Page({
                 )}
               </li>
             ))}
-          <ul className="only:block hidden opacity-50">
-            No social media accounts found
+          <ul className="only:block hidden opacity-50 col-span-2">
+            No services found
           </ul>
         </ul>
         <SectionHeader>Social media</SectionHeader>
@@ -187,7 +230,7 @@ export default async function Page({
                 </div>
               </li>
             ))}
-          <ul className="only:block hidden opacity-50">
+          <ul className="only:block hidden opacity-50 col-span-2">
             No social media accounts found
           </ul>
         </ul>
