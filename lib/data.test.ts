@@ -43,9 +43,7 @@ const DOMAIN_TO_EXPECTED_DATA = {
 describe("fetching", () => {
   Object.entries(DOMAIN_TO_EXPECTED_DATA).forEach(([domain, expectedData]) => {
     expectedData.forEach((data) => {
-      test(`fetches ${
-        data.metadata.value || data.label
-      } for ${domain}`, async () => {
+      test(`fetches ${data.label} for ${domain}`, async () => {
         const { notes } = await fetch(domain);
         expect(notes).toContainEqual(data);
       });

@@ -1,4 +1,4 @@
-const Twitter = ({ className }) => {
+const Twitter = ({ className }: { className: string }) => {
   return (
     <svg
       role="img"
@@ -13,7 +13,7 @@ const Twitter = ({ className }) => {
   );
 };
 
-const Instagram = ({ className }) => {
+const Instagram = ({ className }: { className: string }) => {
   return (
     <svg
       role="img"
@@ -28,7 +28,7 @@ const Instagram = ({ className }) => {
   );
 };
 
-const GitHub = ({ className }) => {
+const GitHub = ({ className }: { className: string }) => {
   return (
     <svg
       role="img"
@@ -43,7 +43,7 @@ const GitHub = ({ className }) => {
   );
 };
 
-const Facebook = ({ className }) => {
+const Facebook = ({ className }: { className: string }) => {
   return (
     <svg
       role="img"
@@ -58,7 +58,7 @@ const Facebook = ({ className }) => {
   );
 };
 
-const LinkedIn = ({ className }) => {
+const LinkedIn = ({ className }: { className: string }) => {
   return (
     <svg
       role="img"
@@ -73,7 +73,7 @@ const LinkedIn = ({ className }) => {
   );
 };
 
-const YouTube = ({ className }) => {
+const YouTube = ({ className }: { className: string }) => {
   return (
     <svg
       role="img"
@@ -88,7 +88,7 @@ const YouTube = ({ className }) => {
   );
 };
 
-const TikTok = ({ className }) => {
+const TikTok = ({ className }: { className: string }) => {
   return (
     <svg
       role="img"
@@ -103,7 +103,7 @@ const TikTok = ({ className }) => {
   );
 };
 
-const Pinterest = ({ className }) => {
+const Pinterest = ({ className }: { className: string }) => {
   return (
     <svg
       role="img"
