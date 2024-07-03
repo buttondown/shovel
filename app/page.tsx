@@ -1,3 +1,5 @@
+import { REGISTRY } from "@/lib/services";
+
 export const metadata = {
   title: "shovel.report",
   description: "A tool to help you dig into the details of a website.",
@@ -33,6 +35,44 @@ export default function Home() {
         >
           shovel.report/vercel.com
         </a>
+        <br />
+        <br />
+        We are tracking {Object.keys(REGISTRY).length} services:
+        <br />
+        <br />
+        <ul
+          className="
+            grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 w-screen gap-[1px] -mx-12 bg-gray-600 border-y border-y-gray-600
+        "
+        >
+          {Object.values(REGISTRY)
+            .toSorted((a, b) => a.identifier.localeCompare(b.identifier))
+            .map((service) => (
+              <li
+                key={service.identifier}
+                className="whitespace-nowrap flex flex-col items-center justify-center bg-gray-800 py-4"
+              >
+                <img
+                  src={`https://icon.horse/icon/${
+                    new URL(service.url).hostname
+                  }`}
+                  className="h-5 w-5 inline-block mb-1"
+                />
+                <span>{service.name}</span>
+              </li>
+            ))}
+        </ul>
+        <br />
+        <br />
+        Any questions? Reach out to us on{" "}
+        <a href="https://twitter.com/buttondown" className="underline">
+          Twitter
+        </a>{" "}
+        or{" "}
+        <a href="https://github.com/buttondown/shovel" className="underline">
+          GitHub
+        </a>
+        .
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
-import Icon from "@/components/Icon";
 import fetch from "@/lib/data";
+import { REGISTRY } from "@/lib/services";
 import Link from "next/link";
 
 export const metadata = {
@@ -7,109 +7,16 @@ export const metadata = {
   description: "A tool to help you dig into the details of a website.",
 };
 
-const SERVICE_TO_ICON: {
-  [key: string]: React.ReactNode;
-} = {
-  Twitter: <Icon.Twitter className="size-6" />,
-  TikTok: <Icon.TikTok className="size-6" />,
-  Instagram: <Icon.Instagram className="size-6" />,
-  Facebook: <Icon.Facebook className="size-6" />,
-  LinkedIn: <Icon.LinkedIn className="size-6" />,
-  Pinterest: <Icon.Pinterest className="size-6" />,
-  GitHub: <Icon.GitHub className="size-6" />,
-  YouTube: <Icon.YouTube className="size-6" />,
-};
-
-const SERVICE_TO_URL: {
-  [key: string]: string;
-} = {
-  Drip: "drip.com",
-  "AWS CloudFront": "aws.amazon.com/cloudfront",
-  "Facebook Pixel": "facebook.com/business",
-  "Google Analytics": "google.com",
-  "Google Webmaster Tools": "google.com/webmasters",
-  Heroku: "heroku.com",
-  Webflow: "webflow.com",
-  "Google Tag Manager": "google.com/tagmanager",
-  Loops: "loops.so",
-  Netlify: "netlify.com",
-  Fathom: "usefathom.com",
-  PHP: "php.net",
-  Shopify: "shopify.com",
-  "Next.js": "nextjs.org",
-  Klaviyo: "klaviyo.com",
-  Zendesk: "zendesk.com",
-  Stripe: "stripe.com",
-  WordPress: "wordpress.org",
-  Plausible: "plausible.io",
-  "Microsoft Clarity": "microsoft.com",
-  Laravel: "laravel.com",
-  Buttondown: "buttondown.email",
-  Intercom: "intercom.com",
-  CookieFirst: "cookiefirst.com",
-  Hotjar: "hotjar.com",
-  Mailgun: "mailgun.com",
-  Mailchimp: "mailchimp.com",
-  "Campaign Monitor": "campaignmonitor.com",
-  Google: "google.com",
-  Rollbar: "rollbar.com",
-  PostHog: "posthog.com",
-  Amplitude: "amplitude.com",
-  Marketo: "marketo.com",
-  Wordpress: "wordpress.org",
-  SMTP2GO: "smtp2go.com",
-  Salesforce: "salesforce.com",
-  HappyFox: "happyfox.com",
-  Consider: "consider.com",
-};
-
-const SERVICE_TO_GENRE: {
-  [key: string]: string;
-} = {
-  "AWS CloudFront": "CDN",
-  Stripe: "Payments",
-  Gauges: "Analytics",
-  ProfitWell: "Analytics",
-  Webflow: "Hosting",
-  Plausible: "Analytics",
-  "Google Webmaster Tools": "Analytics",
-  Ghost: "Hosting",
-  Loops: "Email",
-  "Google Tag Manager": "Analytics",
-  Fathom: "Analytics",
-  "Next.js": "Framework",
-  Shopify: "E-commerce",
-  Klaviyo: "Email",
-  Zendesk: "Customer Support",
-  Facebook: "Social Media",
-  Laravel: "Framework",
-  Buttondown: "Email",
-  Intercom: "Customer Support",
-  CookieFirst: "GDPR",
-  Hotjar: "Analytics",
-  "Microsoft Clarity": "Analytics",
-  Mailgun: "Email",
-  Mailchimp: "Email",
-  "Campaign Monitor": "Email",
-  Google: "Lots of stuff",
-  "Google Analytics": "Analytics",
-  Rollbar: "Error Tracking",
-  PostHog: "Analytics",
-  Amplitude: "Analytics",
-  Marketo: "Marketing",
-  Wordpress: "CMS",
-  SMTP2GO: "Email",
-  Salesforce: "CRM",
-  HappyFox: "Customer Support",
-  Consider: "Hiring",
-};
-
 const ServicePill = ({ service }: { service: string }) => (
   <div className="inline-flex items-center">
-    {SERVICE_TO_ICON[service] ||
-      (SERVICE_TO_URL[service] ? (
+    {REGISTRY[service]?.icon ||
+      (REGISTRY[service]?.url ? (
         <img
-          src={`https://icon.horse/icon/${SERVICE_TO_URL[service] || service}`}
+          src={`https://icon.horse/icon/${
+            REGISTRY[service]?.url
+              ? new URL(REGISTRY[service]?.url).hostname
+              : service
+          }`}
           alt={service}
           className="w-6 h-6"
         />
@@ -202,10 +109,10 @@ export default async function Page({
                 <ServicePill service={note.metadata.value} />
                 <div className="mt-2 font-bold">{note.metadata.value}</div>
                 {(note.metadata.genre ||
-                  SERVICE_TO_GENRE[note.metadata.value]) && (
+                  REGISTRY[note.metadata.value]?.genre) && (
                   <div className="text-xs capitalize text-gray-400">
                     {note.metadata.genre ||
-                      SERVICE_TO_GENRE[note.metadata.value]}
+                      REGISTRY[note.metadata.value]?.genre}
                   </div>
                 )}
               </li>

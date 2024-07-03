@@ -1,122 +1,43 @@
 import { parse as parseHTML } from "node-html-parser";
+import { REGISTRY } from "../services";
 import { Note, Parser } from "./types";
 
-const SUBSTRING_TO_PROVIDER = {
-  "cdn.usefathom.com": "Fathom",
-  "data-rewardful": "Rewardful",
-  ".getrewardful.com": "Rewardful",
-  "cdn.segment.com": "Segment",
-  "omappapi.com": "OptinMonster",
-  "_next/static/": "Next.js",
-  "nr-data.net": "New Relic",
-  "termly.io": "Termly",
-  "data-drip": "Drip",
-  "chatbase.co/embed.min.js": "Chatbase",
-  "cloudfront.net": "AWS CloudFront",
-  "app.loops.so": "Loops",
-  "js.stripe.com": "Stripe",
-  "gaug.es": "Gauges",
-  "Built with Framer": "Framer",
-  "profitwell.com/js/profitwell": "ProfitWell",
-  _vwo_code: "Visual Website Optimizer",
-  "f.fbq": "Facebook Pixel",
-  TiktokAnalyticsObject: "TikTok Pixel",
-  "googletagmanager.com": "Google Tag Manager",
-  "assets.squarespace.com": "Squarespace",
-  'rel="webmention"': "Webmention",
-  "plausible.io/js": "Plausible",
-  'name="generator" content="Ghost': "Ghost",
-  'name="generator" content="Gatsby': "Gatsby",
-  "view.flodesk.com": "Flodesk",
-  "content='blogger' name='generator'": "Blogger",
-  "cdn.shopify.com": "Shopify",
-  "data-beehiiv": "Beehiiv",
-  "wp-content/plugins": "WordPress",
-  "/convertkit/": "ConvertKit",
-  "static.mailerlite.com": "MailerLite",
-  "filekitcdn.com": "ConvertKit",
-  "list-manage.com": "Mailchimp",
-  bubble_page_load_id: "Bubble",
-  "window.groove": "Groove",
-  "intercom.com": "Intercom",
-  "/js/webflow": "Webflow",
-  "data-turbo": "Hotwire",
-  "revue-form": "Revue",
-  'action="https://tinyletter.com': "TinyLetter",
-  GoogleAnalyticsObject: "Google Analytics",
-  "fast.wistia.com": "Wistia",
-  "hs-banner.com": "HubSpot",
-  "ahrefs-site-verification": "Ahrefs",
-  "code.jquery.com": "jQuery",
-  "ns1.digitaloceanspaces.com": "DigitalOcean",
-  "simplecastcdn.com": "Simplecast",
-  "h,o,t,j,a,r": "Hotjar",
-  "c,l,a,r,i,t,y": "Microsoft Clarity",
-  "assets.apollo.io": "Apollo",
-  "Wix.com Website Builder": "Wix",
-  "cdn.outseta.com": "Outseta",
-  "klaviyo.init": "Klaviyo",
-  __sveltekit__: "Svelte",
-  "js.afterpay.com": "Afterpay",
-  "zdassets.com": "Zendesk",
-  "cookiefirst.com": "CookieFirst",
-  livewireScriptConfig: "Laravel",
-  "buttondown.email/api": "Buttondown",
-  "hs-script-loader": "HubSpot",
-  "cdn.yottaa.com": "Yottaa",
-  intercomSettings: "Intercom",
-  _rollbarConfig: "Rollbar",
-  "posthog.init": "PostHog",
-  "e.amplitude": "Amplitude",
-};
-
-const URL_TO_PROVIDER: {
-  [key: string]: string;
-} = {
-  "patreon.com": "Patreon",
-  "twitter.com": "Twitter",
-  "x.com": "Twitter",
-  "instagram.com": "Instagram",
-  "github.com": "GitHub",
-  "facebook.com": "Facebook",
-  "facebook.com/groups": "Facebook",
-  "linkedin.com": "LinkedIn",
-  "linkedin.com/company": "LinkedIn",
-  "linkedin.com/school": "LinkedIn",
-  "pinterest.com": "Pinterest",
-  "youtube.com": "YouTube",
-  "youtube.com/c": "YouTube",
-  "snapchat.com": "Snapchat",
-  "tiktok.com": "TikTok",
-  "reddit.com/r": "Reddit",
-};
-
 const GENERIC_SOCIAL_MEDIA_PROVIDER = (html: string) => {
-  const socialMediaProviders = Object.keys(URL_TO_PROVIDER);
-  const potentialMatches = socialMediaProviders.filter((provider) =>
-    html.includes(provider)
+  const socialMediaProviders = Object.values(REGISTRY).filter(
+    (service) => service.genre === "social_media"
   );
-  return potentialMatches.flatMap((potentialMatch) => {
-    const match = html.match(
-      new RegExp(
-        `href=["']https?://(www\.)?${potentialMatch}/([^/"^%]+?)/?["']`
-      )
-    );
-    if (match) {
-      const username = match[match.length - 1];
-      return [
-        {
-          label: "SOCIAL_MEDIA",
-          metadata: {
-            username,
-            service:
-              URL_TO_PROVIDER[potentialMatch as keyof typeof URL_TO_PROVIDER],
+  const potentialMatches = socialMediaProviders.filter((provider) =>
+    provider.urlSubstrings?.some((substring) => html.includes(substring))
+  );
+  return potentialMatches
+    .flatMap((service) =>
+      service.urlSubstrings?.map((s) => {
+        return {
+          identifier: service.identifier,
+          substring: s,
+        };
+      })
+    )
+    .flatMap((potentialMatch) => {
+      const match = html.match(
+        new RegExp(
+          `href=["']https?://(www\.)?${potentialMatch?.substring}/([^/"^%]+?)/?["']`
+        )
+      );
+      if (match) {
+        const username = match[match.length - 1];
+        return [
+          {
+            label: "SOCIAL_MEDIA",
+            metadata: {
+              username,
+              service: potentialMatch?.identifier,
+            },
           },
-        },
-      ];
-    }
-    return [];
-  });
+        ];
+      }
+      return [];
+    });
 };
 
 const TWITTER_RULE = (html: string) => {
@@ -184,14 +105,19 @@ const JSONLD_RULE = (html: string) => {
         ["@graph"]?.filter((i: { sameAs: string[] }) => i.sameAs)
         .flatMap((i: any) => {
           return i.sameAs.flatMap((url: string) => {
-            const service = URL_TO_PROVIDER[new URL(url).hostname];
+            const service = Object.values(REGISTRY).find((service) =>
+              url.includes(service.urlSubstrings?.[0] || "")
+            );
             if (!service) {
               return [];
             }
             return [
               {
                 label: "SOCIAL_MEDIA",
-                metadata: { service, username: url.split("/").pop() },
+                metadata: {
+                  service: service.identifier,
+                  username: url.split("/").pop(),
+                },
               },
             ];
           });
@@ -251,19 +177,22 @@ const SUBDOMAIN_RULE = (html: string, domain: string) => {
 };
 
 const RULES: ((html: string, domain: string) => Note[])[] = [
-  ...Object.entries(SUBSTRING_TO_PROVIDER).map(([substring, provider]) => {
-    return (html: string) => {
-      if (html.includes(substring)) {
-        return [
-          {
+  ...Object.values(REGISTRY).map((service) => {
+    return (html: string, domain: string) => {
+      const potentialMatches = service.substrings?.filter((substring) =>
+        html.includes(substring)
+      );
+      return (
+        potentialMatches?.map(() => {
+          return {
             label: "SERVICE",
             metadata: {
-              value: provider,
+              value: service.identifier,
+              via: "URL",
             },
-          },
-        ];
-      }
-      return [];
+          };
+        }) || []
+      );
     };
   }),
   TWITTER_RULE,
