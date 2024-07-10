@@ -13,9 +13,10 @@ const NAMESERVER_RULE = (record: Record): Note[] => {
     if (record.value.includes(service.ns_values[0])) {
       return [
         {
-          label: "NAMESERVER",
+          label: "SERVICE",
           metadata: {
             value: service.identifier,
+            genre: "nameserver",
           },
         },
       ];
@@ -57,9 +58,10 @@ const MX_RULE = (record: Record): Note[] => {
     ) {
       return [
         {
-          label: "MAILSERVER",
+          label: "SERVICE",
           metadata: {
             value: service.identifier,
+            genre: "Mailserver",
           },
         },
       ];

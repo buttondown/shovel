@@ -44,6 +44,20 @@ type Service = {
 export const REGISTRY: {
   [key: string]: Service;
 } = {
+  formassembly: {
+    identifier: "formassembly",
+    name: "FormAssembly",
+    genre: "crm",
+    url: "https://formassembly.com",
+    spf_values: ["spf1.formassembly.com"],
+  },
+  geojs: {
+    identifier: "geojs",
+    name: "GeoJS",
+    genre: "analytics",
+    url: "https://geojs.io",
+    substrings: ["geojs.io/v1"],
+  },
   github_pages: {
     identifier: "github_pages",
     name: "GitHub Pages",
@@ -64,6 +78,13 @@ export const REGISTRY: {
     url: "https://www.substack.com",
     genre: "email",
     cname_values: ["substack-custom-domains.com"],
+  },
+  datadog: {
+    identifier: "datadog",
+    name: "Datadog",
+    url: "https://www.datadoghq.com",
+    genre: "monitoring",
+    substrings: ["function(h,o,u,n,d)"],
   },
   umami: {
     identifier: "umami",
@@ -145,6 +166,13 @@ export const REGISTRY: {
     url: "https://www.google.com/adsense",
     substrings: ["adsbygoogle.js"],
   },
+  norton_safe_web: {
+    identifier: "norton_safe_web",
+    name: "Norton Safe Web",
+    genre: "security",
+    url: "https://safeweb.norton.com",
+    txt_values: ["norton-safeweb-site-verification"],
+  },
   cloudflare: {
     identifier: "cloudflare",
     name: "Cloudflare",
@@ -152,6 +180,13 @@ export const REGISTRY: {
     url: "https://www.cloudflare.com",
     ns_values: ["cloudflare.com"],
     spf_values: ["_spf.mx.cloudflare.net"],
+  },
+  cloudflare_analytics: {
+    identifier: "cloudflare_analytics",
+    name: "Cloudflare Analytics",
+    genre: "analytics",
+    url: "https://www.cloudflare.com",
+    substrings: ["data-cf-beacon"],
   },
   google_tag_manager: {
     identifier: "google_tag_manager",
@@ -428,6 +463,8 @@ export const REGISTRY: {
     name: "Shopify",
     url: "https://www.shopify.com",
     genre: "ecommerce",
+    cname_values: ["myshopify.com"],
+    substrings: ["shopifycdn.com"],
   },
   rails: {
     identifier: "rails",
@@ -664,6 +701,13 @@ export const REGISTRY: {
     substrings: ["bizible.com"],
     genre: "crm",
   },
+  heymarket: {
+    identifier: "heymarket",
+    name: "Heymarket",
+    url: "https://www.heymarket.com",
+    genre: "support",
+    substrings: ["heymarket.com"],
+  },
   smtp2go: {
     identifier: "smtp2go",
     name: "SMTP2GO",
@@ -676,7 +720,7 @@ export const REGISTRY: {
     name: "Salesforce",
     url: "https://www.salesforce.com",
     genre: "crm",
-    spf_values: ["_spf.salesforce.com"],
+    spf_values: ["_spf.salesforce.com", "cust-spf.exacttarget.com"],
   },
   happyfox: {
     identifier: "happyfox",
@@ -842,13 +886,23 @@ export const REGISTRY: {
     url: "https://www.yottaa.com",
     substrings: ["cdn.yottaa.com"],
   },
+  cookielaw: {
+    identifier: "cookielaw",
+    name: "Cookie Law",
+    genre: "gdpr",
+    url: "https://www.cookielaw.org",
+    substrings: ["cdn.cookielaw.org"],
+  },
   hubspot: {
     identifier: "hubspot",
     name: "HubSpot",
     genre: "marketing",
     url: "https://www.hubspot.com",
     substrings: ["hs-scripts.com", "hs-banner.com", "hs-script-loader"],
-    txt_values: ["hubspot-domain-verification"],
+    txt_values: [
+      "hubspot-domain-verification",
+      "hubspot-developer-verification",
+    ],
   },
   github: {
     identifier: "github",
@@ -973,5 +1027,40 @@ export const REGISTRY: {
     url: "https://www.migadu.com",
     txt_values: ["hosted-email-verify"],
     spf_values: ["spf.migadu.com"],
+  },
+  famewall: {
+    identifier: "famewall",
+    name: "Famewall",
+    genre: "marketing",
+    url: "https://www.famewall.com",
+    substrings: ["famewall-embed"],
+  },
+  rebuy_engine: {
+    identifier: "rebuy_engine",
+    name: "Rebuy Engine",
+    genre: "ecommerce",
+    url: "https://www.rebuyengine.com",
+    substrings: ["cdn.rebuyengine.com"],
+  },
+  omega_commerce: {
+    identifier: "omega_commerce",
+    name: "Omega Commerce",
+    genre: "ecommerce",
+    url: "https://www.omegacommerce.com",
+    substrings: ["omegacommerce.com"],
+  },
+  northbeam: {
+    identifier: "northbeam",
+    name: "Northbeam",
+    genre: "analytics",
+    url: "https://www.northbeam.io",
+    substrings: ["j.northbeam.io"],
+  },
+  506: {
+    identifier: "506",
+    name: "506",
+    genre: "ecommerce",
+    url: "https://www.506.io",
+    substrings: ["506.io"],
   },
 };
