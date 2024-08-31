@@ -1,8 +1,9 @@
+import DomainIcon from "@/components/DomainIcon";
+import SectionHeader from "@/components/SectionHeader";
 import fetch from "@/lib/data";
 import { db } from "@/lib/db/connection";
 import { REGISTRY } from "@/lib/services";
 import Link from "next/link";
-
 export const metadata = {
   title: "shovel.report",
   description: "A tool to help you dig into the details of a website.",
@@ -12,24 +13,15 @@ const ServicePill = ({ service }: { service: string }) => (
   <div className="inline-flex items-center">
     {REGISTRY[service]?.icon ||
       (REGISTRY[service]?.url ? (
-        <img
-          src={`https://icon.horse/icon/${
-            REGISTRY[service]?.url
-              ? new URL(REGISTRY[service]?.url).hostname
-              : service
-          }`}
-          alt={service}
-          className="w-6 h-6"
-        />
+        <DomainIcon domain={
+            new URL(REGISTRY[service]?.url).hostname
+        } />
       ) : (
         <span>{service}</span>
       ))}
   </div>
 );
 
-const SectionHeader = ({ children }: { children: React.ReactNode }) => (
-  <h2 className="font-bold mt-4 text-gray-400">{children}</h2>
-);
 
 export default async function Page({
   params,
@@ -56,7 +48,9 @@ export default async function Page({
   const existingTechSet = new Set(existingTechnologies.map(tech => tech.technology));
 
   const newTechnologies = data.notes
-    .filter((note) => note.label === "SERVICE" && !existingTechSet.has(note.metadata.value))
+    .filter((note) => [
+        "SERVICE",
+    ].includes(note.label) && !existingTechSet.has(note.metadata.value))
     .map((note) => ({
       domain: params.domain,
       technology: note.metadata.value,
@@ -122,7 +116,7 @@ export default async function Page({
                 className="flex flex-col items-center p-4 bg-white/10 rounded-lg shadow-md border border-white/15 hover:bg-white/15 hover:border-white/20 transition-colors duration-200"
               >
                 <ServicePill service={note.metadata.value} />
-                <div className="mt-2 font-bold">{note.metadata.value}</div>
+                <div className="mt-2 font-bold">{REGISTRY[note.metadata.value]?.name || note.metadata.value}</div>
                 {(note.metadata.genre ||
                   REGISTRY[note.metadata.value]?.genre) && (
                   <div className="text-xs capitalize text-gray-400">
@@ -140,16 +134,17 @@ export default async function Page({
         <SectionHeader>Social media</SectionHeader>
         <ul className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mt-2">
           {data.notes
-            .filter((datum) => datum.label === "SOCIAL_MEDIA")
+            .filter((datum) => datum.label === "SERVICE")
+            .filter((note) => REGISTRY[note.metadata.value]?.genre === "social_media")
             .map((note, i) => (
               <li
                 key={i}
                 className="flex flex-col items-center p-4 bg-white/10 rounded-lg shadow-md border border-white/15 hover:bg-white/15 hover:border-white/20 transition-colors duration-200"
               >
-                <ServicePill service={note.metadata.service} />
+                <ServicePill service={note.metadata.value} />
                 <div className="mt-2 font-bold">{note.metadata.username}</div>
                 <div className="text-xs text-gray-400">
-                  {note.metadata.service}
+                  {note.metadata.value}
                 </div>
               </li>
             ))}

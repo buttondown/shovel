@@ -1,3 +1,4 @@
+import DomainIcon from "@/components/DomainIcon";
 import { REGISTRY } from "@/lib/services";
 
 export const metadata = {
@@ -44,15 +45,12 @@ export default function Home() {
             .map((service) => (
               <li
                 key={service.identifier}
-                className="whitespace-nowrap flex flex-col items-center justify-center bg-gray-800 py-4"
               >
-                <img
-                  src={`https://icon.horse/icon/${
-                    new URL(service.url).hostname
-                  }`}
-                  className="h-5 w-5 inline-block mb-1"
-                />
-                <span>{service.name}</span>
+                <a href={`/technology/${service.identifier}`}
+                className="whitespace-nowrap flex flex-col items-center justify-center bg-gray-800 py-4 space-y-1">
+                  <DomainIcon domain={new URL(service.url).hostname} />
+                  <div className="">{service.name}</div>
+                </a>
               </li>
             ))}
         </ul>

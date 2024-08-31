@@ -322,6 +322,27 @@ export const REGISTRY: {
     url: "https://www.gaug.es",
     substrings: ["gaug.es"],
   },
+  sendinblue: {
+    identifier: "sendinblue",
+    name: "Sendinblue",
+    genre: "email",
+    url: "https://www.sendinblue.com",
+    spf_values: ["spf.sendinblue.com"],
+  },
+  mailjet: {
+    identifier: "mailjet",
+    name: "Mailjet",
+    genre: "email",
+    url: "https://www.mailjet.com",
+    spf_values: ["spf.mailjet.com"],
+  },
+  mailersend: {
+    identifier: "mailersend",
+    name: "Mailersend",
+    genre: "email",
+    url: "https://www.mailersend.com",
+    spf_values: ["_spf.mailersend.net"],
+  },
   facebook_ads: {
     identifier: "facebook_ads",
     name: "Facebook Ads",
@@ -329,12 +350,26 @@ export const REGISTRY: {
     url: "https://www.facebook.com/business/ads",
     txt_values: ["facebook-domain-verification"],
   },
+  uservoice: {
+    identifier: "uservoice",
+    name: "UserVoice",
+    genre: "support",
+    url: "https://www.uservoice.com",
+    spf_values: ["smtp1.uservoice.com"],
+  },
   notion: {
     identifier: "notion",
     name: "Notion",
     genre: "design",
     url: "https://www.notion.so",
     txt_values: ["notion-domain-verification"],
+  },
+  statuspage: {
+    identifier: "statuspage",
+    name: "Statuspage",
+    genre: "monitoring",
+    url: "https://www.statuspage.io",
+    txt_values: ["stspg-customer.com"],
   },
   facebook_pixel: {
     identifier: "facebook_pixel",
@@ -684,7 +719,7 @@ export const REGISTRY: {
     name: "Postmark",
     url: "https://www.postmarkapp.com",
     genre: "email",
-    spf_values: ["mtasv.net"],
+    spf_values: ["mtasv.net", "spf.mtasv.net"],
   },
   posthog: {
     identifier: "posthog",
@@ -900,6 +935,7 @@ export const REGISTRY: {
     genre: "web_framework",
     url: "https://firebase.google.com",
     substrings: ["gstatic.com/firebasejs"],
+    spf_values: ["_spf.firebasemail.com"],
   },
   cookiefirst: {
     identifier: "cookiefirst",
@@ -1024,7 +1060,7 @@ export const REGISTRY: {
     name: "ConvertKit",
     genre: "email",
     url: "https://www.convertkit.com",
-    substrings: ["filekitcdn.com", "/convertkit/"],
+    substrings: ["filekitcdn.com", "/convertkit/", "app.convertkit.com", ".ck.page"],
   },
   sparkpost: {
     identifier: "sparkpost",

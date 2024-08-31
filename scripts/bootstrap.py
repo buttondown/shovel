@@ -2,7 +2,7 @@ import threading
 
 import requests
 
-FILENAME = "data/domains.csv"
+FILENAME = "data/hn.csv"
 NUMBER_OF_THREADS = 8
 
 domains = open(FILENAME, "r").read().split("\n")
@@ -10,7 +10,7 @@ domains = open(FILENAME, "r").read().split("\n")
 
 def process(domain):
     print(f"Requesting {domain}")
-    requests.get(f"http://localhost:3044/{domain}")
+    requests.get(f"https://shovel.report/{domain}")
 
 
 def chunkify(lst, n):

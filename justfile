@@ -3,3 +3,6 @@ dev:
 
 install:
   bun i
+
+bootstrap:
+  python3 scripts/bootstrap.py
