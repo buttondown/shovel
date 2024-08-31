@@ -9,19 +9,19 @@ export const metadata = {
   description: "A tool to help you dig into the details of a website.",
 };
 
-const ServicePill = ({ service }: { service: string }) => (
-  <div className="inline-flex items-center">
-    {REGISTRY[service]?.icon ||
-      (REGISTRY[service]?.url ? (
-        <DomainIcon domain={
-            new URL(REGISTRY[service]?.url).hostname
-        } />
-      ) : (
-        <span>{service}</span>
-      ))}
-  </div>
-);
-
+const ServicePill = ({ service }: { service: string }) => {
+  const technology = REGISTRY[service];
+  if (!technology) {
+    return <span>{service}</span>;
+  }
+  if (technology.icon) {
+    return <div className="inline-flex items-center">{technology.icon}</div>;
+  }
+  if (technology.url) {
+    return <DomainIcon domain={new URL(technology.url).hostname} />;
+  }
+  return <span>{service}</span>;
+};
 
 export default async function Page({
   params,
@@ -45,12 +45,16 @@ export default async function Page({
     .where("domain", "=", params.domain)
     .execute();
 
-  const existingTechSet = new Set(existingTechnologies.map(tech => tech.technology));
+  const existingTechSet = new Set(
+    existingTechnologies.map((tech) => tech.technology)
+  );
 
   const newTechnologies = data.notes
-    .filter((note) => [
-        "SERVICE",
-    ].includes(note.label) && !existingTechSet.has(note.metadata.value))
+    .filter(
+      (note) =>
+        ["SERVICE"].includes(note.label) &&
+        !existingTechSet.has(note.metadata.value)
+    )
     .map((note) => ({
       domain: params.domain,
       technology: note.metadata.value,
@@ -59,33 +63,34 @@ export default async function Page({
     }));
 
   if (newTechnologies.length > 0) {
-    await db.insertInto("detected_technologies")
+    await db
+      .insertInto("detected_technologies")
       .values(newTechnologies)
       .execute();
   }
 
   return (
     <div className="p-4 pt-8">
-        <a
-          href={`https://${params.domain}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-block hover:bg-white/20 transition-colors font-black text-xl"
-        >
-          {params.domain}
-        </a>
+      <a
+        href={`https://${params.domain}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-block hover:bg-white/20 transition-colors font-black text-xl"
+      >
+        {params.domain}
+      </a>
       <div className="overflow-x-scroll max-w-screen">
         <SectionHeader>DNS Records</SectionHeader>
         <table className="">
           <tbody>
             {data.data
               .filter((datum) => datum.label === "DNS")
-            .flatMap((datum) =>
-              datum.data.map((record) => (
-                <tr key={record.value}>
-                  <td className="pr-4">{record.type}</td>
-                  <td className="whitespace-nowrap">{record.value}</td>
-                </tr>
+              .flatMap((datum) =>
+                datum.data.map((record) => (
+                  <tr key={record.value}>
+                    <td className="pr-4">{record.type}</td>
+                    <td className="whitespace-nowrap">{record.value}</td>
+                  </tr>
                 ))
               )}
           </tbody>
@@ -113,17 +118,19 @@ export default async function Page({
               <a href={`/technology/${note.metadata.value}`} key={i}>
                 <li
                   key={i}
-                className="flex flex-col items-center p-4 bg-white/10 rounded-lg shadow-md border border-white/15 hover:bg-white/15 hover:border-white/20 transition-colors duration-200"
-              >
-                <ServicePill service={note.metadata.value} />
-                <div className="mt-2 font-bold">{REGISTRY[note.metadata.value]?.name || note.metadata.value}</div>
-                {(note.metadata.genre ||
-                  REGISTRY[note.metadata.value]?.genre) && (
-                  <div className="text-xs capitalize text-gray-400">
-                    {note.metadata.genre ||
-                      REGISTRY[note.metadata.value]?.genre}
+                  className="flex flex-col items-center p-4 bg-white/10 rounded-lg shadow-md border border-white/15 hover:bg-white/15 hover:border-white/20 transition-colors duration-200"
+                >
+                  <ServicePill service={note.metadata.value} />
+                  <div className="mt-2 font-bold">
+                    {REGISTRY[note.metadata.value]?.name || note.metadata.value}
                   </div>
-                )}
+                  {(note.metadata.genre ||
+                    REGISTRY[note.metadata.value]?.genre) && (
+                    <div className="text-xs capitalize text-gray-400">
+                      {note.metadata.genre ||
+                        REGISTRY[note.metadata.value]?.genre}
+                    </div>
+                  )}
                 </li>
               </a>
             ))}
@@ -135,7 +142,9 @@ export default async function Page({
         <ul className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mt-2">
           {data.notes
             .filter((datum) => datum.label === "SERVICE")
-            .filter((note) => REGISTRY[note.metadata.value]?.genre === "social_media")
+            .filter(
+              (note) => REGISTRY[note.metadata.value]?.genre === "social_media"
+            )
             .map((note, i) => (
               <li
                 key={i}
