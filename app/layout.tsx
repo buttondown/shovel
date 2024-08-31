@@ -9,7 +9,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <Analytics />
-      <body>{children}</body>
+      <body>
+    <div className="font-mono bg-gray-900 min-h-screen text-white p-8">
+        <div className="font-black">
+          <header className="rotate-[-3deg] bg-blue-500 inline-block px-2 py-1">
+            shovel.report
+          </header>
+        </div>
+        {children}
+        </div>
+      </body>
     </html>
   );
 }

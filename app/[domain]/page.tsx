@@ -1,4 +1,5 @@
 import fetch from "@/lib/data";
+import { db } from "@/lib/db/connection";
 import { REGISTRY } from "@/lib/services";
 import Link from "next/link";
 
@@ -38,49 +39,62 @@ export default async function Page({
   };
 }) {
   const data = await fetch(params.domain);
+  await db
+    .insertInto("domains")
+    .values({
+      domain: params.domain,
+      data: JSON.stringify(data),
+    })
+    .execute();
+
+  const existingTechnologies = await db
+    .selectFrom("detected_technologies")
+    .select("technology")
+    .where("domain", "=", params.domain)
+    .execute();
+
+  const existingTechSet = new Set(existingTechnologies.map(tech => tech.technology));
+
+  const newTechnologies = data.notes
+    .filter((note) => note.label === "SERVICE" && !existingTechSet.has(note.metadata.value))
+    .map((note) => ({
+      domain: params.domain,
+      technology: note.metadata.value,
+      data: JSON.stringify(note.metadata),
+      creation_date: new Date().toISOString(),
+    }));
+
+  if (newTechnologies.length > 0) {
+    await db.insertInto("detected_technologies")
+      .values(newTechnologies)
+      .execute();
+  }
 
   return (
-    <div className="font-mono bg-gray-900 min-h-screen text-white p-4 pt-0">
-      <nav className="font-black flex items-center sticky top-0 py-4 bg-gray-900 z-10">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          className="size-6 text-blue-500"
-        >
-          <path d="M11.625 16.5a1.875 1.875 0 1 0 0-3.75 1.875 1.875 0 0 0 0 3.75Z" />
-          <path
-            d="M5.625 1.5H9a3.75 3.75 0 0 1 3.75 3.75v1.875c0 1.036.84 1.875 1.875 1.875H16.5a3.75 3.75 0 0 1 3.75 3.75v7.875c0 1.035-.84 1.875-1.875 1.875H5.625a1.875 1.875 0 0 1-1.875-1.875V3.375c0-1.036.84-1.875 1.875-1.875Zm6 16.5c.66 0 1.277-.19 1.797-.518l1.048 1.048a.75.75 0 0 0 1.06-1.06l-1.047-1.048A3.375 3.375 0 1 0 11.625 18Z"
-            clipRule="evenodd"
-          />
-          <path d="M14.25 5.25a5.23 5.23 0 0 0-1.279-3.434 9.768 9.768 0 0 1 6.963 6.963A5.23 5.23 0 0 0 16.5 7.5h-1.875a.375.375 0 0 1-.375-.375V5.25Z" />
-        </svg>
-
-        <header className="inline-block px-2 py-1 pr-0 text-gray-400">
-          shovel.report/
-        </header>
+    <div className="p-4 pt-8">
         <a
           href={`https://${params.domain}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-block hover:bg-white/20 transition-colors"
+          className="inline-block hover:bg-white/20 transition-colors font-black text-xl"
         >
           {params.domain}
         </a>
-      </nav>
-      <div className="p-8 pt-0 overflow-x-scroll max-w-screen">
+      <div className="overflow-x-scroll max-w-screen">
         <SectionHeader>DNS Records</SectionHeader>
         <table className="">
-          {data.data
-            .filter((datum) => datum.label === "DNS")
+          <tbody>
+            {data.data
+              .filter((datum) => datum.label === "DNS")
             .flatMap((datum) =>
               datum.data.map((record) => (
                 <tr key={record.value}>
                   <td className="pr-4">{record.type}</td>
                   <td className="whitespace-nowrap">{record.value}</td>
                 </tr>
-              ))
-            )}
+                ))
+              )}
+          </tbody>
         </table>
         <SectionHeader>Subdomains</SectionHeader>
         <ul className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mt-2">
@@ -102,8 +116,9 @@ export default async function Page({
           {data.notes
             .filter((datum) => datum.label === "SERVICE")
             .map((note, i) => (
-              <li
-                key={i}
+              <a href={`/technology/${note.metadata.value}`} key={i}>
+                <li
+                  key={i}
                 className="flex flex-col items-center p-4 bg-white/10 rounded-lg shadow-md border border-white/15 hover:bg-white/15 hover:border-white/20 transition-colors duration-200"
               >
                 <ServicePill service={note.metadata.value} />
@@ -115,7 +130,8 @@ export default async function Page({
                       REGISTRY[note.metadata.value]?.genre}
                   </div>
                 )}
-              </li>
+                </li>
+              </a>
             ))}
           <ul className="only:block hidden opacity-50 col-span-2">
             No services found

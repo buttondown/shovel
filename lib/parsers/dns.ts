@@ -99,8 +99,11 @@ const extractURLsOrIPsFromSPF = (record: string): string[] => {
     .map((part) => part.split(":")[1])
     .map(
       (part) =>
-        Object.values(REGISTRY).find((s) => s.spf_values?.includes(part))
-          ?.identifier || part
+        Object.values(REGISTRY).find((s) =>
+          s.spf_values?.some((v) =>
+            v.includes("*") ? part.includes(v.replace("*", "")) : v === part
+          )
+        )?.identifier || part
     );
 };
 

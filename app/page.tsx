@@ -7,12 +7,6 @@ export const metadata = {
 
 export default function Home() {
   return (
-    <div className="font-mono bg-gray-900 min-h-screen text-white p-8">
-      <nav className="font-black">
-        <header className="rotate-[-3deg] bg-blue-500 inline-block px-2 py-1">
-          shovel.report
-        </header>
-      </nav>
       <div className="p-4 pt-8 max-w-prose">
         <span className="font-bold">Shovel</span> is a tool to help you dig into
         the details of a website. Think of it as `dig` or `nslookup`, but way
@@ -74,6 +68,5 @@ export default function Home() {
         </a>
         .
       </div>
-    </div>
   );
 }

@@ -2,10 +2,23 @@ import fetch from "@/lib/data";
 import { describe, expect, test } from "vitest";
 
 const DOMAIN_TO_EXPECTED_DATA = {
+  "formkeep.com": [
+    {
+      label: "SOCIAL_MEDIA",
+      metadata: {
+        username: "formkeep.js",
+        service: "github",
+      },
+    },
+    {
+      label: "SOCIAL_MEDIA",
+      metadata: { username: "formkeep", service: "linkedin" },
+    },
+  ],
   "savvycal.com": [
     {
       label: "SOCIAL_MEDIA",
-      metadata: { username: "savvycal", service: "Twitter" },
+      metadata: { username: "savvycal", service: "twitter" },
     },
     {
       label: "RSS",
@@ -13,29 +26,35 @@ const DOMAIN_TO_EXPECTED_DATA = {
     },
     {
       label: "SERVICE",
-      metadata: { value: "Rewardful" },
+      metadata: { value: "rewardful", via: "URL" },
+    },
+  ],
+  "milled.com": [
+    {
+      label: "SERVICE",
+      metadata: { value: "email_octopus", via: "SPF" },
     },
   ],
   "buttondown.email": [
     {
       label: "SOCIAL_MEDIA",
-      metadata: { username: "buttondown", service: "Twitter" },
+      metadata: { username: "buttondown", service: "github" },
     },
   ],
   "zed.dev": [
     {
       label: "SOCIAL_MEDIA",
-      metadata: { username: "zeddotdev", service: "Twitter" },
+      metadata: { username: "zeddotdev", service: "twitter" },
     },
   ],
   "bytereview.co.uk": [
     {
       label: "SOCIAL_MEDIA",
-      metadata: { username: "@bytereview", service: "TikTok" },
+      metadata: { username: "@bytereview", service: "tiktok" },
     },
     {
       label: "SOCIAL_MEDIA",
-      metadata: { username: "bytereview", service: "Twitter" },
+      metadata: { username: "bytereview", service: "twitter" },
     },
   ],
 };

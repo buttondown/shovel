@@ -51,7 +51,7 @@ const TWITTER_RULE = (html: string) => {
     return [
       {
         label: "SOCIAL_MEDIA",
-        metadata: { username: usernameWithoutQuery, service: "Twitter" },
+        metadata: { username: usernameWithoutQuery, service: "twitter" },
       },
     ];
   }
@@ -68,7 +68,7 @@ const TWITTER_RULE = (html: string) => {
     return [
       {
         label: "SOCIAL_MEDIA",
-        metadata: { username: usernameWithoutQuery, service: "Twitter" },
+        metadata: { username: usernameWithoutQuery, service: "witter" },
       },
     ];
   }

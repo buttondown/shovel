@@ -23,5 +23,5 @@ const load: Loader = async (domain: string) => {
   };
 };
 
-const exports = { load };
+const exports = { load, name: "bimi" };
 export default exports;

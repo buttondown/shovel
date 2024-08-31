@@ -298,6 +298,7 @@ export const REGISTRY: {
     name: "MailerLite",
     genre: "email",
     url: "https://www.mailerlite.com",
+    spf_values: ["_spf.mlsend.com"],
     substrings: ["static.mailerlite.com"],
   },
   loom: {
@@ -437,6 +438,13 @@ export const REGISTRY: {
     url: "https://www.savvycal.com",
     genre: "calendar",
     substrings: ["savvycal.com"],
+  },
+  podia: {
+    identifier: "podia",
+    name: "Podia",
+    url: "https://www.podia.com",
+    genre: "podcast",
+    cname_values: ["podia.com"],
   },
   transistor: {
     identifier: "transistor",
@@ -642,7 +650,12 @@ export const REGISTRY: {
     name: "Mailgun",
     url: "https://www.mailgun.com",
     genre: "email",
-    spf_values: ["mailgun.org", "spf.mandrillapp.com"],
+    spf_values: [
+      "mailgun.org",
+      "spf.mandrillapp.com",
+      "spf1.mailgun.org",
+      "spf2.mailgun.org",
+    ],
   },
   campaign_monitor: {
     identifier: "campaign_monitor",
@@ -650,6 +663,7 @@ export const REGISTRY: {
     url: "https://www.campaignmonitor.com",
     genre: "email",
     spf_values: ["_spf.createsend.com", "spf.createsend.com"],
+    urlSubstrings: ["confirmsubscription.com"],
   },
   google: {
     identifier: "google",
@@ -751,6 +765,13 @@ export const REGISTRY: {
     icon: <Icon.Twitter className="size-6" />,
     urlSubstrings: ["twitter.com", "x.com"],
   },
+  email_octopus: {
+    identifier: "email_octopus",
+    name: "EmailOctopus",
+    genre: "email",
+    url: "https://www.emailoctopus.com",
+    spf_values: ["*.eoidentity.com"],
+  },
   discord: {
     identifier: "discord",
     name: "Discord",
@@ -814,6 +835,14 @@ export const REGISTRY: {
       "linkedin.com/school",
       "linkedin.com",
     ],
+  },
+  linkedin_ads: {
+    identifier: "linkedin_ads",
+    name: "LinkedIn Ads",
+    genre: "marketing",
+    url: "https://www.linkedin.com",
+    icon: <Icon.LinkedIn className="size-6" />,
+    substrings: ["ads.linkedin.com"],
   },
   youtube: {
     identifier: "youtube",
@@ -910,7 +939,7 @@ export const REGISTRY: {
     genre: "social_media",
     url: "https://www.github.com",
     icon: <Icon.GitHub className="size-6" />,
-    urlSubstrings: ["github.com"],
+    urlSubstrings: ["github.com", "github.com/[a-z]*"],
   },
   snapchat: {
     identifier: "snapchat",
@@ -954,6 +983,13 @@ export const REGISTRY: {
     genre: "analytics",
     url: "https://www.segment.com",
     substrings: ["cdn.segment.com"],
+  },
+  apple_pay: {
+    identifier: "apple_pay",
+    name: "Apple Pay",
+    genre: "payments",
+    url: "https://www.apple.com/apple-pay",
+    substrings: ["apple-pay-shop-capabilities"],
   },
   optinmonster: {
     identifier: "optinmonster",
