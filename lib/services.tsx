@@ -170,6 +170,14 @@ type Service = {
 export const REGISTRY: {
   [key: string]: Service;
 } = {
+  constantcontact: {
+    identifier: "constantcontact",
+    name: "Constant Contact",
+    genre: "marketing",
+    url: "https://www.constantcontact.com",
+    substrings: ["constantcontact.com"],
+    spf_values: ["spf.constantcontact.com"],
+  },
   rss: {
     identifier: "rss",
     name: "RSS",
@@ -1154,6 +1162,37 @@ export const REGISTRY: {
     genre: "email",
     url: "https://www.emailoctopus.com",
     spf_values: ["*.eoidentity.com"],
+  },
+  clicky: {
+    identifier: "clicky",
+    name: "Clicky",
+    genre: "analytics",
+    url: "https://www.clicky.com",
+    substrings: ["getclicky.com"],
+  },
+  nuxt: {
+    identifier: "nuxt",
+    name: "Nuxt",
+    genre: "web_framework",
+    url: "https://www.nuxtjs.org",
+    substrings: ["/_nuxt/"],
+  },
+  font_awesome: {
+    identifier: "font_awesome",
+    name: "Font Awesome",
+    genre: "web_framework",
+    url: "https://www.fontawesome.com",
+    substrings: [
+      "cdnjs.cloudflare.com/ajax/libs/font-awesome",
+      "kit.fontawesome.com",
+    ],
+  },
+  oneuptime: {
+    identifier: "oneuptime",
+    name: "OneUptime",
+    genre: "monitoring",
+    url: "https://www.oneuptime.com",
+    txt_values: ["oneuptime-verification"],
   },
   discord: {
     identifier: "discord",
