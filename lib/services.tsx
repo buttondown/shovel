@@ -237,6 +237,13 @@ export const REGISTRY: {
     genre: "support",
     cname_values: ["custom-domain.nolt.io"],
   },
+  improv_mx: {
+    identifier: "improv_mx",
+    name: "ImprovMX",
+    url: "https://www.improvmx.com",
+    genre: "email",
+    mx_values: ["mx1.improvmx.com"],
+  },
   namecheap: {
     identifier: "namecheap",
     name: "Namecheap",
@@ -624,6 +631,7 @@ export const REGISTRY: {
     name: "Heroku",
     url: "https://www.heroku.com",
     genre: "hosting",
+    cname_values: ["herokudns.com"],
   },
   groove: {
     identifier: "groove",

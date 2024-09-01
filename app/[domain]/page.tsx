@@ -3,8 +3,7 @@ import Grid from "@/components/Grid";
 import SectionHeader from "@/components/SectionHeader";
 import fetch from "@/lib/data";
 import { db } from "@/lib/db/connection";
-import { REGISTRY } from "@/lib/services";
-import Link from "next/link";
+import { GENRE_REGISTRY, REGISTRY } from "@/lib/services";
 export const metadata = {
   title: "shovel.report",
   description: "A tool to help you dig into the details of a website.",
@@ -71,7 +70,7 @@ export default async function Page({
   }
 
   return (
-    <div className="p-4 pt-8">
+    <div className="">
       <a
         href={`https://${params.domain}`}
         target="_blank"
@@ -96,20 +95,15 @@ export default async function Page({
         </tbody>
       </table>
       <SectionHeader>Subdomains</SectionHeader>
-      <ul className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mt-2">
+      <Grid.Container>
         {data.notes
           .filter((datum) => datum.label === "SUBDOMAIN")
           .map((note, i) => (
-            <Link href={`/${note.metadata.value}`} key={i}>
-              <li className="flex flex-col whitespace-nowrap items-center p-4 bg-white/10 rounded-lg shadow-md border border-white/15 hover:bg-white/15 hover:border-white/20 transition-colors duration-200">
-                <div className="font-bold">{note.metadata.value}</div>
-              </li>
-            </Link>
+            <Grid.Item key={i} url={`/${note.metadata.value}`}>
+              {note.metadata.value}
+            </Grid.Item>
           ))}
-        <ul className="only:block hidden opacity-50 col-span-2">
-          No subdomains found
-        </ul>
-      </ul>
+      </Grid.Container>
       <SectionHeader>Services</SectionHeader>
       <Grid.Container>
         {data.notes
@@ -121,31 +115,33 @@ export default async function Page({
               url={`/technology/${note.metadata.value}`}
               domain={new URL(REGISTRY[note.metadata.value]?.url).hostname}
             >
-              {REGISTRY[note.metadata.value]?.name}
+              <div>{REGISTRY[note.metadata.value]?.name}</div>
+              <div className="text-gray-400 text-sm">
+                {GENRE_REGISTRY[REGISTRY[note.metadata.value]?.genre].name}
+              </div>
             </Grid.Item>
           ))}
       </Grid.Container>
       <SectionHeader>Social media</SectionHeader>
-      <ul className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mt-2">
+      <Grid.Container>
         {data.notes
           .filter((datum) => datum.label === "SERVICE")
           .filter(
             (note) => REGISTRY[note.metadata.value]?.genre === "social_media"
           )
           .map((note, i) => (
-            <li
+            <Grid.Item
               key={i}
-              className="flex flex-col items-center p-4 bg-white/10 rounded-lg shadow-md border border-white/15 hover:bg-white/15 hover:border-white/20 transition-colors duration-200"
+              url={`/social-media/${note.metadata.value}`}
+              domain={new URL(REGISTRY[note.metadata.value]?.url).hostname}
             >
-              <ServicePill service={note.metadata.value} />
-              <div className="mt-2 font-bold">{note.metadata.username}</div>
-              <div className="text-xs text-gray-400">{note.metadata.value}</div>
-            </li>
+              <div>{note.metadata.username}</div>
+              <div className="text-gray-400 text-sm">
+                {REGISTRY[note.metadata.value]?.name}
+              </div>
+            </Grid.Item>
           ))}
-        <ul className="only:block hidden opacity-50 col-span-2">
-          No social media accounts found
-        </ul>
-      </ul>
+      </Grid.Container>
       <SectionHeader>DMARC</SectionHeader>
       <ul>
         {data.data

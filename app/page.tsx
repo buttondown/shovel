@@ -8,7 +8,7 @@ export const metadata = {
 
 export default function Home() {
   return (
-    <div className="p-4 pt-8 max-w-prose">
+    <div className="">
       <span className="font-bold">Shovel</span> is a tool to help you dig into
       the details of a website. Think of it as `dig` or `nslookup`, but way
       better, plus a splash of `BuiltWith`.
@@ -40,7 +40,7 @@ export default function Home() {
           .map((service) => (
             <Grid.Item
               key={service.identifier}
-              domain={service.url}
+              domain={new URL(service.url).hostname}
               url={`/technology/${service.identifier}`}
             >
               <div className="text-xs">{service.name}</div>
