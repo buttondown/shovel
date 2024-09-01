@@ -1251,6 +1251,13 @@ export const REGISTRY: {
     genre: "web_framework",
     substrings: ["__svelte__", "__sveltekit"],
   },
+  dropcatch: {
+    identifier: "dropcatch",
+    name: "Dropcatch",
+    url: "https://www.dropcatch.com",
+    genre: "dns",
+    ns_values: ["ns1.dropcatch.com", "ns2.dropcatch.com"],
+  },
   twitter: {
     identifier: "twitter",
     name: "Twitter",
@@ -1413,6 +1420,27 @@ export const REGISTRY: {
     icon: <Icon.LinkedIn className="size-6" />,
     substrings: ["ads.linkedin.com"],
   },
+  hugo: {
+    identifier: "hugo",
+    name: "Hugo",
+    genre: "web_framework",
+    url: "https://gohugo.io",
+    substrings: ['content="Hugo'],
+  },
+  fuse: {
+    identifier: "fuse",
+    name: "Fuse",
+    genre: "search",
+    url: "https://www.fusejs.io",
+    substrings: ["/fuse.js"],
+  },
+  typekit: {
+    identifier: "typekit",
+    name: "Typekit",
+    genre: "web_framework",
+    url: "https://typekit.com",
+    substrings: ["typekit.net"],
+  },
   youtube: {
     identifier: "youtube",
     name: "YouTube",
@@ -1420,6 +1448,13 @@ export const REGISTRY: {
     url: "https://www.youtube.com",
     icon: <Icon.YouTube className="size-6" />,
     urlSubstrings: ["youtube.com", "youtube.com/c", "youtube.com/channel"],
+  },
+  hashicorp: {
+    identifier: "hashicorp",
+    name: "HashiCorp",
+    genre: "hosting",
+    url: "https://www.hashicorp.com",
+    txt_values: ["hcp-domain-verification"],
   },
   afterpay: {
     identifier: "afterpay",
