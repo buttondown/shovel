@@ -1,6 +1,6 @@
 import Grid from "@/components/Grid";
 import { db } from "@/lib/db/connection";
-import { REGISTRY } from "@/lib/services";
+import { GENRE_REGISTRY, REGISTRY } from "@/lib/services";
 
 export const metadata = {
   title: "shovel.report",
@@ -74,8 +74,25 @@ export default async function Home() {
       <br />
       <h2 className="font-bold">What we are tracking</h2>
       <br />
-      We are tracking {Object.keys(REGISTRY).length} technologies; we&apos;ve
-      logged {data[0].count} detections.
+      We are tracking {Object.keys(REGISTRY).length} technologies across the
+      following genres:
+      <br />
+      <br />
+      <ol className="list-inside list-disc space-y-4">
+        {Object.entries(GENRE_REGISTRY).map(([genre, { name }]) => (
+          <li key={genre} className="m-2">
+            <a
+              href={`/genre/${genre}`}
+              className="bg-white/10 p-2 hover:bg-white/20 transition-colors"
+            >
+              {name}
+            </a>
+          </li>
+        ))}
+      </ol>
+      <br />
+      <br />
+      We&apos;ve logged {data[0].count} detections.
       <br />
       <br />
       <Grid.Container>

@@ -170,6 +170,27 @@ type Service = {
 export const REGISTRY: {
   [key: string]: Service;
 } = {
+  webex: {
+    identifier: "webex",
+    name: "Webex",
+    genre: "hosting",
+    url: "https://www.webex.com",
+    txt_values: ["webexdomainverification"],
+  },
+  liveramp: {
+    identifier: "liveramp",
+    name: "Liveramp",
+    genre: "marketing",
+    url: "https://liveramp.com",
+    txt_values: ["liveramp-site-verification"],
+  },
+  paloalto: {
+    identifier: "paloalto",
+    name: "Palo Alto",
+    genre: "security",
+    url: "https://www.paloaltonetworks.com",
+    txt_values: ["paloaltonetworks-site-verification"],
+  },
   headway: {
     identifier: "headway",
     name: "Headway",
@@ -275,6 +296,13 @@ export const REGISTRY: {
     url: "https://www.improvmx.com",
     genre: "email",
     mx_values: ["mx1.improvmx.com"],
+  },
+  proofpoint: {
+    identifier: "proofpoint",
+    name: "Proofpoint",
+    url: "https://www.proofpoint.com",
+    genre: "security",
+    mx_values: ["pphosted.com"],
   },
   namecheap: {
     identifier: "namecheap",
@@ -1180,12 +1208,26 @@ export const REGISTRY: {
     genre: "email",
     spf_values: ["spf.smtp2go.com"],
   },
+  dynatrace: {
+    identifier: "dynatrace",
+    name: "Dynatrace",
+    url: "https://www.dynatrace.com",
+    genre: "monitoring",
+    txt_values: ["Dynatrace-site-verification"],
+  },
   salesforce: {
     identifier: "salesforce",
     name: "Salesforce",
     url: "https://www.salesforce.com",
     genre: "crm",
     spf_values: ["_spf.salesforce.com", "cust-spf.exacttarget.com"],
+  },
+  salesforce_marketing_cloud: {
+    identifier: "salesforce_marketing_cloud",
+    name: "Salesforce Marketing Cloud",
+    url: "https://www.salesforce.com",
+    genre: "marketing",
+    txt_values: ["SMFC-"],
   },
   happyfox: {
     identifier: "happyfox",
