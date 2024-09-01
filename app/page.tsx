@@ -1,4 +1,5 @@
 import Grid from "@/components/Grid";
+import { db } from "@/lib/db/connection";
 import { REGISTRY } from "@/lib/services";
 
 export const metadata = {
@@ -6,9 +7,14 @@ export const metadata = {
   description: "A tool to help you dig into the details of a website.",
 };
 
-export default function Home() {
+export default async function Home() {
+  const data = await db
+    .selectFrom("detected_technologies")
+    .select(db.fn.countAll<number>().as("count"))
+    .execute();
+
   return (
-    <div className="">
+    <div className="max-w-prose">
       <span className="font-bold">Shovel</span> is a tool to help you dig into
       the details of a website. Think of it as `dig` or `nslookup`, but way
       better, plus a splash of `BuiltWith`.
@@ -18,20 +24,58 @@ export default function Home() {
       of our customers&apos; websites, and we are excited to share it with you.
       <br />
       <br />
-      Get started by entering a domain in the URL bar, like:
+      <br />
+      <br />
+      <h2 className="font-bold">How to use it</h2>
+      <br />
+      You can ask basic questions like &quot;what domain records and
+      technologies are used by Vercel?&quot;:
       <br />
       <br />
       <a
         className="bg-white/10 p-2 hover:bg-white/20 transition-colors"
         href="
-            https://shovel.report/vercel.com
+            https://shovel.report/domain/vercel.com
         "
       >
-        shovel.report/vercel.com
+        shovel.report/domain/vercel.com
       </a>
       <br />
       <br />
-      We are tracking {Object.keys(REGISTRY).length} services:
+      You can also retrieve this information programmatically, and get a JSON
+      response (though at the moment, the API is neither stable nor documented):
+      <br />
+      <br />
+      <a
+        className="bg-white/10 p-2 hover:bg-white/20 transition-colors"
+        href="
+            https://shovel.report/api/v1/domain/vercel.com
+        "
+      >
+        shovel.report/api/v1/domain/vercel.com
+      </a>
+      <br />
+      <br />
+      Or you can ask more complex questions, like &quot;what domains are using
+      both Mailgun and Cloudflare?&quot;:
+      <br />
+      <br />
+      <a
+        className="bg-white/10 p-2 hover:bg-white/20 transition-colors"
+        href="
+            https://shovel.report/technology/cloudflare/and/mailgun
+        "
+      >
+        shovel.report/technology/cloudflare/and/mailgun
+      </a>
+      <br />
+      <br />
+      <br />
+      <br />
+      <h2 className="font-bold">What we are tracking</h2>
+      <br />
+      We are tracking {Object.keys(REGISTRY).length} technologies; we&apos;ve
+      logged {data[0].count} detections.
       <br />
       <br />
       <Grid.Container>

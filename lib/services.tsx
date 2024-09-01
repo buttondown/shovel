@@ -843,6 +843,7 @@ export const REGISTRY: {
     genre: "email",
     txt_values: ["klaviyo-site-verification"],
     substrings: ["klaviyo.init"],
+    spf_values: ["klaviyomail.com"],
   },
   apollo: {
     identifier: "apollo",
@@ -994,11 +995,19 @@ export const REGISTRY: {
     genre: "analytics",
     substrings: ["c,l,a,r,i,t,y"],
   },
+  microsoft_365: {
+    identifier: "microsoft_365",
+    name: "Microsoft 365",
+    url: "https://www.microsoft.com",
+    genre: "everything",
+    txt_values: ["v=verifydomain MS"],
+  },
   buttondown: {
     identifier: "buttondown",
     name: "Buttondown",
     url: "https://www.buttondown.email",
     genre: "email",
+    substrings: ["buttondown.email/"],
   },
   intercom: {
     identifier: "intercom",
@@ -1177,6 +1186,13 @@ export const REGISTRY: {
     url: "https://www.nuxtjs.org",
     substrings: ["/_nuxt/"],
   },
+  aweber: {
+    identifier: "aweber",
+    name: "AWeber",
+    genre: "email",
+    url: "https://www.aweber.com",
+    spf_values: ["send.aweber.com"],
+  },
   font_awesome: {
     identifier: "font_awesome",
     name: "Font Awesome",
@@ -1186,6 +1202,13 @@ export const REGISTRY: {
       "cdnjs.cloudflare.com/ajax/libs/font-awesome",
       "kit.fontawesome.com",
     ],
+  },
+  moosend: {
+    identifier: "moosend",
+    name: "Moosend",
+    genre: "email",
+    url: "https://www.moosend.com",
+    spf_values: ["spfa.mailend.com"],
   },
   oneuptime: {
     identifier: "oneuptime",

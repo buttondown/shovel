@@ -1,15 +1,35 @@
 import Grid from "@/components/Grid";
 import Header from "@/components/Header";
+import { db } from "@/lib/db/connection";
 import { Genre, GENRE_REGISTRY, REGISTRY } from "@/lib/services";
+
+const PAGE_SIZE = 101;
 
 export default async function GenrePage({
   params,
 }: {
-  params: { genre: Genre };
+  params: { genre: string };
 }) {
   const services = Object.values(REGISTRY)
     .filter((service) => service.genre === params.genre)
     .sort((a, b) => a.name.localeCompare(b.name));
+
+  const data = await db
+    .selectFrom("detected_technologies")
+    .where(
+      "technology",
+      "in",
+      services.map((service) => service.identifier)
+    )
+    .select(["technology"])
+    .select(db.fn.count("domain").as("count"))
+    .groupBy("technology")
+    .execute();
+
+  const technologyToCount = data.reduce((acc, curr) => {
+    acc[curr.technology] = Number(curr.count);
+    return acc;
+  }, {} as Record<string, number>);
 
   return (
     <div className="">
@@ -28,6 +48,9 @@ export default async function GenrePage({
               domain={new URL(service.url).hostname}
             >
               {service.name}
+              <span className="text-gray-500 text-sm">
+                {technologyToCount[service.identifier] ?? 0} domains
+              </span>
             </Grid.Item>
           ))}
         </Grid.Container>

@@ -4,10 +4,52 @@ import SectionHeader from "@/components/SectionHeader";
 import fetch from "@/lib/data";
 import { db } from "@/lib/db/connection";
 import { GENRE_REGISTRY, REGISTRY } from "@/lib/services";
-export const metadata = {
-  title: "shovel.report",
-  description: "A tool to help you dig into the details of a website.",
+import { Metadata, ResolvingMetadata } from "next";
+
+type Props = {
+  params: { domain: string };
 };
+
+const generateURLForSocialMedia = (service: string, username: string) => {
+  if (service === "twitter") {
+    return `https://twitter.com/${username}`;
+  }
+  if (service === "linkedin") {
+    return `https://linkedin.com/in/${username}`;
+  }
+  if (service === "facebook") {
+    return `https://facebook.com/${username}`;
+  }
+  if (service === "instagram") {
+    return `https://instagram.com/${username}`;
+  }
+  if (service === "youtube") {
+    return `https://youtube.com/${username}`;
+  }
+  if (service === "tiktok") {
+    return `https://tiktok.com/@${username}`;
+  }
+  if (service === "bluesky") {
+    return `https://bsky.social/${username}`;
+  }
+  if (service === "github") {
+    return `https://github.com/${username}`;
+  }
+  return "";
+};
+
+export async function generateMetadata(
+  { params }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  return {
+    title: params.domain + " - shovel.report",
+    description:
+      "Information about " +
+      params.domain +
+      " and its DNS records, technologies, social media and more.",
+  };
+}
 
 const ServicePill = ({ service }: { service: string }) => {
   const technology = REGISTRY[service];
@@ -99,7 +141,7 @@ export default async function Page({
         {data.notes
           .filter((datum) => datum.label === "SUBDOMAIN")
           .map((note, i) => (
-            <Grid.Item key={i} url={`/${note.metadata.value}`}>
+            <Grid.Item key={i} url={`/domain/${note.metadata.value}`}>
               {note.metadata.value}
             </Grid.Item>
           ))}
@@ -132,7 +174,10 @@ export default async function Page({
           .map((note, i) => (
             <Grid.Item
               key={i}
-              url={`/social-media/${note.metadata.value}`}
+              url={generateURLForSocialMedia(
+                note.metadata.value,
+                note.metadata.username
+              )}
               domain={new URL(REGISTRY[note.metadata.value]?.url).hostname}
             >
               <div>{note.metadata.username}</div>

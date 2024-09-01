@@ -6,6 +6,24 @@ import { GENRE_REGISTRY, REGISTRY } from "@/lib/services";
 
 const PAGE_SIZE = 101;
 
+import { Metadata, ResolvingMetadata } from "next";
+
+type Props = {
+  params: { identifier: string };
+};
+
+export async function generateMetadata(
+  { params }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const service = REGISTRY[params.identifier];
+
+  return {
+    title: `${service.name} - shovel.report`,
+    description: `Information about ${service.name}, including domains using this technology, DNS records, social media, and more.`,
+  };
+}
+
 export default async function TechnologyPage({
   params,
 }: {
@@ -83,7 +101,7 @@ export default async function TechnologyPage({
           <Grid.Item
             key={item.domain}
             domain={item.domain}
-            url={`/${item.domain}`}
+            url={`/domain/${item.domain}`}
           >
             <div className="text-xs">{item.domain}</div>
           </Grid.Item>
@@ -99,22 +117,24 @@ export default async function TechnologyPage({
         Other technologies found on the same domains:
       </SectionHeader>
       <Grid.Container>
-        {technologyCounts.map((item) => (
-          <Grid.Item
-            key={item.technology}
-            domain={
-              item.technology in REGISTRY
-                ? new URL(REGISTRY[item.technology]?.url).hostname
-                : undefined
-            }
-            url={`/technology/${params.identifier}/and/${item.technology}`}
-          >
-            {item.technology in REGISTRY
-              ? REGISTRY[item.technology]?.name
-              : item.technology}
-            <div className="text-xs">{item.count}</div>
-          </Grid.Item>
-        ))}
+        {technologyCounts
+          .filter((item) => item.technology in REGISTRY)
+          .map((item) => (
+            <Grid.Item
+              key={item.technology}
+              domain={
+                item.technology in REGISTRY
+                  ? new URL(REGISTRY[item.technology]?.url).hostname
+                  : undefined
+              }
+              url={`/technology/${params.identifier}/and/${item.technology}`}
+            >
+              {item.technology in REGISTRY
+                ? REGISTRY[item.technology]?.name
+                : item.technology}
+              <div className="text-xs">{item.count}</div>
+            </Grid.Item>
+          ))}
       </Grid.Container>
     </div>
   );

@@ -4,6 +4,25 @@ import SectionHeader from "@/components/SectionHeader";
 import { db } from "@/lib/db/connection";
 import { REGISTRY } from "@/lib/services";
 
+import { Metadata, ResolvingMetadata } from "next";
+
+type Props = {
+  params: { identifier: string; subidentifier: string };
+};
+
+export async function generateMetadata(
+  { params }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const service1 = REGISTRY[params.identifier];
+  const service2 = REGISTRY[params.subidentifier];
+
+  return {
+    title: `${service1.name} and ${service2.name} - shovel.report`,
+    description: `Information about domains using both ${service1.name} and ${service2.name}, including DNS records, technologies, social media, and more.`,
+  };
+}
+
 export default async function TechnologyAndPage({
   params,
 }: {
@@ -48,13 +67,29 @@ export default async function TechnologyAndPage({
         Domains using both {service1.name} and {service2.name}
       </Header>
 
-      <SectionHeader>Found on:</SectionHeader>
+      <SectionHeader>
+        {data.length} domains detected using both{" "}
+        <a
+          href={`/technology/${params.identifier}`}
+          className="underline hover:bg-white/10"
+        >
+          {service1.name}
+        </a>{" "}
+        and{" "}
+        <a
+          href={`/technology/${params.subidentifier}`}
+          className="underline hover:bg-white/10"
+        >
+          {service2.name}
+        </a>
+        :
+      </SectionHeader>
       <Grid.Container>
         {data.map((item) => (
           <Grid.Item
             key={item.domain}
             domain={item.domain}
-            url={`/${item.domain}`}
+            url={`/domain/${item.domain}`}
           >
             <div className="text-xs">{item.domain}</div>
             <div className="text-gray-400 text-xs">
