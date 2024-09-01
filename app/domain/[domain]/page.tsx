@@ -117,9 +117,10 @@ export default async function Page({
         href={`https://${params.domain}`}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-block hover:bg-white/20 transition-colors font-black text-xl"
+        className="inline-flex items-center gap-2 hover:bg-white/20 transition-colors font-black text-xl"
       >
-        {params.domain}
+        <DomainIcon domain={params.domain} />
+        <span>{params.domain}</span>
       </a>
       <SectionHeader>DNS Records</SectionHeader>
       <table className="">

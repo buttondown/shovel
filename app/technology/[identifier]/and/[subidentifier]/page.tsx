@@ -10,6 +10,8 @@ type Props = {
   params: { identifier: string; subidentifier: string };
 };
 
+const PAGE_SIZE = 17;
+
 export async function generateMetadata(
   { params }: Props,
   parent: ResolvingMetadata
@@ -37,7 +39,12 @@ export default async function TechnologyAndPage({
     .where("dt2.technology", "=", params.subidentifier)
     .select(["dt1.domain", "dt1.creation_date"])
     .distinct()
-    .execute();
+    .execute()
+    .then((data) => {
+      const total = data.length;
+      const hasMore = total > PAGE_SIZE;
+      return { data: data.slice(0, PAGE_SIZE), hasMore, total };
+    });
 
   const technologyCounts = await db
     .selectFrom("detected_technologies")
@@ -68,7 +75,7 @@ export default async function TechnologyAndPage({
       </Header>
 
       <SectionHeader>
-        {data.length} domains detected using both{" "}
+        {data.total} domains detected using both{" "}
         <a
           href={`/technology/${params.identifier}`}
           className="underline hover:bg-white/10"
@@ -85,7 +92,7 @@ export default async function TechnologyAndPage({
         :
       </SectionHeader>
       <Grid.Container>
-        {data.map((item) => (
+        {data.data.map((item) => (
           <Grid.Item
             key={item.domain}
             domain={item.domain}
@@ -97,7 +104,14 @@ export default async function TechnologyAndPage({
             </div>
           </Grid.Item>
         ))}
-        {data.length === 0 && (
+        {data.hasMore && (
+          <Grid.Item>
+            <div className="text-xs opacity-50">
+              + {data.total - data.data.length} more
+            </div>
+          </Grid.Item>
+        )}
+        {data.data.length === 0 && (
           <Grid.Item>
             <div className="text-xs opacity-50">No examples found</div>
           </Grid.Item>
@@ -108,22 +122,24 @@ export default async function TechnologyAndPage({
         Other technologies found on the same domains:
       </SectionHeader>
       <Grid.Container>
-        {technologyCounts.map((item) => (
-          <Grid.Item
-            key={item.technology}
-            domain={
-              item.technology in REGISTRY
-                ? new URL(REGISTRY[item.technology]?.url).hostname
-                : undefined
-            }
-            url={`/technology/${params.identifier}/and/${item.technology}`}
-          >
-            {item.technology in REGISTRY
-              ? REGISTRY[item.technology]?.name
-              : item.technology}
-            <div className="text-xs">{item.count}</div>
-          </Grid.Item>
-        ))}
+        {technologyCounts
+          .filter((item) => item.technology in REGISTRY)
+          .map((item) => (
+            <Grid.Item
+              key={item.technology}
+              domain={
+                item.technology in REGISTRY
+                  ? new URL(REGISTRY[item.technology]?.url).hostname
+                  : undefined
+              }
+              url={`/technology/${params.identifier}/and/${item.technology}`}
+            >
+              {item.technology in REGISTRY
+                ? REGISTRY[item.technology]?.name
+                : item.technology}
+              <div className="text-xs">{item.count}</div>
+            </Grid.Item>
+          ))}
       </Grid.Container>
     </div>
   );

@@ -489,6 +489,20 @@ export const REGISTRY: {
     genre: "email",
     substrings: ["sparkloop.app"],
   },
+  tapfiliate: {
+    identifier: "tapfiliate",
+    name: "Tapfiliate",
+    url: "https://www.tapfiliate.com",
+    genre: "marketing",
+    substrings: ["script.tapfiliate.com"],
+  },
+  rightmessage: {
+    identifier: "rightmessage",
+    name: "RightMessage",
+    url: "https://www.rightmessage.com",
+    genre: "email",
+    substrings: ["rightmessage-id"],
+  },
   sendowl: {
     identifier: "sendowl",
     name: "SendOwl",
