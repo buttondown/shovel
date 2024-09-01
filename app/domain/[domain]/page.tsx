@@ -137,6 +137,17 @@ export default async function Page({
             )}
         </tbody>
       </table>
+      <SectionHeader>Tranco ranking</SectionHeader>
+      <ul>
+        {data.data
+          .filter((datum) => datum.label === "Tranco")
+          .flatMap((datum) =>
+            datum.data.map((record) => (
+              <li key={record.value}>#{record.value}</li>
+            ))
+          )}
+        <ul className="only:block hidden opacity-50">No Tranco record found</ul>
+      </ul>
       <SectionHeader>Subdomains</SectionHeader>
       <Grid.Container>
         {data.notes

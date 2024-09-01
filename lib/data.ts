@@ -3,6 +3,7 @@ import bimi from "@/lib/loaders/bimi";
 import dmarc from "@/lib/loaders/dmarc";
 import dns from "@/lib/loaders/dns";
 import html from "@/lib/loaders/html";
+import tranco from "@/lib/loaders/tranco";
 import records from "@/lib/parsers/dns";
 import fly from "@/lib/parsers/fly";
 import heroku from "@/lib/parsers/heroku";
@@ -14,7 +15,7 @@ import { unique } from "@/lib/utils";
 import pino from "pino";
 import { Loader } from "./loaders/types";
 
-const LOADERS = [dns, html, dmarc, bimi, atproto];
+const LOADERS = [dns, html, dmarc, bimi, atproto, tranco];
 const PARSERS = [records, htmlRecords, netlify, webflow, php, fly, heroku];
 
 const logger = pino();
