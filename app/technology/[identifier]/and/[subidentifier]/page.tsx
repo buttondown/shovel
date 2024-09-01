@@ -1,11 +1,8 @@
-import DomainIcon from "@/components/DomainIcon";
-import TechnologyPill from "@/components/TechnologyPill";
+import Grid from "@/components/Grid";
+import Header from "@/components/Header";
+import SectionHeader from "@/components/SectionHeader";
 import { db } from "@/lib/db/connection";
 import { REGISTRY } from "@/lib/services";
-
-const SectionHeader = ({ children }: { children: React.ReactNode }) => (
-  <h2 className="font-bold mt-4 text-gray-400">{children}</h2>
-);
 
 export default async function TechnologyAndPage({
   params,
@@ -44,44 +41,55 @@ export default async function TechnologyAndPage({
     .execute();
 
   return (
-    <div className="p-4 pt-8">
-      <h1 className="font-black text-2xl mb-4">
+    <div className="">
+      <Header
+        url={`/technology/${params.identifier}/and/${params.subidentifier}`}
+      >
         Domains using both {service1.name} and {service2.name}
-      </h1>
+      </Header>
 
       <SectionHeader>Found on:</SectionHeader>
-      <ul className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mt-2">
+      <Grid.Container>
         {data.map((item) => (
-          <div
+          <Grid.Item
             key={item.domain}
-            className="flex flex-col items-center gap-2 p-4 bg-white/10 rounded-lg shadow-md border border-white/15 hover:bg-white/15 hover:border-white/20 transition-colors duration-200"
+            domain={item.domain}
+            url={`/${item.domain}`}
           >
-            <DomainIcon domain={item.domain} />
-            <a href={`/${item.domain}`} className="block whitespace-nowrap">
-              {item.domain}
-            </a>
+            <div className="text-xs">{item.domain}</div>
             <div className="text-gray-400 text-xs">
               {item.creation_date.toLocaleDateString()}
             </div>
-          </div>
+          </Grid.Item>
         ))}
-        <li className="only:block hidden opacity-50 col-span-2">
-          No examples found
-        </li>
-      </ul>
+        {data.length === 0 && (
+          <Grid.Item>
+            <div className="text-xs opacity-50">No examples found</div>
+          </Grid.Item>
+        )}
+      </Grid.Container>
 
       <SectionHeader>
         Other technologies found on the same domains:
       </SectionHeader>
-      <ul className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mt-2">
+      <Grid.Container>
         {technologyCounts.map((item) => (
-          <TechnologyPill
+          <Grid.Item
             key={item.technology}
-            technology={item.technology}
-            subtitle={item.count.toString()}
-          />
+            domain={
+              item.technology in REGISTRY
+                ? new URL(REGISTRY[item.technology]?.url).hostname
+                : undefined
+            }
+            url={`/technology/${params.identifier}/and/${item.technology}`}
+          >
+            {item.technology in REGISTRY
+              ? REGISTRY[item.technology]?.name
+              : item.technology}
+            <div className="text-xs">{item.count}</div>
+          </Grid.Item>
         ))}
-      </ul>
+      </Grid.Container>
     </div>
   );
 }

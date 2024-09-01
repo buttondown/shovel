@@ -12,7 +12,7 @@ export default async function GenrePage({
     .sort((a, b) => a.name.localeCompare(b.name));
 
   return (
-    <div className="p-4 pt-8">
+    <div className="">
       <Header url={`/genre/${params.genre}`}>
         {GENRE_REGISTRY[params.genre as Genre].name}
       </Header>

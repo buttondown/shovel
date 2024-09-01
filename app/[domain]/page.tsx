@@ -88,7 +88,7 @@ export default async function Page({
               datum.data.map((record) => (
                 <tr key={record.value}>
                   <td className="pr-4">{record.type}</td>
-                  <td className="whitespace-nowrap">{record.value}</td>
+                  <td className="">{record.value}</td>
                 </tr>
               ))
             )}

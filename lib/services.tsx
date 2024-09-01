@@ -2,6 +2,7 @@ import Icon from "@/components/Icon";
 
 export type Genre =
   | "accounting"
+  | "ads"
   | "analytics"
   | "ats"
   | "calendar"
@@ -10,6 +11,7 @@ export type Genre =
   | "crm"
   | "design"
   | "dns"
+  | "search"
   | "documentation"
   | "ecommerce"
   | "email"
@@ -34,9 +36,17 @@ export const GENRE_REGISTRY: {
     description: string;
   };
 } = {
+  ads: {
+    name: "Advertising",
+    description: "Advertising services",
+  },
   open_web: {
     name: "Open Web",
     description: "Open web services",
+  },
+  search: {
+    name: "Search",
+    description: "Search services",
   },
   accounting: {
     name: "Accounting",
@@ -255,7 +265,11 @@ export const REGISTRY: {
       "ns3.namecheap.com",
       "ns4.namecheap.com",
     ],
-    spf_values: ["spf.efwd.registrar-servers.com"],
+    spf_values: [
+      "spf.efwd.registrar-servers.com",
+      "spf.web-hosting.com",
+      "privateemail.com",
+    ],
   },
   fastmail: {
     identifier: "fastmail",
@@ -344,6 +358,27 @@ export const REGISTRY: {
     genre: "email",
     spf_values: ["amazonses.com"],
   },
+  carbon: {
+    identifier: "carbon",
+    name: "Carbon",
+    url: "https://carbonads.net",
+    genre: "ads",
+    substrings: ["https://cdn.carbonads.com/carbon.js"],
+  },
+  rocket: {
+    identifier: "rocket",
+    name: "Rocket",
+    url: "https://rocket.net",
+    genre: "hosting",
+    cname_values: ["onrocket.site"],
+  },
+  woocommerce: {
+    identifier: "woocommerce",
+    name: "WooCommerce",
+    url: "https://woocommerce.com",
+    genre: "ecommerce",
+    substrings: ["woocommerce_params"],
+  },
   aws_cloudfront: {
     identifier: "aws_cloudfront",
     name: "AWS CloudFront",
@@ -354,8 +389,12 @@ export const REGISTRY: {
     identifier: "google_analytics",
     name: "Google Analytics",
     genre: "analytics",
-    url: "https://analytics.google.com",
-    substrings: ["GoogleAnalyticsObject"],
+    url: "https://google.com/analytics",
+    substrings: [
+      "GoogleAnalyticsObject",
+      "https://www.googletagmanager.com/gtag/js",
+      "https://www.google-analytics.com/analytics.js",
+    ],
   },
   google_adsense: {
     identifier: "google_adsense",
@@ -425,7 +464,7 @@ export const REGISTRY: {
     name: "Mailchimp",
     url: "https://mailchimp.com",
     genre: "email",
-    substrings: ["list-manage.com", "mc:edit"],
+    substrings: ["list-manage.com", "mc:edit", "c,h,i,m,p"],
     spf_values: ["servers.mcsv.net"],
   },
   clearbit: {
@@ -470,12 +509,26 @@ export const REGISTRY: {
     url: "https://webmention.io",
     substrings: ['rel="webmention"'],
   },
+  bluehost: {
+    identifier: "bluehost",
+    name: "Bluehost",
+    genre: "hosting",
+    url: "https://www.bluehost.com",
+    cname_values: ["bluehost.com"],
+  },
   bluesky: {
     identifier: "bluesky",
     name: "BlueSky",
     genre: "social_media",
     url: "https://bsky.app",
     urlSubstrings: ["bsky.app/profile"],
+  },
+  threads: {
+    identifier: "threads",
+    name: "Threads",
+    genre: "social_media",
+    url: "https://www.threads.net",
+    urlSubstrings: ["threads.net"],
   },
   fresh: {
     identifier: "fresh",
@@ -499,6 +552,20 @@ export const REGISTRY: {
     spf_values: ["_spf.mlsend.com"],
     substrings: ["static.mailerlite.com"],
   },
+  algolia: {
+    identifier: "algolia",
+    name: "Algolia",
+    genre: "search",
+    url: "https://www.algolia.com",
+    substrings: ['algolia.net" crossorigin'],
+  },
+  bootstrap: {
+    identifier: "bootstrap",
+    name: "Bootstrap",
+    genre: "web_framework",
+    url: "https://getbootstrap.com",
+    substrings: ["bootstrapcdn.com"],
+  },
   loom: {
     identifier: "loom",
     name: "Loom",
@@ -506,12 +573,27 @@ export const REGISTRY: {
     url: "https://www.loom.com",
     txt_values: ["loom-verification", "loom-site-verification"],
   },
+  tailwindcss: {
+    identifier: "tailwindcss",
+    name: "Tailwind CSS",
+    genre: "web_framework",
+    url: "https://tailwindcss.com",
+    substrings: ["tailwindcss.com", "mx-auto", "text-white"],
+  },
   alpinejs: {
     identifier: "alpinejs",
     name: "Alpine.js",
     genre: "web_framework",
     url: "https://alpinejs.dev",
-    substrings: ["x-on:click"],
+    substrings: ["x-on:click", "x-text"],
+  },
+  gandi: {
+    identifier: "gandi",
+    name: "Gandi",
+    genre: "dns",
+    url: "https://www.gandi.net",
+    ns_values: ["ns.gandi.net"],
+    spf_values: ["_mailcust.gandi.net"],
   },
   gauges: {
     identifier: "gauges",
@@ -632,6 +714,13 @@ export const REGISTRY: {
     url: "https://www.heroku.com",
     genre: "hosting",
     cname_values: ["herokudns.com"],
+  },
+  ovh: {
+    identifier: "ovh",
+    name: "OVH",
+    url: "https://www.ovh.com",
+    genre: "hosting",
+    mx_values: ["mx.ovh.net"],
   },
   groove: {
     identifier: "groove",
@@ -813,6 +902,20 @@ export const REGISTRY: {
     genre: "analytics",
     cname_values: ["appsflyer.com"],
   },
+  lemon_squeezy: {
+    identifier: "lemon_squeezy",
+    name: "Lemon Squeezy",
+    url: "https://www.lemonsqueezy.com",
+    genre: "payments",
+    substrings: ["assets.lemonsqueezy.com"],
+  },
+  fly_io: {
+    identifier: "fly_io",
+    name: "Fly.io",
+    url: "https://www.fly.io",
+    genre: "hosting",
+    cname_values: ["fly.dev"],
+  },
   mimecast: {
     identifier: "mimecast",
     name: "Mimecast",
@@ -860,7 +963,7 @@ export const REGISTRY: {
     name: "Plausible",
     url: "https://www.plausible.io",
     genre: "analytics",
-    substrings: ["plausible.io/js"],
+    substrings: ["plausible.io/js", "click.pageview.click"],
   },
   whimsical: {
     identifier: "whimsical",
@@ -916,7 +1019,7 @@ export const REGISTRY: {
     name: "Hotjar",
     url: "https://www.hotjar.com",
     genre: "analytics",
-    substrings: ["h,o,t,j,a,r"],
+    substrings: ["h,o,t,j,a,r", "h, o, t, j, a, r)"],
   },
   drift: {
     identifier: "drift",
@@ -1323,6 +1426,7 @@ export const REGISTRY: {
     substrings: [
       "filekitcdn.com",
       "/convertkit/",
+      "f.convertkit.com",
       "app.convertkit.com",
       ".ck.page",
     ],
@@ -1372,6 +1476,13 @@ export const REGISTRY: {
     url: "https://www.famewall.com",
     substrings: ["famewall-embed"],
   },
+  buysellads: {
+    identifier: "buysellads",
+    name: "BuySellAds",
+    genre: "ads",
+    url: "https://www.buysellads.com",
+    substrings: ["servedby-buysellads.com"],
+  },
   rebuy_engine: {
     identifier: "rebuy_engine",
     name: "Rebuy Engine",
@@ -1399,5 +1510,20 @@ export const REGISTRY: {
     genre: "ecommerce",
     url: "https://www.506.io",
     substrings: ["506.io"],
+  },
+  protonmail: {
+    identifier: "protonmail",
+    name: "ProtonMail",
+    genre: "email",
+    url: "https://www.protonmail.com",
+    spf_values: ["_spf.protonmail.ch"],
+    txt_values: ["protonmail-verification"],
+  },
+  maxio: {
+    identifier: "maxio",
+    name: "Maxio",
+    genre: "accounting",
+    url: "https://www.maxio.com",
+    spf_values: ["mailer.chargify.com"],
   },
 };

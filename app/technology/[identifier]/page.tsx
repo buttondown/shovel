@@ -4,6 +4,8 @@ import SectionHeader from "@/components/SectionHeader";
 import { db } from "@/lib/db/connection";
 import { GENRE_REGISTRY, REGISTRY } from "@/lib/services";
 
+const PAGE_SIZE = 101;
+
 export default async function TechnologyPage({
   params,
 }: {
@@ -15,7 +17,20 @@ export default async function TechnologyPage({
     .where("technology", "=", params.identifier)
     .selectAll()
     .distinctOn("domain")
-    .execute();
+    .execute()
+    .then((results) => {
+      if (results.length > PAGE_SIZE) {
+        const moreCount = results.length - PAGE_SIZE;
+        return {
+          data: results.slice(0, PAGE_SIZE),
+          moreCount,
+        };
+      }
+      return {
+        data: results,
+        moreCount: 0,
+      };
+    });
 
   const technologyCounts = await db
     .selectFrom("detected_technologies")
@@ -36,7 +51,7 @@ export default async function TechnologyPage({
     .execute();
 
   return (
-    <div className="p-4 pt-8">
+    <div className="">
       {service ? (
         <>
           <Header url={`/technology/${params.identifier}`}>
@@ -64,7 +79,7 @@ export default async function TechnologyPage({
 
       <SectionHeader>Found on:</SectionHeader>
       <Grid.Container>
-        {data.map((item) => (
+        {data.data.map((item) => (
           <Grid.Item
             key={item.domain}
             domain={item.domain}
@@ -73,6 +88,11 @@ export default async function TechnologyPage({
             <div className="text-xs">{item.domain}</div>
           </Grid.Item>
         ))}
+        {data.moreCount > 0 && (
+          <Grid.Item>
+            <div className="text-xs">and {data.moreCount} more</div>
+          </Grid.Item>
+        )}
       </Grid.Container>
 
       <SectionHeader>
@@ -87,7 +107,7 @@ export default async function TechnologyPage({
                 ? new URL(REGISTRY[item.technology]?.url).hostname
                 : undefined
             }
-            url={`/technology/${item.technology}`}
+            url={`/technology/${params.identifier}/and/${item.technology}`}
           >
             {item.technology in REGISTRY
               ? REGISTRY[item.technology]?.name
