@@ -315,6 +315,7 @@ export const REGISTRY: {
     genre: "hosting",
     ns_values: ["wixdns.net"],
     substrings: ["Wix.com Website Builder"],
+    cname_values: ["wixdns.net"],
   },
   zoho_invoices: {
     identifier: "zoho_invoices",
@@ -444,7 +445,7 @@ export const REGISTRY: {
     name: "Astro",
     genre: "web_framework",
     url: "https://astro.build",
-    substrings: ["astro-slot"],
+    substrings: ["astro-slot", "/_astro"],
   },
   chargebee: {
     identifier: "chargebee",
@@ -586,7 +587,7 @@ export const REGISTRY: {
     name: "Bootstrap",
     genre: "web_framework",
     url: "https://getbootstrap.com",
-    substrings: ["bootstrapcdn.com"],
+    substrings: ["bootstrapcdn.com", "navbar-brand", "bootstrap.min.js"],
   },
   loom: {
     identifier: "loom",
@@ -629,6 +630,7 @@ export const REGISTRY: {
     name: "Sendinblue",
     genre: "email",
     url: "https://www.sendinblue.com",
+    substrings: ["sib_signup_form"],
     spf_values: ["spf.sendinblue.com"],
   },
   mailjet: {
@@ -665,6 +667,27 @@ export const REGISTRY: {
     genre: "design",
     url: "https://www.notion.so",
     txt_values: ["notion-domain-verification"],
+  },
+  customer_io: {
+    identifier: "customer_io",
+    name: "Customer.io",
+    genre: "email",
+    url: "https://www.customer.io",
+    substrings: ["customerioforms"],
+  },
+  cloudinary: {
+    identifier: "cloudinary",
+    name: "Cloudinary",
+    genre: "hosting",
+    url: "https://www.cloudinary.com",
+    substrings: ["res.cloudinary.com"],
+  },
+  oembed: {
+    identifier: "oembed",
+    name: "OEmbed",
+    genre: "open_web",
+    url: "https://oembed.com",
+    substrings: ["json+oembed"],
   },
   statuspage: {
     identifier: "statuspage",
@@ -1156,6 +1179,7 @@ export const REGISTRY: {
     genre: "support",
     spf_values: ["spf.happyfox.com"],
     url: "https://www.happyfox.com",
+    substrings: ["HFCHAT_CONFIG"],
   },
   consider: {
     identifier: "consider",
@@ -1178,6 +1202,13 @@ export const REGISTRY: {
     url: "https://www.twitter.com",
     icon: <Icon.Twitter className="size-6" />,
     urlSubstrings: ["twitter.com", "x.com"],
+  },
+  medium: {
+    identifier: "medium",
+    name: "Medium",
+    genre: "social_media",
+    url: "https://www.medium.com",
+    urlSubstrings: ["medium.com"],
   },
   email_octopus: {
     identifier: "email_octopus",
@@ -1205,7 +1236,7 @@ export const REGISTRY: {
     name: "AWeber",
     genre: "email",
     url: "https://www.aweber.com",
-    spf_values: ["send.aweber.com"],
+    spf_values: ["send.aweber.com", "fbl.optin.com"],
   },
   font_awesome: {
     identifier: "font_awesome",
@@ -1223,6 +1254,13 @@ export const REGISTRY: {
     genre: "email",
     url: "https://www.moosend.com",
     spf_values: ["spfa.mailend.com"],
+  },
+  uptimerobot: {
+    identifier: "uptimerobot",
+    name: "UptimeRobot",
+    genre: "monitoring",
+    url: "https://www.uptimerobot.com",
+    cname_values: ["stats.uptimerobot.com"],
   },
   oneuptime: {
     identifier: "oneuptime",
@@ -1308,6 +1346,7 @@ export const REGISTRY: {
       "linkedin.com/company",
       "linkedin.com/school",
       "linkedin.com",
+      "linkedin.com/in",
     ],
   },
   linkedin_ads: {
@@ -1339,6 +1378,13 @@ export const REGISTRY: {
     genre: "marketing",
     url: "https://www.stackadapt.com",
     substrings: ["srv.stackadapt.com"],
+  },
+  google_fonts: {
+    identifier: "google_fonts",
+    name: "Google Fonts",
+    genre: "web_framework",
+    url: "https://fonts.google.com",
+    substrings: ["fonts.googleapis.com"],
   },
   chrome_webstore: {
     identifier: "chrome_webstore",
@@ -1520,6 +1566,13 @@ export const REGISTRY: {
     genre: "form",
     url: "https://www.formspark.io",
     substrings: ["submit-form.io"],
+  },
+  formkeep: {
+    identifier: "formkeep",
+    name: "FormKeep",
+    genre: "form",
+    url: "https://www.formkeep.com",
+    substrings: ["formkeep.com/f"],
   },
   revue: {
     identifier: "revue",

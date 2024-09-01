@@ -20,7 +20,7 @@ const Item = ({
   return (
     <a
       href={url ? url : undefined}
-      className="whitespace-nowrap flex flex-col items-center justify-center bg-gray-800 py-4 space-y-1 hover:bg-gray-700 transition-colors border-r border-gray-600 border-b border-gray-600 [&:nth-child(6n)]:border-r-0"
+      className="whitespace-nowrap flex flex-col items-center justify-center bg-gray-800 py-4 space-y-1 hover:bg-gray-700 transition-colors border-r border-gray-600 border-b border-gray-600 lg xl:[&:nth-child(6n)]:border-r-0"
     >
       {domain && <DomainIcon domain={domain} />}
       {children}
