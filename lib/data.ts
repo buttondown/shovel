@@ -5,18 +5,14 @@ import dns from "@/lib/loaders/dns";
 import html from "@/lib/loaders/html";
 import tranco from "@/lib/loaders/tranco";
 import records from "@/lib/parsers/dns";
-import fly from "@/lib/parsers/fly";
-import heroku from "@/lib/parsers/heroku";
+import headers from "@/lib/parsers/headers";
 import htmlRecords from "@/lib/parsers/html";
-import netlify from "@/lib/parsers/netlify";
-import php from "@/lib/parsers/php";
-import webflow from "@/lib/parsers/webflow";
 import { unique } from "@/lib/utils";
 import pino from "pino";
 import { Loader } from "./loaders/types";
 
 const LOADERS = [dns, html, dmarc, bimi, atproto, tranco];
-const PARSERS = [records, htmlRecords, netlify, webflow, php, fly, heroku];
+const PARSERS = [records, htmlRecords, headers];
 
 const logger = pino();
 

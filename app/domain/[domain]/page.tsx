@@ -2,7 +2,7 @@ import DomainIcon from "@/components/DomainIcon";
 import Grid from "@/components/Grid";
 import SectionHeader from "@/components/SectionHeader";
 import fetch from "@/lib/data";
-import { db } from "@/lib/db/connection";
+import { reify } from "@/lib/db/domains";
 import { GENRE_REGISTRY, REGISTRY } from "@/lib/services";
 import { Metadata, ResolvingMetadata } from "next";
 
@@ -73,43 +73,7 @@ export default async function Page({
   };
 }) {
   const data = await fetch(params.domain);
-  await db
-    .insertInto("domains")
-    .values({
-      domain: params.domain,
-      data: JSON.stringify(data),
-    })
-    .execute();
-
-  const existingTechnologies = await db
-    .selectFrom("detected_technologies")
-    .select("technology")
-    .where("domain", "=", params.domain)
-    .execute();
-
-  const existingTechSet = new Set(
-    existingTechnologies.map((tech) => tech.technology)
-  );
-
-  const newTechnologies = data.notes
-    .filter(
-      (note) =>
-        ["SERVICE"].includes(note.label) &&
-        !existingTechSet.has(note.metadata.value)
-    )
-    .map((note) => ({
-      domain: params.domain,
-      technology: note.metadata.value,
-      data: JSON.stringify(note.metadata),
-      creation_date: new Date().toISOString(),
-    }));
-
-  if (newTechnologies.length > 0) {
-    await db
-      .insertInto("detected_technologies")
-      .values(newTechnologies)
-      .execute();
-  }
+  await reify(params.domain, data);
 
   return (
     <div className="">

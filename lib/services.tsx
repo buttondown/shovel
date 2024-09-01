@@ -165,6 +165,9 @@ type Service = {
   urlSubstrings?: string[];
   substrings?: string[];
   defunct?: boolean;
+  headers?: {
+    [key: string]: string;
+  };
 };
 
 export const REGISTRY: {
@@ -801,6 +804,10 @@ export const REGISTRY: {
     url: "https://www.heroku.com",
     genre: "hosting",
     cname_values: ["herokudns.com"],
+    headers: {
+      key: "text/headers/nel",
+      value: "heroku-nel",
+    },
   },
   ovh: {
     identifier: "ovh",
@@ -823,6 +830,10 @@ export const REGISTRY: {
     genre: "web_framework",
     substrings: ["/js/webflow"],
     cname_values: ["proxy-ssl.webflow.com"],
+    headers: {
+      key: "text/headers/vary",
+      value: "x-wf-forwarded-proto",
+    },
   },
   loops: {
     identifier: "loops",
@@ -836,6 +847,10 @@ export const REGISTRY: {
     name: "Netlify",
     url: "https://www.netlify.com",
     genre: "hosting",
+    headers: {
+      key: "text/headers/server",
+      value: "Netlify",
+    },
   },
   fathom: {
     identifier: "fathom",
@@ -884,6 +899,10 @@ export const REGISTRY: {
     name: "PHP",
     url: "https://www.php.net",
     genre: "web_framework",
+    headers: {
+      key: "text/headers/set-cookie",
+      value: "PHPSESSID",
+    },
   },
   shopify: {
     identifier: "shopify",
@@ -1003,6 +1022,10 @@ export const REGISTRY: {
     url: "https://www.fly.io",
     genre: "hosting",
     cname_values: ["fly.dev"],
+    headers: {
+      key: "text/headers/fly-request-id",
+      value: "*",
+    },
   },
   mimecast: {
     identifier: "mimecast",
