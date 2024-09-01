@@ -134,8 +134,8 @@ const RSS_RULE = (html: string): Note[] => {
         const href = tag.getAttribute("href") || "";
         return [
             {
-                label: "RSS",
-                metadata: { url: href },
+                label: "SERVICE",
+                metadata: { url: href, value: "rss" },
             },
         ];
     }

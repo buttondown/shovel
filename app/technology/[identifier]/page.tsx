@@ -1,11 +1,8 @@
-import DomainIcon from "@/components/DomainIcon";
-import TechnologyPill from "@/components/TechnologyPill";
+import Grid from "@/components/Grid";
+import Header from "@/components/Header";
+import SectionHeader from "@/components/SectionHeader";
 import { db } from "@/lib/db/connection";
-import { REGISTRY } from "@/lib/services";
-
-const SectionHeader = ({ children }: { children: React.ReactNode }) => (
-  <h2 className="font-bold mt-4 text-gray-400">{children}</h2>
-);
+import { GENRE_REGISTRY, REGISTRY } from "@/lib/services";
 
 export default async function TechnologyPage({
   params,
@@ -17,6 +14,7 @@ export default async function TechnologyPage({
     .selectFrom("detected_technologies")
     .where("technology", "=", params.identifier)
     .selectAll()
+    .distinctOn("domain")
     .execute();
 
   const technologyCounts = await db
@@ -39,52 +37,65 @@ export default async function TechnologyPage({
 
   return (
     <div className="p-4 pt-8">
-      <a
-        href={`/technology/${params.identifier}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-block hover:bg-white/20 transition-colors font-black text-xl"
-      >
-        {service.name}
-      </a>
-      <div className="">
-        <div className="text-gray-400">{service.url}</div>
-        <div className="text-gray-400 capitalize">{service.genre}</div>
-      </div>
+      {service ? (
+        <>
+          <Header url={`/technology/${params.identifier}`}>
+            {service.name}
+          </Header>
+          <div className="flex flex-col items-start">
+            <a
+              className="text-gray-400 capitalize text-md inline-block hover:text-gray-300 hover:bg-white/10"
+              href={`/genre/${service.genre}`}
+            >
+              {GENRE_REGISTRY[service.genre].name}
+            </a>
+            <a
+              className="text-gray-400 text-sm hover:text-gray-300 hover:bg-white/10"
+              target="_blank"
+              href={service.url}
+            >
+              {service.url}
+            </a>
+          </div>
+        </>
+      ) : (
+        <div>Unknown technology</div>
+      )}
 
       <SectionHeader>Found on:</SectionHeader>
-      <ul className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mt-2">
+      <Grid.Container>
         {data.map((item) => (
-          <div
+          <Grid.Item
             key={item.domain}
-            className="flex flex-col items-center gap-2 p-4 bg-white/10 rounded-lg shadow-md border border-white/15 hover:bg-white/15 hover:border-white/20 transition-colors duration-200"
+            domain={item.domain}
+            url={`/${item.domain}`}
           >
-            <DomainIcon domain={item.domain} />
-            <a href={`/${item.domain}`} className="block whitespace-nowrap">
-              {item.domain}
-            </a>
-            <div className="text-gray-400 text-xs">
-              {item.creation_date.toLocaleDateString()}
-            </div>
-          </div>
+            <div className="text-xs">{item.domain}</div>
+          </Grid.Item>
         ))}
-        <li className="only:block hidden opacity-50 col-span-2">
-          No examples found
-        </li>
-      </ul>
+      </Grid.Container>
 
       <SectionHeader>
         Other technologies found on the same domains:
       </SectionHeader>
-      <ul className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mt-2">
+      <Grid.Container>
         {technologyCounts.map((item) => (
-          <TechnologyPill
+          <Grid.Item
             key={item.technology}
-            technology={item.technology}
-            subtitle={item.count.toString()}
-          />
+            domain={
+              item.technology in REGISTRY
+                ? new URL(REGISTRY[item.technology]?.url).hostname
+                : undefined
+            }
+            url={`/technology/${item.technology}`}
+          >
+            {item.technology in REGISTRY
+              ? REGISTRY[item.technology]?.name
+              : item.technology}
+            <div className="text-xs">{item.count}</div>
+          </Grid.Item>
         ))}
-      </ul>
+      </Grid.Container>
     </div>
   );
 }

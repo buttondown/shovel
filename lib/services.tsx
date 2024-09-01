@@ -1,29 +1,145 @@
 import Icon from "@/components/Icon";
 
-type Genre =
+export type Genre =
+  | "accounting"
   | "analytics"
-  | "email"
+  | "ats"
+  | "calendar"
   | "cdn"
+  | "cms"
+  | "crm"
+  | "design"
+  | "dns"
+  | "documentation"
+  | "ecommerce"
+  | "email"
+  | "everything"
+  | "form"
+  | "gdpr"
   | "hosting"
   | "marketing"
-  | "cms"
-  | "web_framework"
-  | "ecommerce"
-  | "payments"
-  | "support"
-  | "ats"
-  | "gdpr"
-  | "calendar"
-  | "form"
-  | "podcast"
   | "monitoring"
-  | "crm"
-  | "everything"
-  | "design"
+  | "open_web"
+  | "payments"
+  | "podcast"
   | "security"
-  | "dns"
+  | "social_media"
+  | "support"
   | "videos"
-  | "social_media";
+  | "web_framework";
+
+export const GENRE_REGISTRY: {
+  [key in Genre]: {
+    name: string;
+    description: string;
+  };
+} = {
+  open_web: {
+    name: "Open Web",
+    description: "Open web services",
+  },
+  accounting: {
+    name: "Accounting",
+    description: "Accounting services",
+  },
+  analytics: {
+    name: "Analytics",
+    description: "Tools for tracking and analyzing website or app usage",
+  },
+  ats: {
+    name: "Applicant Tracking System",
+    description: "Software for managing recruitment processes",
+  },
+  calendar: {
+    name: "Calendar",
+    description: "Tools for scheduling and managing events",
+  },
+  cdn: {
+    name: "Content Delivery Network",
+    description: "Services for distributing content globally",
+  },
+  cms: {
+    name: "Content Management System",
+    description: "Platforms for creating and managing digital content",
+  },
+  crm: {
+    name: "Customer Relationship Management",
+    description: "Systems for managing customer interactions and data",
+  },
+  design: {
+    name: "Design",
+    description: "Tools for graphic and web design",
+  },
+  dns: {
+    name: "Domain Name System",
+    description: "Services for managing domain names and DNS records",
+  },
+  documentation: {
+    name: "Documentation",
+    description: "Tools for creating and managing technical documentation",
+  },
+  ecommerce: {
+    name: "E-commerce",
+    description: "Platforms for online selling and shopping",
+  },
+  email: {
+    name: "Email",
+    description: "Services for email hosting and management",
+  },
+  everything: {
+    name: "Everything",
+    description: "Comprehensive platforms covering multiple categories",
+  },
+  form: {
+    name: "Form",
+    description: "Tools for creating and managing online forms",
+  },
+  gdpr: {
+    name: "GDPR Compliance",
+    description:
+      "Services for ensuring compliance with data protection regulations",
+  },
+  hosting: {
+    name: "Hosting",
+    description: "Services for hosting websites and applications",
+  },
+  marketing: {
+    name: "Marketing",
+    description: "Tools for digital marketing and promotion",
+  },
+  monitoring: {
+    name: "Monitoring",
+    description: "Services for tracking system performance and uptime",
+  },
+  payments: {
+    name: "Payments",
+    description: "Platforms for processing online payments",
+  },
+  podcast: {
+    name: "Podcast",
+    description: "Tools for creating and distributing podcasts",
+  },
+  security: {
+    name: "Security",
+    description: "Services for enhancing online security and protection",
+  },
+  social_media: {
+    name: "Social Media",
+    description: "Platforms for social networking and content sharing",
+  },
+  support: {
+    name: "Support",
+    description: "Tools for customer support and helpdesk management",
+  },
+  videos: {
+    name: "Videos",
+    description: "Platforms for hosting and streaming video content",
+  },
+  web_framework: {
+    name: "Web Framework",
+    description: "Frameworks for building web applications",
+  },
+};
 
 type Service = {
   identifier: string;
@@ -44,6 +160,19 @@ type Service = {
 export const REGISTRY: {
   [key: string]: Service;
 } = {
+  rss: {
+    identifier: "rss",
+    name: "RSS",
+    genre: "open_web",
+    url: "https://rss.com",
+  },
+  readme: {
+    identifier: "readme",
+    name: "ReadMe",
+    genre: "documentation",
+    url: "https://readme.com",
+    cname_values: ["ssl.readmessl.com"],
+  },
   formassembly: {
     identifier: "formassembly",
     name: "FormAssembly",
@@ -57,6 +186,13 @@ export const REGISTRY: {
     genre: "analytics",
     url: "https://geojs.io",
     substrings: ["geojs.io/v1"],
+  },
+  digitalocean: {
+    identifier: "digitalocean",
+    name: "DigitalOcean",
+    genre: "hosting",
+    url: "https://www.digitalocean.com",
+    ns_values: ["ns1.digitalocean.com", "ns2.digitalocean.com"],
   },
   github_pages: {
     identifier: "github_pages",
@@ -94,6 +230,26 @@ export const REGISTRY: {
     cname_values: ["umami.sh"],
     substrings: ["data-website-id"],
   },
+  nolt: {
+    identifier: "nolt",
+    name: "Nolt",
+    url: "https://nolt.io",
+    genre: "support",
+    cname_values: ["custom-domain.nolt.io"],
+  },
+  namecheap: {
+    identifier: "namecheap",
+    name: "Namecheap",
+    url: "https://www.namecheap.com",
+    genre: "dns",
+    ns_values: [
+      "ns1.namecheap.com",
+      "ns2.namecheap.com",
+      "ns3.namecheap.com",
+      "ns4.namecheap.com",
+    ],
+    spf_values: ["spf.efwd.registrar-servers.com"],
+  },
   fastmail: {
     identifier: "fastmail",
     name: "FastMail",
@@ -101,6 +257,13 @@ export const REGISTRY: {
     genre: "email",
     mx_values: ["smtp.messagingengine.com"],
     spf_values: ["spf.messagingengine.com"],
+  },
+  sailthru: {
+    identifier: "sailthru",
+    name: "Sailthru",
+    url: "https://www.sailthru.com",
+    genre: "marketing",
+    spf_values: ["aspmx.sailthru.com"],
   },
   dnsimple: {
     identifier: "dnsimple",
@@ -124,12 +287,26 @@ export const REGISTRY: {
     ns_values: ["wixdns.net"],
     substrings: ["Wix.com Website Builder"],
   },
+  zoho_invoices: {
+    identifier: "zoho_invoices",
+    name: "Zoho Invoices",
+    url: "https://www.zoho.com/invoices",
+    genre: "accounting",
+    spf_values: ["sender.zohoinvoice.com"],
+  },
   drip: {
     identifier: "drip",
     name: "Drip",
     url: "https://www.drip.com",
     genre: "email",
     substrings: ["data-drip"],
+  },
+  zoho_campaigns: {
+    identifier: "zoho_campaigns",
+    name: "Zoho Campaigns",
+    url: "https://www.zoho.com/campaigns",
+    genre: "marketing",
+    substrings: ["zcc.zoho.com"],
   },
   zoho_mail: {
     identifier: "zoho_mail",
@@ -138,6 +315,20 @@ export const REGISTRY: {
     genre: "email",
     mx_values: ["mx.zoho.com"],
     spf_values: ["zoho.com", "zeptomail.net"],
+  },
+  elasticemail: {
+    identifier: "elasticemail",
+    name: "ElasticEmail",
+    url: "https://www.elasticemail.com",
+    genre: "email",
+    spf_values: ["_spf.elasticemail.com"],
+  },
+  aws_s3: {
+    identifier: "aws_s3",
+    name: "AWS S3",
+    url: "https://aws.amazon.com/s3",
+    genre: "hosting",
+    substrings: ["s3.amazonaws.com", "NoSuchBucket"],
   },
   aws_ses: {
     identifier: "aws_ses",
@@ -413,12 +604,20 @@ export const REGISTRY: {
     url: "https://crisp.chat",
     substrings: ["CRISP_WEBSITE_ID"],
   },
+  adestra: {
+    identifier: "adestra",
+    name: "Adestra",
+    url: "https://www.adestra.com",
+    genre: "email",
+    spf_values: ["msgfocus.com"],
+  },
   helpscout: {
     identifier: "helpscout",
     name: "Help Scout",
     genre: "support",
     url: "https://www.helpscout.com",
     spf_values: ["helpscoutemail.com"],
+    cname_values: ["helpscoutdocs.com"],
   },
   heroku: {
     identifier: "heroku",
@@ -439,6 +638,7 @@ export const REGISTRY: {
     url: "https://www.webflow.com",
     genre: "web_framework",
     substrings: ["/js/webflow"],
+    cname_values: ["proxy-ssl.webflow.com"],
   },
   loops: {
     identifier: "loops",
@@ -508,6 +708,7 @@ export const REGISTRY: {
     genre: "ecommerce",
     cname_values: ["myshopify.com"],
     substrings: ["shopifycdn.com"],
+    spf_values: ["shops.shopify.com"],
   },
   rails: {
     identifier: "rails",
@@ -545,6 +746,27 @@ export const REGISTRY: {
     genre: "analytics",
     substrings: ["assets.apollo.io"],
   },
+  brevo: {
+    identifier: "brevo",
+    name: "Brevo",
+    url: "https://www.brevo.com",
+    genre: "email",
+    txt_values: ["brevo-code"],
+  },
+  adobe: {
+    identifier: "adobe",
+    name: "Adobe",
+    url: "https://www.adobe.com",
+    genre: "design",
+    txt_values: ["adobe-idp"],
+  },
+  namebright: {
+    identifier: "namebright",
+    name: "Namebright",
+    url: "https://www.namebright.com",
+    genre: "dns",
+    spf_values: ["namebrightmail.com"],
+  },
   zendesk: {
     identifier: "zendesk",
     name: "Zendesk",
@@ -552,7 +774,7 @@ export const REGISTRY: {
     genre: "support",
     txt_values: ["mail.zendesk.com"],
     substrings: ["zdassets.com"],
-    spf_values: ["mail.zendesk.com"],
+    spf_values: ["mail.zendesk.com", "_spf.zdsys.com"],
   },
   paddle: {
     identifier: "paddle",
@@ -575,6 +797,20 @@ export const REGISTRY: {
     url: "https://www.beehiiv.com",
     genre: "marketing",
     substrings: ["beehiiv.com"],
+  },
+  appsflyer: {
+    identifier: "appsflyer",
+    name: "AppsFlyer",
+    url: "https://www.appsflyer.com",
+    genre: "analytics",
+    cname_values: ["appsflyer.com"],
+  },
+  mimecast: {
+    identifier: "mimecast",
+    name: "Mimecast",
+    url: "https://www.mimecast.com",
+    genre: "email",
+    spf_values: ["eu._netblocks.mimecast.com"],
   },
   vwo: {
     identifier: "vwo",
@@ -651,6 +887,7 @@ export const REGISTRY: {
     url: "https://www.intercom.com",
     genre: "support",
     substrings: ["intercomSettings"],
+    spf_values: ["spf.mail.intercom.io"],
   },
   gatsby: {
     identifier: "gatsby",
@@ -828,6 +1065,21 @@ export const REGISTRY: {
     url: "https://www.tiktok.com",
     icon: <Icon.TikTok className="size-6" />,
     urlSubstrings: ["tiktok.com"],
+  },
+  greenhouse: {
+    identifier: "greenhouse",
+    name: "Greenhouse",
+    genre: "ats",
+    url: "https://www.greenhouse.io",
+    substrings: ["greenhouse.io"],
+    spf_values: ["mg-spf.greenhouse.io"],
+  },
+  netsuite: {
+    identifier: "netsuite",
+    name: "NetSuite",
+    genre: "crm",
+    url: "https://www.netsuite.com",
+    spf_values: ["mailsenders.netsuite.com"],
   },
   instagram: {
     identifier: "instagram",
@@ -1060,7 +1312,12 @@ export const REGISTRY: {
     name: "ConvertKit",
     genre: "email",
     url: "https://www.convertkit.com",
-    substrings: ["filekitcdn.com", "/convertkit/", "app.convertkit.com", ".ck.page"],
+    substrings: [
+      "filekitcdn.com",
+      "/convertkit/",
+      "app.convertkit.com",
+      ".ck.page",
+    ],
   },
   sparkpost: {
     identifier: "sparkpost",

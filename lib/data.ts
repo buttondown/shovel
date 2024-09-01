@@ -20,38 +20,38 @@ const PARSERS = [records, htmlRecords, netlify, webflow, php, fly, heroku];
 const logger = pino();
 
 const load = async (
-  domain: string,
-  loader: {
-    load: Loader;
-    name: string;
-  }
+    domain: string,
+    loader: {
+        load: Loader;
+        name: string;
+    }
 ) => {
-  logger.info({ message: "loader.started", domain, loader: loader.name });
-  const data = await loader.load(domain);
-  logger.info({ message: "loader.ended", domain, loader: loader.name });
-  return data;
+    logger.info({ message: "loader.started", domain, loader: loader.name });
+    const data = await loader.load(domain);
+    logger.info({ message: "loader.ended", domain, loader: loader.name });
+    return data;
 };
 
 const fetch = async (domain: string) => {
-  const data = [
-    ...(await Promise.all(LOADERS.map((loader) => load(domain, loader)))),
-    {
-      label: "URL",
-      data: [
+    const data = [
+        ...(await Promise.all(LOADERS.map((loader) => load(domain, loader)))),
         {
-          value: `${domain}`,
-          type: "text/url",
+            label: "URL",
+            data: [
+                {
+                    value: `${domain}`,
+                    type: "text/url",
+                },
+            ],
         },
-      ],
-    },
-  ];
+    ];
 
-  const notes = PARSERS.flatMap((parser) => parser.parse(data));
-  return {
-    domain,
-    data: unique(data),
-    notes: unique(notes),
-  };
+    const notes = PARSERS.flatMap((parser) => parser.parse(data));
+    return {
+        domain,
+        data: unique(data),
+        notes: unique(notes, (n) => n.metadata.value),
+    };
 };
 
 export default fetch;

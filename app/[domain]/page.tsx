@@ -1,4 +1,5 @@
 import DomainIcon from "@/components/DomainIcon";
+import Grid from "@/components/Grid";
 import SectionHeader from "@/components/SectionHeader";
 import fetch from "@/lib/data";
 import { db } from "@/lib/db/connection";
@@ -79,162 +80,143 @@ export default async function Page({
       >
         {params.domain}
       </a>
-      <div className="overflow-x-scroll max-w-screen">
-        <SectionHeader>DNS Records</SectionHeader>
-        <table className="">
-          <tbody>
-            {data.data
-              .filter((datum) => datum.label === "DNS")
-              .flatMap((datum) =>
-                datum.data.map((record) => (
-                  <tr key={record.value}>
-                    <td className="pr-4">{record.type}</td>
-                    <td className="whitespace-nowrap">{record.value}</td>
-                  </tr>
-                ))
-              )}
-          </tbody>
-        </table>
-        <SectionHeader>Subdomains</SectionHeader>
-        <ul className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mt-2">
-          {data.notes
-            .filter((datum) => datum.label === "SUBDOMAIN")
-            .map((note, i) => (
-              <Link href={`/${note.metadata.value}`} key={i}>
-                <li className="flex flex-col whitespace-nowrap items-center p-4 bg-white/10 rounded-lg shadow-md border border-white/15 hover:bg-white/15 hover:border-white/20 transition-colors duration-200">
-                  <div className="font-bold">{note.metadata.value}</div>
-                </li>
-              </Link>
-            ))}
-          <ul className="only:block hidden opacity-50 col-span-2">
-            No subdomains found
-          </ul>
-        </ul>
-        <SectionHeader>Services</SectionHeader>
-        <ul className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mt-2">
-          {data.notes
-            .filter((datum) => datum.label === "SERVICE")
-            .map((note, i) => (
-              <a href={`/technology/${note.metadata.value}`} key={i}>
-                <li
-                  key={i}
-                  className="flex flex-col items-center p-4 bg-white/10 rounded-lg shadow-md border border-white/15 hover:bg-white/15 hover:border-white/20 transition-colors duration-200"
-                >
-                  <ServicePill service={note.metadata.value} />
-                  <div className="mt-2 font-bold">
-                    {REGISTRY[note.metadata.value]?.name || note.metadata.value}
-                  </div>
-                  {(note.metadata.genre ||
-                    REGISTRY[note.metadata.value]?.genre) && (
-                    <div className="text-xs capitalize text-gray-400">
-                      {note.metadata.genre ||
-                        REGISTRY[note.metadata.value]?.genre}
-                    </div>
-                  )}
-                </li>
-              </a>
-            ))}
-          <ul className="only:block hidden opacity-50 col-span-2">
-            No services found
-          </ul>
-        </ul>
-        <SectionHeader>Social media</SectionHeader>
-        <ul className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mt-2">
-          {data.notes
-            .filter((datum) => datum.label === "SERVICE")
-            .filter(
-              (note) => REGISTRY[note.metadata.value]?.genre === "social_media"
-            )
-            .map((note, i) => (
-              <li
-                key={i}
-                className="flex flex-col items-center p-4 bg-white/10 rounded-lg shadow-md border border-white/15 hover:bg-white/15 hover:border-white/20 transition-colors duration-200"
-              >
-                <ServicePill service={note.metadata.value} />
-                <div className="mt-2 font-bold">{note.metadata.username}</div>
-                <div className="text-xs text-gray-400">
-                  {note.metadata.value}
-                </div>
+      <SectionHeader>DNS Records</SectionHeader>
+      <table className="">
+        <tbody>
+          {data.data
+            .filter((datum) => datum.label === "DNS")
+            .flatMap((datum) =>
+              datum.data.map((record) => (
+                <tr key={record.value}>
+                  <td className="pr-4">{record.type}</td>
+                  <td className="whitespace-nowrap">{record.value}</td>
+                </tr>
+              ))
+            )}
+        </tbody>
+      </table>
+      <SectionHeader>Subdomains</SectionHeader>
+      <ul className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mt-2">
+        {data.notes
+          .filter((datum) => datum.label === "SUBDOMAIN")
+          .map((note, i) => (
+            <Link href={`/${note.metadata.value}`} key={i}>
+              <li className="flex flex-col whitespace-nowrap items-center p-4 bg-white/10 rounded-lg shadow-md border border-white/15 hover:bg-white/15 hover:border-white/20 transition-colors duration-200">
+                <div className="font-bold">{note.metadata.value}</div>
               </li>
-            ))}
-          <ul className="only:block hidden opacity-50 col-span-2">
-            No social media accounts found
-          </ul>
+            </Link>
+          ))}
+        <ul className="only:block hidden opacity-50 col-span-2">
+          No subdomains found
         </ul>
-        <SectionHeader>DMARC</SectionHeader>
-        <ul>
-          {data.data
-            .filter((datum) => datum.label === "DMARC")
-            .flatMap((datum) =>
-              datum.data.map((record) => (
-                <li key={record.value}>{record.value}</li>
-              ))
-            )}
-          <ul className="only:block hidden opacity-50">
-            No DMARC record found
-          </ul>
+      </ul>
+      <SectionHeader>Services</SectionHeader>
+      <Grid.Container>
+        {data.notes
+          .filter((datum) => datum.label === "SERVICE")
+          .filter((note) => REGISTRY[note.metadata.value])
+          .map((note, i) => (
+            <Grid.Item
+              key={i}
+              url={`/technology/${note.metadata.value}`}
+              domain={new URL(REGISTRY[note.metadata.value]?.url).hostname}
+            >
+              {REGISTRY[note.metadata.value]?.name}
+            </Grid.Item>
+          ))}
+      </Grid.Container>
+      <SectionHeader>Social media</SectionHeader>
+      <ul className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mt-2">
+        {data.notes
+          .filter((datum) => datum.label === "SERVICE")
+          .filter(
+            (note) => REGISTRY[note.metadata.value]?.genre === "social_media"
+          )
+          .map((note, i) => (
+            <li
+              key={i}
+              className="flex flex-col items-center p-4 bg-white/10 rounded-lg shadow-md border border-white/15 hover:bg-white/15 hover:border-white/20 transition-colors duration-200"
+            >
+              <ServicePill service={note.metadata.value} />
+              <div className="mt-2 font-bold">{note.metadata.username}</div>
+              <div className="text-xs text-gray-400">{note.metadata.value}</div>
+            </li>
+          ))}
+        <ul className="only:block hidden opacity-50 col-span-2">
+          No social media accounts found
         </ul>
-        <SectionHeader>BIMI</SectionHeader>
-        <ul>
-          {data.data
-            .filter((datum) => datum.label === "BIMI")
-            .flatMap((datum) =>
-              datum.data.map((record) => (
-                <li key={record.value}>{record.value}</li>
-              ))
-            )}
-          <ul className="only:block hidden opacity-50">No BIMI record found</ul>
-        </ul>
-        <SectionHeader>ATPROTO</SectionHeader>
-        <ul>
-          {data.data
-            .filter((datum) => datum.label === "ATPROTO")
-            .flatMap((datum) =>
-              datum.data.map((record) => (
-                <li key={record.value}>{record.value}</li>
-              ))
-            )}
-          <ul className="only:block hidden opacity-50">
-            No ATPROTO record found
-          </ul>
-        </ul>
-        <SectionHeader>JSON+LD</SectionHeader>
-        <ul>
-          {data.notes.find((datum) => datum.label === "JSON+LD")?.metadata && (
-            <pre className="whitespace-pre max-w-full overflow-x-scroll">
-              {JSON.stringify(
-                JSON.parse(
-                  data.notes.find((datum) => datum.label === "JSON+LD")
-                    ?.metadata.value || "{}"
-                ),
-                null,
-                2
-              )}
-            </pre>
+      </ul>
+      <SectionHeader>DMARC</SectionHeader>
+      <ul>
+        {data.data
+          .filter((datum) => datum.label === "DMARC")
+          .flatMap((datum) =>
+            datum.data.map((record) => (
+              <li key={record.value}>{record.value}</li>
+            ))
           )}
-          <ul className="only:block hidden opacity-50">
-            No JSON+LD record found
-          </ul>
+        <ul className="only:block hidden opacity-50">No DMARC record found</ul>
+      </ul>
+      <SectionHeader>BIMI</SectionHeader>
+      <ul>
+        {data.data
+          .filter((datum) => datum.label === "BIMI")
+          .flatMap((datum) =>
+            datum.data.map((record) => (
+              <li key={record.value}>{record.value}</li>
+            ))
+          )}
+        <ul className="only:block hidden opacity-50">No BIMI record found</ul>
+      </ul>
+      <SectionHeader>ATPROTO</SectionHeader>
+      <ul>
+        {data.data
+          .filter((datum) => datum.label === "ATPROTO")
+          .flatMap((datum) =>
+            datum.data.map((record) => (
+              <li key={record.value}>{record.value}</li>
+            ))
+          )}
+        <ul className="only:block hidden opacity-50">
+          No ATPROTO record found
         </ul>
-        <SectionHeader>Notes</SectionHeader>
-        <ul>
-          {data.notes
-            .filter((note) => note.label !== "JSON+LD")
-            .filter((note) => note.label !== "SOCIAL_MEDIA")
-            .filter((note) => note.label !== "SERVICE")
-            .filter((note) => note.label !== "SUBDOMAIN")
-            .map((note, i) => (
-              <li key={i}>
-                <ServicePill service={note.label} />{" "}
-                {Object.keys(note.metadata).length > 0 &&
-                  JSON.stringify(note.metadata)}
-              </li>
-            ))}
-          <ul className="only:block hidden opacity-50">
-            No additional notes found
-          </ul>
+      </ul>
+      <SectionHeader>JSON+LD</SectionHeader>
+      <ul>
+        {data.notes.find((datum) => datum.label === "JSON+LD")?.metadata && (
+          <pre className="whitespace-pre max-w-full overflow-x-scroll">
+            {JSON.stringify(
+              JSON.parse(
+                data.notes.find((datum) => datum.label === "JSON+LD")?.metadata
+                  .value || "{}"
+              ),
+              null,
+              2
+            )}
+          </pre>
+        )}
+        <ul className="only:block hidden opacity-50">
+          No JSON+LD record found
         </ul>
-      </div>
+      </ul>
+      <SectionHeader>Notes</SectionHeader>
+      <ul>
+        {data.notes
+          .filter((note) => note.label !== "JSON+LD")
+          .filter((note) => note.label !== "SOCIAL_MEDIA")
+          .filter((note) => note.label !== "SERVICE")
+          .filter((note) => note.label !== "SUBDOMAIN")
+          .map((note, i) => (
+            <li key={i}>
+              <ServicePill service={note.label} />{" "}
+              {Object.keys(note.metadata).length > 0 &&
+                JSON.stringify(note.metadata)}
+            </li>
+          ))}
+        <ul className="only:block hidden opacity-50">
+          No additional notes found
+        </ul>
+      </ul>
     </div>
   );
 }
