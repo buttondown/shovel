@@ -170,6 +170,20 @@ type Service = {
 export const REGISTRY: {
   [key: string]: Service;
 } = {
+  headway: {
+    identifier: "headway",
+    name: "Headway",
+    genre: "support",
+    url: "https://headwayapp.co",
+    cname_values: ["headwayapp.co"],
+  },
+  skysnag: {
+    identifier: "skysnag",
+    name: "Skysnag",
+    genre: "security",
+    url: "https://skysnag.com",
+    spf_values: ["_spf.skysnag.com"],
+  },
   constantcontact: {
     identifier: "constantcontact",
     name: "Constant Contact",

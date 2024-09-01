@@ -68,6 +68,18 @@ export default async function TechnologyPage({
     .orderBy("count", "desc")
     .execute();
 
+  const trancoCount = await db
+    .selectFrom("tranco")
+    .innerJoin(
+      "detected_technologies",
+      "tranco.domain",
+      "detected_technologies.domain"
+    )
+    .where("detected_technologies.technology", "=", params.identifier)
+    .select(db.fn.count("tranco.domain").as("count"))
+    .executeTakeFirst()
+    .then((result) => Number(result?.count || 0));
+
   return (
     <div className="">
       {service ? (
@@ -77,7 +89,7 @@ export default async function TechnologyPage({
           </Header>
           <div className="flex flex-col items-start">
             <a
-              className="text-gray-400 capitalize text-md inline-block hover:text-gray-300 hover:bg-white/10"
+              className="text-gray-400 capitalize text-sm inline-block hover:text-gray-300 hover:bg-white/10"
               href={`/genre/${service.genre}`}
             >
               {GENRE_REGISTRY[service.genre].name}
@@ -89,6 +101,14 @@ export default async function TechnologyPage({
             >
               {service.url}
             </a>
+            <div className="text-sm text-gray-400">
+              {trancoCount} notable domains (
+              {(
+                (trancoCount * 100) /
+                (data.data.length + data.moreCount)
+              ).toFixed(2)}
+              %) / {data.data.length + data.moreCount} total domains
+            </div>
           </div>
         </>
       ) : (

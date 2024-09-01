@@ -30,7 +30,7 @@ const GENERIC_SOCIAL_MEDIA_PROVIDER = (html: string) => {
                     {
                         label: "SERVICE",
                         metadata: {
-                            username,
+                            username: username.split("?")[0],
                             value: potentialMatch?.identifier,
                         },
                     },
@@ -115,7 +115,7 @@ const JSONLD_RULE = (html: string) => {
                             {
                                 label: "SOCIAL_MEDIA",
                                 metadata: {
-                                    service: service.identifier,
+                                    service: service.identifier.split("?")[0],
                                     username: url.split("/").pop(),
                                 },
                             },
