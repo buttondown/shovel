@@ -1,6 +1,6 @@
 import { parse as parseHTML } from "node-html-parser";
 import { REGISTRY } from "../services";
-import { Note, Parser } from "./types";
+import { DetectedTechnology, Parser } from "./types";
 
 const GENERIC_SOCIAL_MEDIA_PROVIDER = (html: string) => {
     const socialMediaProviders = Object.values(REGISTRY).filter(
@@ -28,10 +28,9 @@ const GENERIC_SOCIAL_MEDIA_PROVIDER = (html: string) => {
                 const username = match[match.length - 1];
                 return [
                     {
-                        label: "SERVICE",
+                        identifier: potentialMatch?.identifier,
                         metadata: {
                             username: username.split("?")[0],
-                            value: potentialMatch?.identifier,
                         },
                     },
                 ];
@@ -50,8 +49,8 @@ const TWITTER_RULE = (html: string) => {
         const usernameWithoutQuery = username.split("?")[0];
         return [
             {
-                label: "SOCIAL_MEDIA",
-                metadata: { username: usernameWithoutQuery, service: "twitter" },
+                identifier: "twitter",
+                metadata: { username: usernameWithoutQuery },
             },
         ];
     }
@@ -67,8 +66,8 @@ const TWITTER_RULE = (html: string) => {
         const usernameWithoutQuery = username.split("?")[0];
         return [
             {
-                label: "SOCIAL_MEDIA",
-                metadata: { username: usernameWithoutQuery, service: "witter" },
+                identifier: "twitter",
+                metadata: { username: usernameWithoutQuery },
             },
         ];
     }
@@ -82,7 +81,7 @@ const EMAIL_ADDRESS_RULE = (html: string) => {
         const username = match[1];
         return [
             {
-                label: "Email",
+                identifier: "email",
                 metadata: { username },
             },
         ];
@@ -98,7 +97,7 @@ const JSONLD_RULE = (html: string) => {
         const text = tag.text;
         const baseRule = [
             {
-                label: "JSON+LD",
+                identifier: "jsonld",
                 metadata: { value: text },
             },
             ...(JSON.parse(text)
@@ -113,9 +112,8 @@ const JSONLD_RULE = (html: string) => {
                         }
                         return [
                             {
-                                label: "SOCIAL_MEDIA",
+                                identifier: service.identifier.split("?")[0],
                                 metadata: {
-                                    service: service.identifier.split("?")[0],
                                     username: url.split("/").pop(),
                                 },
                             },
@@ -128,14 +126,14 @@ const JSONLD_RULE = (html: string) => {
     return [];
 };
 
-const RSS_RULE = (html: string): Note[] => {
+const RSS_RULE = (html: string): DetectedTechnology[] => {
     const tag = parseHTML(html).querySelector("link[type='application/rss+xml']");
     if (tag) {
         const href = tag.getAttribute("href") || "";
         return [
             {
-                label: "SERVICE",
-                metadata: { url: href, value: "rss" },
+                identifier: "rss",
+                metadata: { url: href },
             },
         ];
     }
@@ -145,7 +143,7 @@ const RSS_RULE = (html: string): Note[] => {
         const href = tag2.getAttribute("href") || "";
         return [
             {
-                label: "RSS",
+                identifier: "rss",
                 metadata: { url: href },
             },
         ];
@@ -169,14 +167,16 @@ const SUBDOMAIN_RULE = (html: string, domain: string) => {
         }))
         .filter((v, i, a) => a.findIndex((t) => t.value === v.value) === i);
     return subdomains.map((subdomain) => ({
-        label: "SUBDOMAIN",
+        // Subdomains aren't a technology, but it's kind of a weird case. We do need
+        // a better abstraction here, though.
+        identifier: "subdomain",
         metadata: {
             value: subdomain.value,
         },
     }));
 };
 
-const RULES: ((html: string, domain: string) => Note[])[] = [
+const RULES: ((html: string, domain: string) => DetectedTechnology[])[] = [
     ...Object.values(REGISTRY).map((service) => {
         return (html: string, domain: string) => {
             const potentialMatches = service.substrings?.filter((substring) =>
@@ -185,7 +185,7 @@ const RULES: ((html: string, domain: string) => Note[])[] = [
             return (
                 potentialMatches?.map(() => {
                     return {
-                        label: "SERVICE",
+                        identifier: service.identifier,
                         metadata: {
                             value: service.identifier,
                             via: "URL",

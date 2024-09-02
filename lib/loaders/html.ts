@@ -1,39 +1,59 @@
+import puppeteer from "puppeteer";
 import { Loader } from "./types";
 
 const load: Loader = async (domain: string) => {
-  try {
-    // Some domains, like `nerdy.dev`, do not return valid responses from HTTP 1.1 requests.
-    // We should rip out the fetch-h2 dependency at some point soon, but.. not high on the list
-    // of priorities.
-    const response = await fetch(`https://${domain}`, {
-      signal: AbortSignal.timeout(5000),
-    });
-    const html = await response.text();
-    const headerKeys = Array.from(response.headers.keys());
-    return {
-      label: "HTML",
-      data: [
-        {
-          value: html,
-          type: "text/html",
-        },
-        ...headerKeys.map((key) => ({
-          value: response.headers.get(key) || "",
-          type: `text/headers/${key}`,
-        })),
-      ],
-    };
-  } catch (error) {
-    return {
-      label: "HTML",
-      data: [
-        {
-          value: "Error loading HTML",
-          type: "text/error",
-        },
-      ],
-    };
-  }
+    try {
+        if (process.env.DISABLE_PUPPETEER !== "true") {
+            const browser = await puppeteer.launch();
+            const page = await browser.newPage();
+            const response = await page.goto(`https://${domain}`, {
+                waitUntil: "networkidle0",
+            });
+            const html = await page.content();
+            const headers = await response?.headers();
+            await browser.close();
+            return {
+                label: "HTML",
+                data: [
+                    {
+                        value: html,
+                        type: "text/html",
+                    },
+                    ...Object.entries(headers || {}).map(([key, value]) => ({
+                        value: value || "",
+                        type: `text/headers/${key}`,
+                    })),
+                ],
+            };
+        } else {
+            const response = await fetch(`https://${domain}`);
+            const html = await response.text();
+            const headers = response.headers;
+            return {
+                label: "HTML",
+                data: [
+                    {
+                        value: html,
+                        type: "text/html",
+                    },
+                    ...Object.entries(headers).map(([key, value]) => ({
+                        value: value[0] || "",
+                        type: `text/headers/${key}`,
+                    })),
+                ],
+            };
+        }
+    } catch (error) {
+        return {
+            label: "HTML",
+            data: [
+                {
+                    value: "Error loading HTML",
+                    type: "text/error",
+                },
+            ],
+        };
+    }
 };
 
 const exports = { load, name: "html" };

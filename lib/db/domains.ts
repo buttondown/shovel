@@ -20,16 +20,15 @@ export const reify = async (domain: string, data: Awaited<ReturnType<typeof fetc
         existingTechnologies.map((tech) => tech.technology)
     );
 
-    const newTechnologies = data.notes
+    const newTechnologies = data.detected_technologies
         .filter(
-            (note) =>
-                ["SERVICE"].includes(note.label) &&
-                !existingTechSet.has(note.metadata.value)
+            (technology) =>
+                !existingTechSet.has(technology.identifier)
         )
-        .map((note) => ({
+        .map((technology) => ({
             domain: domain,
-            technology: note.metadata.value,
-            data: JSON.stringify(note.metadata),
+            technology: technology.identifier,
+            data: JSON.stringify(technology.metadata),
             creation_date: new Date().toISOString(),
         }));
 

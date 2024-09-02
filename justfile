@@ -6,3 +6,6 @@ install:
 
 bootstrap:
   python3 scripts/bootstrap.py
+
+test:
+  PINO_LEVEL=silent bun test

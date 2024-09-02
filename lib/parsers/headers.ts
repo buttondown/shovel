@@ -6,13 +6,11 @@ const parse: Parser = (data) => {
         .flatMap((datum) => datum.data)
         .flatMap((d) => {
             const servicesWithHeaders = Object.values(REGISTRY).filter((service) => service.headers);
-            return servicesWithHeaders.filter((service) => service.headers?.key === d.type && (service.headers?.value === '*' || service.headers?.value === d.value))
+            return servicesWithHeaders.filter((service) => d.type.includes(service.headers?.key || '') && (service.headers?.value === '*' || d.value.includes(service.headers?.value || '')))
         })
         .map((service) => ({
-            label: "SERVICE",
+            identifier: service.identifier,
             metadata: {
-                value: service.identifier,
-                genre: service.genre,
                 via: "headers",
             },
         }));

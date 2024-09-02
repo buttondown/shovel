@@ -1,6 +1,5 @@
 import fetch from "@/lib/data";
 import { reify } from "@/lib/db/domains";
-import { REGISTRY } from "@/lib/services";
 
 const SOCIAL_MEDIA_SERVICES = [
     "facebook",
@@ -26,8 +25,8 @@ export async function GET(
         domain: context.params.domain,
         records: rawResponse.data.filter((datum) => datum.label === "DNS").flatMap((datum) => datum.data),
         ranking: rawResponse.data.find((datum) => datum.label === "Tranco")?.data[0]?.value,
-        services: rawResponse.notes.filter((note) => note.label === "SERVICE").map((note) => note.metadata.value).filter((service) => service in REGISTRY).sort(),
-        subdomains: rawResponse.notes.filter((note) => note.label === "SUBDOMAIN").map((note) => note.metadata.value).sort(),
-        social_media: Object.fromEntries(SOCIAL_MEDIA_SERVICES.map(service => [service, rawResponse.notes.find((note) => note.label === "SERVICE" && note.metadata.value === service)?.metadata.username]))
+        services: rawResponse.detected_technologies.filter((technology) => technology.identifier !== "subdomain").map((technology) => technology.identifier).sort(),
+        subdomains: rawResponse.detected_technologies.filter((technology) => technology.identifier === "subdomain").map((technology) => technology.metadata.value).sort(),
+        social_media: Object.fromEntries(SOCIAL_MEDIA_SERVICES.map(service => [service, rawResponse.detected_technologies.find((note) => note.identifier === service)?.metadata.username]))
     });
 }

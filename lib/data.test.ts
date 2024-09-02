@@ -1,76 +1,76 @@
 import fetch from "@/lib/data";
 import { describe, expect, test } from "vitest";
+import { DetectedTechnology } from "./parsers/types";
 
-const DOMAIN_TO_EXPECTED_DATA = {
-  "formkeep.com": [
-    {
-      label: "SOCIAL_MEDIA",
-      metadata: {
-        username: "formkeep.js",
-        service: "github",
-      },
-    },
-    {
-      label: "SOCIAL_MEDIA",
-      metadata: { username: "formkeep", service: "linkedin" },
-    },
-  ],
-  "savvycal.com": [
-    {
-      label: "SOCIAL_MEDIA",
-      metadata: { username: "savvycal", service: "twitter" },
-    },
-    {
-      label: "RSS",
-      metadata: { url: "https://savvycal.com/feed.xml" },
-    },
-    {
-      label: "SERVICE",
-      metadata: { value: "rewardful", via: "URL" },
-    },
-  ],
-  "milled.com": [
-    {
-      label: "SERVICE",
-      metadata: { value: "email_octopus", via: "SPF" },
-    },
-  ],
-  "buttondown.email": [
-    {
-      label: "SOCIAL_MEDIA",
-      metadata: { username: "buttondown", service: "github" },
-    },
-  ],
-  "zed.dev": [
-    {
-      label: "SOCIAL_MEDIA",
-      metadata: { username: "zeddotdev", service: "twitter" },
-    },
-  ],
-  "bytereview.co.uk": [
-    {
-      label: "SOCIAL_MEDIA",
-      metadata: { username: "@bytereview", service: "tiktok" },
-    },
-    {
-      label: "SOCIAL_MEDIA",
-      metadata: { username: "bytereview", service: "twitter" },
-    },
-  ],
+const DOMAIN_TO_EXPECTED_DATA: Record<string, DetectedTechnology[]> = {
+    "formkeep.com": [
+        {
+            identifier: "github",
+            metadata: {
+                username: "formkeep.js",
+            },
+        },
+        {
+            identifier: "linkedin",
+            metadata: { username: "formkeep" },
+        },
+    ],
+    "savvycal.com": [
+        {
+            identifier: "twitter",
+            metadata: { username: "savvycal" },
+        },
+        {
+            identifier: "rss",
+            metadata: { url: "https://savvycal.com/feed.xml" },
+        },
+        {
+            identifier: "rewardful",
+            metadata: { value: "rewardful", via: "URL" },
+        },
+    ],
+    "milled.com": [
+        {
+            identifier: "email_octopus",
+            metadata: { via: "SPF" },
+        },
+    ],
+    "buttondown.email": [
+        {
+            identifier: "github",
+            metadata: { username: "buttondown" },
+        },
+    ],
+    "zed.dev": [
+        {
+            identifier: "twitter",
+            metadata: { username: "zeddotdev" },
+        },
+    ],
+    "bytereview.co.uk": [
+        {
+            identifier: "tiktok",
+            metadata: { username: "@bytereview" },
+        },
+        {
+            identifier: "twitter",
+            metadata: { username: "bytereview" },
+        },
+    ],
 };
 
 describe("fetching", () => {
-  Object.entries(DOMAIN_TO_EXPECTED_DATA).forEach(([domain, expectedData]) => {
-    expectedData.forEach((data) => {
-      test(`fetches ${data.label} for ${domain}`, async () => {
-        const { notes } = await fetch(domain);
-        expect(notes).toContainEqual(data);
-      });
+    Object.entries(DOMAIN_TO_EXPECTED_DATA).forEach(([domain, expectedData]) => {
+        expectedData.forEach((data) => {
+            test(`fetches ${data.identifier} for ${domain}`, async () => {
+                const { detected_technologies } = await fetch(domain);
+                expect(detected_technologies).toContainEqual(data);
+            });
+        });
     });
-  });
 
-  test("deduping identical records", async () => {
-    const { notes } = await fetch("zed.dev");
-    expect(notes.filter((n) => n.label === "SOCIAL_MEDIA")).toHaveLength(1);
-  });
+    test("deduping identical records", async () => {
+        const { detected_technologies } = await fetch("zed.dev");
+        expect(detected_technologies.filter((tech) => tech.identifier === "twitter")).toHaveLength(1);
+    });
 });

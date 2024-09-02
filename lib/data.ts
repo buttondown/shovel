@@ -7,12 +7,15 @@ import headers from "@/lib/parsers/headers";
 import htmlRecords from "@/lib/parsers/html";
 import { unique } from "@/lib/utils";
 import pino from "pino";
-import { Loader } from "./loaders/types";
+import { Loader, RecordGroup } from "./loaders/types";
+import { DetectedTechnology } from "./parsers/types";
 
 const LOADERS = [dns, html, dns_prefix, tranco];
 const PARSERS = [records, htmlRecords, headers];
 
-const logger = pino();
+const logger = pino({
+    level: process.env.PINO_LEVEL || "warn",
+});
 
 const load = async (
     domain: string,
@@ -27,7 +30,11 @@ const load = async (
     return data;
 };
 
-const fetch = async (domain: string) => {
+const fetch = async (domain: string): Promise<{
+    domain: string;
+    data: RecordGroup[];
+    detected_technologies: DetectedTechnology[];
+}> => {
     const data = [
         ...(await Promise.all(LOADERS.map((loader) => load(domain, loader)))),
         {
@@ -41,22 +48,19 @@ const fetch = async (domain: string) => {
         },
     ];
 
-    const notes = PARSERS.flatMap((parser) => parser.parse(data));
+    const detected_technologies = PARSERS.flatMap((parser) => parser.parse(data));
     return {
         domain,
         data: unique(data),
-        notes: [
-            ...unique(notes, (n) => n.metadata.value),
+        detected_technologies: [
+            ...unique(detected_technologies, (n) => n.identifier === "subdomain" ? n.metadata.value : n.identifier),
             ...data
                 .filter((d) => d.label === "SERVICE")
                 .flatMap((d) => d.data)
                 .map((d) => {
                     return {
-                        label: "SERVICE",
-                        metadata: {
-                            value: d.type,
-                            username: "",
-                        },
+                        identifier: d.type,
+                        metadata: {},
                     };
                 }),
         ],

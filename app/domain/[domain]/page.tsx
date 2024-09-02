@@ -104,8 +104,8 @@ export default async function Page({
         <ul className="only:block hidden opacity-50">No Tranco record found</ul>
       </ul>
       <Grid.Container title="Subdomains">
-        {data.notes
-          .filter((datum) => datum.label === "SUBDOMAIN")
+        {data.detected_technologies
+          .filter((datum) => datum.identifier === "subdomain")
           .map((note, i) => (
             <Grid.Item key={i} url={`/domain/${note.metadata.value}`}>
               {note.metadata.value}
@@ -113,52 +113,52 @@ export default async function Page({
           ))}
       </Grid.Container>
       <Grid.Container title="Services">
-        {data.notes
-          .filter((datum) => datum.label === "SERVICE")
-          .filter((note) => REGISTRY[note.metadata.value])
+        {data.detected_technologies
+          .filter((datum) => datum.identifier !== "subdomain")
+          .filter((note) => REGISTRY[note.identifier])
           .map((note, i) => (
             <Grid.Item
               key={i}
-              url={`/technology/${note.metadata.value}`}
-              domain={new URL(REGISTRY[note.metadata.value]?.url).hostname}
+              url={`/technology/${note.identifier}`}
+              domain={new URL(REGISTRY[note.identifier]?.url).hostname}
             >
-              <div>{REGISTRY[note.metadata.value]?.name}</div>
+              <div>{REGISTRY[note.identifier]?.name}</div>
               <div className="text-gray-400 text-sm">
-                {GENRE_REGISTRY[REGISTRY[note.metadata.value]?.genre].name}
+                {GENRE_REGISTRY[REGISTRY[note.identifier]?.genre].name}
               </div>
             </Grid.Item>
           ))}
       </Grid.Container>
       <Grid.Container title="Social media">
-        {data.notes
-          .filter((datum) => datum.label === "SERVICE")
-          .filter(
-            (note) => REGISTRY[note.metadata.value]?.genre === "social_media"
-          )
+        {data.detected_technologies
+          .filter((note) => REGISTRY[note.identifier]?.genre === "social_media")
           .map((note, i) => (
             <Grid.Item
               key={i}
               url={generateURLForSocialMedia(
-                note.metadata.value,
+                note.identifier,
                 note.metadata.username
               )}
-              domain={new URL(REGISTRY[note.metadata.value]?.url).hostname}
+              domain={new URL(REGISTRY[note.identifier]?.url).hostname}
             >
               <div>{note.metadata.username}</div>
               <div className="text-gray-400 text-sm">
-                {REGISTRY[note.metadata.value]?.name}
+                {REGISTRY[note.identifier]?.name}
               </div>
             </Grid.Item>
           ))}
       </Grid.Container>
       <SectionHeader>JSON+LD</SectionHeader>
       <ul>
-        {data.notes.find((datum) => datum.label === "JSON+LD")?.metadata && (
+        {data.detected_technologies.find(
+          (datum) => datum.identifier === "jsonld"
+        )?.metadata && (
           <pre className="whitespace-pre max-w-full overflow-x-scroll">
             {JSON.stringify(
               JSON.parse(
-                data.notes.find((datum) => datum.label === "JSON+LD")?.metadata
-                  .value || "{}"
+                data.detected_technologies.find(
+                  (datum) => datum.identifier === "jsonld"
+                )?.metadata.value || "{}"
               ),
               null,
               2

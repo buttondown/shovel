@@ -181,9 +181,7 @@ type Service = {
   dns_prefix?: string;
 };
 
-export const REGISTRY: {
-  [key: string]: Service;
-} = {
+export const REGISTRY: { [key in string]: Service } = {
   webex: {
     identifier: "webex",
     name: "Webex",
@@ -552,6 +550,17 @@ export const REGISTRY: {
     url: "https://sparkloop.app",
     genre: "email",
     substrings: ["sparkloop.app"],
+  },
+  laravel: {
+    identifier: "laravel",
+    name: "Laravel",
+    url: "https://laravel.com",
+    genre: "web_framework",
+    substrings: ["LivewireScript"],
+    headers: {
+      key: "set-cookie",
+      value: "laravel_session",
+    },
   },
   tapfiliate: {
     identifier: "tapfiliate",
@@ -1634,13 +1643,6 @@ export const REGISTRY: {
     url: "https://www.foundryco.com",
     substrings: ["triblio.io"],
   },
-  laravel: {
-    identifier: "laravel",
-    name: "Laravel",
-    genre: "web_framework",
-    substrings: ["livewireScriptConfig"],
-    url: "https://www.laravel.com",
-  },
   firebase: {
     identifier: "firebase",
     name: "Firebase",
@@ -1903,4 +1905,4 @@ export const REGISTRY: {
     url: "https://www.maxio.com",
     spf_values: ["mailer.chargify.com"],
   },
-};
+} as const;
