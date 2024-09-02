@@ -24,6 +24,7 @@ export async function GET(
 
     return Response.json({
         domain: context.params.domain,
+        records: rawResponse.data.filter((datum) => datum.label === "DNS").flatMap((datum) => datum.data),
         ranking: rawResponse.data.find((datum) => datum.label === "Tranco")?.data[0]?.value,
         services: rawResponse.notes.filter((note) => note.label === "SERVICE").map((note) => note.metadata.value).filter((service) => service in REGISTRY).sort(),
         subdomains: rawResponse.notes.filter((note) => note.label === "SUBDOMAIN").map((note) => note.metadata.value).sort(),

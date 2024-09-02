@@ -10,10 +10,9 @@ export type Genre =
   | "cms"
   | "crm"
   | "design"
-  | "dns"
-  | "search"
-  | "documentation"
   | "devtools"
+  | "dns"
+  | "documentation"
   | "ecommerce"
   | "email"
   | "everything"
@@ -25,8 +24,10 @@ export type Genre =
   | "open_web"
   | "payments"
   | "podcast"
+  | "search"
   | "security"
   | "social_media"
+  | "static_site_generator"
   | "support"
   | "videos"
   | "web_framework";
@@ -37,6 +38,10 @@ export const GENRE_REGISTRY: {
     description: string;
   };
 } = {
+  static_site_generator: {
+    name: "Static Site Generator",
+    description: "Static site generators",
+  },
   devtools: {
     name: "Developer Tools",
     description: "Developer tools",
@@ -240,6 +245,13 @@ export const REGISTRY: {
     genre: "crm",
     url: "https://formassembly.com",
     spf_values: ["spf1.formassembly.com"],
+  },
+  fireside: {
+    identifier: "fireside",
+    name: "Fireside",
+    genre: "podcast",
+    url: "https://fireside.fm",
+    cname_values: ["hosted.fireside.fm"],
   },
   geojs: {
     identifier: "geojs",
@@ -675,14 +687,6 @@ export const REGISTRY: {
     url: "https://www.gaug.es",
     substrings: ["gaug.es"],
   },
-  sendinblue: {
-    identifier: "sendinblue",
-    name: "Sendinblue",
-    genre: "email",
-    url: "https://www.sendinblue.com",
-    substrings: ["sib_signup_form"],
-    spf_values: ["spf.sendinblue.com"],
-  },
   mailjet: {
     identifier: "mailjet",
     name: "Mailjet",
@@ -976,6 +980,13 @@ export const REGISTRY: {
     substrings: ["klaviyo.init"],
     spf_values: ["klaviyomail.com"],
   },
+  "101domain": {
+    identifier: "101domain",
+    name: "101domain",
+    url: "https://www.101domain.com",
+    genre: "dns",
+    ns_values: ["ns1.101domain.com", "ns2.101domain.com"],
+  },
   apollo: {
     identifier: "apollo",
     name: "Apollo",
@@ -988,7 +999,9 @@ export const REGISTRY: {
     name: "Brevo",
     url: "https://www.brevo.com",
     genre: "email",
-    txt_values: ["brevo-code"],
+    txt_values: ["brevo-code", "Sendinblue-code"],
+    substrings: ["sib_signup_form"],
+    spf_values: ["spf.sendinblue.com"],
   },
   adobe: {
     identifier: "adobe",
@@ -1099,7 +1112,7 @@ export const REGISTRY: {
     identifier: "jekyll",
     name: "Jekyll",
     url: "https://www.jekyllrb.com",
-    genre: "web_framework",
+    genre: "static_site_generator",
     substrings: ['content="Jekyll'],
   },
   plausible: {
@@ -1479,7 +1492,7 @@ export const REGISTRY: {
   hugo: {
     identifier: "hugo",
     name: "Hugo",
-    genre: "web_framework",
+    genre: "static_site_generator",
     url: "https://gohugo.io",
     substrings: ['content="Hugo'],
   },
