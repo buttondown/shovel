@@ -10,32 +10,23 @@ type Props = {
   params: { domain: string };
 };
 
-const generateURLForSocialMedia = (service: string, username: string) => {
-  if (service === "twitter") {
-    return `https://twitter.com/${username}`;
-  }
-  if (service === "linkedin") {
-    return `https://linkedin.com/in/${username}`;
-  }
-  if (service === "facebook") {
-    return `https://facebook.com/${username}`;
-  }
-  if (service === "instagram") {
-    return `https://instagram.com/${username}`;
-  }
-  if (service === "youtube") {
-    return `https://youtube.com/${username}`;
-  }
-  if (service === "tiktok") {
-    return `https://tiktok.com/@${username}`;
-  }
-  if (service === "bluesky") {
-    return `https://bsky.social/${username}`;
-  }
-  if (service === "github") {
-    return `https://github.com/${username}`;
-  }
-  return "";
+const SOCIAL_MEDIA_URL_TEMPLATES: { [key: string]: string } = {
+  twitter: "https://twitter.com/",
+  linkedin: "https://linkedin.com/in/",
+  facebook: "https://facebook.com/",
+  instagram: "https://instagram.com/",
+  youtube: "https://youtube.com/",
+  tiktok: "https://tiktok.com/@",
+  bluesky: "https://bsky.social/",
+  github: "https://github.com/",
+};
+
+const generateURLForSocialMedia = (
+  service: string,
+  username: string
+): string => {
+  const template = SOCIAL_MEDIA_URL_TEMPLATES[service];
+  return template ? `${template}${username}` : "";
 };
 
 export async function generateMetadata(

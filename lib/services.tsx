@@ -13,6 +13,7 @@ export type Genre =
   | "dns"
   | "search"
   | "documentation"
+  | "devtools"
   | "ecommerce"
   | "email"
   | "everything"
@@ -36,6 +37,10 @@ export const GENRE_REGISTRY: {
     description: string;
   };
 } = {
+  devtools: {
+    name: "Developer Tools",
+    description: "Developer tools",
+  },
   ads: {
     name: "Advertising",
     description: "Advertising services",
@@ -886,6 +891,34 @@ export const REGISTRY: {
     url: "https://www.transistor.fm",
     genre: "podcast",
     substrings: [".transistor.fm"],
+  },
+  fastly: {
+    identifier: "fastly",
+    name: "Fastly",
+    url: "https://www.fastly.com",
+    genre: "hosting",
+    txt_values: ["fastly-domain-delegation"],
+  },
+  postman: {
+    identifier: "postman",
+    name: "Postman",
+    url: "https://www.postman.com",
+    genre: "devtools",
+    txt_values: ["postman-domain-verification"],
+  },
+  docker: {
+    identifier: "docker",
+    name: "Docker",
+    url: "https://www.docker.com",
+    genre: "hosting",
+    txt_values: ["docker-verification"],
+  },
+  canva: {
+    identifier: "canva",
+    name: "Canva",
+    url: "https://www.canva.com",
+    genre: "design",
+    txt_values: ["canva-domain-verification"],
   },
   rewardful: {
     identifier: "rewardful",
