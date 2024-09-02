@@ -103,8 +103,7 @@ export default async function Page({
           )}
         <ul className="only:block hidden opacity-50">No Tranco record found</ul>
       </ul>
-      <SectionHeader>Subdomains</SectionHeader>
-      <Grid.Container>
+      <Grid.Container title="Subdomains">
         {data.notes
           .filter((datum) => datum.label === "SUBDOMAIN")
           .map((note, i) => (
@@ -113,8 +112,7 @@ export default async function Page({
             </Grid.Item>
           ))}
       </Grid.Container>
-      <SectionHeader>Services</SectionHeader>
-      <Grid.Container>
+      <Grid.Container title="Services">
         {data.notes
           .filter((datum) => datum.label === "SERVICE")
           .filter((note) => REGISTRY[note.metadata.value])
@@ -131,8 +129,7 @@ export default async function Page({
             </Grid.Item>
           ))}
       </Grid.Container>
-      <SectionHeader>Social media</SectionHeader>
-      <Grid.Container>
+      <Grid.Container title="Social media">
         {data.notes
           .filter((datum) => datum.label === "SERVICE")
           .filter(
@@ -154,41 +151,6 @@ export default async function Page({
             </Grid.Item>
           ))}
       </Grid.Container>
-      <SectionHeader>DMARC</SectionHeader>
-      <ul>
-        {data.data
-          .filter((datum) => datum.label === "DMARC")
-          .flatMap((datum) =>
-            datum.data.map((record) => (
-              <li key={record.value}>{record.value}</li>
-            ))
-          )}
-        <ul className="only:block hidden opacity-50">No DMARC record found</ul>
-      </ul>
-      <SectionHeader>BIMI</SectionHeader>
-      <ul>
-        {data.data
-          .filter((datum) => datum.label === "BIMI")
-          .flatMap((datum) =>
-            datum.data.map((record) => (
-              <li key={record.value}>{record.value}</li>
-            ))
-          )}
-        <ul className="only:block hidden opacity-50">No BIMI record found</ul>
-      </ul>
-      <SectionHeader>ATPROTO</SectionHeader>
-      <ul>
-        {data.data
-          .filter((datum) => datum.label === "ATPROTO")
-          .flatMap((datum) =>
-            datum.data.map((record) => (
-              <li key={record.value}>{record.value}</li>
-            ))
-          )}
-        <ul className="only:block hidden opacity-50">
-          No ATPROTO record found
-        </ul>
-      </ul>
       <SectionHeader>JSON+LD</SectionHeader>
       <ul>
         {data.notes.find((datum) => datum.label === "JSON+LD")?.metadata && (
@@ -205,24 +167,6 @@ export default async function Page({
         )}
         <ul className="only:block hidden opacity-50">
           No JSON+LD record found
-        </ul>
-      </ul>
-      <SectionHeader>Notes</SectionHeader>
-      <ul>
-        {data.notes
-          .filter((note) => note.label !== "JSON+LD")
-          .filter((note) => note.label !== "SOCIAL_MEDIA")
-          .filter((note) => note.label !== "SERVICE")
-          .filter((note) => note.label !== "SUBDOMAIN")
-          .map((note, i) => (
-            <li key={i}>
-              <ServicePill service={note.label} />{" "}
-              {Object.keys(note.metadata).length > 0 &&
-                JSON.stringify(note.metadata)}
-            </li>
-          ))}
-        <ul className="only:block hidden opacity-50">
-          No additional notes found
         </ul>
       </ul>
     </div>

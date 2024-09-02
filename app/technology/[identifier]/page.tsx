@@ -1,6 +1,5 @@
 import Grid from "@/components/Grid";
 import Header from "@/components/Header";
-import SectionHeader from "@/components/SectionHeader";
 import { db } from "@/lib/db/connection";
 import { GENRE_REGISTRY, REGISTRY } from "@/lib/services";
 
@@ -103,10 +102,12 @@ export default async function TechnologyPage({
             </a>
             <div className="text-sm text-gray-400">
               {trancoCount} notable domains (
-              {(
-                (trancoCount * 100) /
-                (data.data.length + data.moreCount)
-              ).toFixed(2)}
+              {trancoCount > 0
+                ? (
+                    (trancoCount * 100) /
+                    (data.data.length + data.moreCount)
+                  ).toFixed(2)
+                : "0.00"}
               %) / {data.data.length + data.moreCount} total domains
             </div>
           </div>
@@ -115,8 +116,7 @@ export default async function TechnologyPage({
         <div>Unknown technology</div>
       )}
 
-      <SectionHeader>Found on:</SectionHeader>
-      <Grid.Container>
+      <Grid.Container title="Domains using this technology:">
         {data.data.map((item) => (
           <Grid.Item
             key={item.domain}
@@ -133,10 +133,7 @@ export default async function TechnologyPage({
         )}
       </Grid.Container>
 
-      <SectionHeader>
-        Other technologies found on the same domains:
-      </SectionHeader>
-      <Grid.Container>
+      <Grid.Container title="Other technologies found on the same domains:">
         {technologyCounts
           .filter((item) => item.technology in REGISTRY)
           .map((item) => (
@@ -152,7 +149,14 @@ export default async function TechnologyPage({
               {item.technology in REGISTRY
                 ? REGISTRY[item.technology]?.name
                 : item.technology}
-              <div className="text-xs">{item.count}</div>
+              <div className="text-xs">
+                {item.count} (
+                {(
+                  (Number(item.count) * 100) /
+                  (data.data.length + data.moreCount)
+                ).toFixed(2)}
+                %)
+              </div>
             </Grid.Item>
           ))}
       </Grid.Container>

@@ -178,6 +178,7 @@ type Service = {
   headers?: {
     [key: string]: string;
   };
+  dns_prefix?: string;
 };
 
 export const REGISTRY: {
@@ -559,12 +560,19 @@ export const REGISTRY: {
     genre: "marketing",
     substrings: ["script.tapfiliate.com"],
   },
+  wistia: {
+    identifier: "wistia",
+    name: "Wistia",
+    url: "https://wistia.com",
+    genre: "videos",
+    substrings: ["wistia.com/embed"],
+  },
   rightmessage: {
     identifier: "rightmessage",
     name: "RightMessage",
     url: "https://www.rightmessage.com",
     genre: "email",
-    substrings: ["rightmessage-id"],
+    substrings: ["rightmessage-id", "tb.rightmessage.com"],
   },
   sendowl: {
     identifier: "sendowl",
@@ -948,6 +956,20 @@ export const REGISTRY: {
       value: "PHPSESSID",
     },
   },
+  globalsign: {
+    identifier: "globalsign",
+    name: "GlobalSign",
+    url: "https://www.globalsign.com",
+    genre: "security",
+    txt_values: ["globalsign-domain-verification"],
+  },
+  zoom: {
+    identifier: "zoom",
+    name: "Zoom",
+    url: "https://www.zoom.us",
+    genre: "videos",
+    txt_values: ["zoom-domain-verification"],
+  },
   shopify: {
     identifier: "shopify",
     name: "Shopify",
@@ -956,6 +978,37 @@ export const REGISTRY: {
     cname_values: ["myshopify.com"],
     substrings: ["shopifycdn.com"],
     spf_values: ["shops.shopify.com"],
+  },
+  asp_net: {
+    identifier: "asp_net",
+    name: "ASP.NET",
+    url: "https://www.asp.net",
+    genre: "web_framework",
+    headers: {
+      key: "x-powered-by",
+      value: "ASP.NET",
+    },
+  },
+  atproto: {
+    identifier: "atproto",
+    name: "ATPROTO",
+    url: "https://www.atproto.com",
+    genre: "open_web",
+    dns_prefix: "_atproto",
+  },
+  bimi: {
+    identifier: "bimi",
+    name: "BIMI",
+    url: "https://www.bimi.com",
+    genre: "open_web",
+    dns_prefix: "_bimi",
+  },
+  dmarc: {
+    identifier: "dmarc",
+    name: "DMARC",
+    url: "https://www.dmarc.com",
+    genre: "open_web",
+    dns_prefix: "_dmarc",
   },
   investorflow: {
     identifier: "investorflow",
@@ -1595,6 +1648,27 @@ export const REGISTRY: {
     url: "https://firebase.google.com",
     substrings: ["gstatic.com/firebasejs"],
     spf_values: ["_spf.firebasemail.com"],
+  },
+  piwik: {
+    identifier: "piwik",
+    name: "Piwik",
+    genre: "analytics",
+    url: "https://www.piwik.org",
+    substrings: ["piwik.js", "piwik.pro"],
+  },
+  genesys: {
+    identifier: "genesys",
+    name: "Genesys",
+    genre: "support",
+    url: "https://www.genesys.com",
+    substrings: ["Genesys("],
+  },
+  cookiebot: {
+    identifier: "cookiebot",
+    name: "Cookiebot",
+    genre: "gdpr",
+    url: "https://www.cookiebot.com",
+    substrings: ["consent.cookiebot.com"],
   },
   cookiefirst: {
     identifier: "cookiefirst",

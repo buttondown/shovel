@@ -1,7 +1,5 @@
-import atproto from "@/lib/loaders/atproto";
-import bimi from "@/lib/loaders/bimi";
-import dmarc from "@/lib/loaders/dmarc";
 import dns from "@/lib/loaders/dns";
+import dns_prefix from "@/lib/loaders/dns_prefix";
 import html from "@/lib/loaders/html";
 import tranco from "@/lib/loaders/tranco";
 import records from "@/lib/parsers/dns";
@@ -11,7 +9,7 @@ import { unique } from "@/lib/utils";
 import pino from "pino";
 import { Loader } from "./loaders/types";
 
-const LOADERS = [dns, html, dmarc, bimi, atproto, tranco];
+const LOADERS = [dns, html, dns_prefix, tranco];
 const PARSERS = [records, htmlRecords, headers];
 
 const logger = pino();
@@ -47,7 +45,21 @@ const fetch = async (domain: string) => {
     return {
         domain,
         data: unique(data),
-        notes: unique(notes, (n) => n.metadata.value),
+        notes: [
+            ...unique(notes, (n) => n.metadata.value),
+            ...data
+                .filter((d) => d.label === "SERVICE")
+                .flatMap((d) => d.data)
+                .map((d) => {
+                    return {
+                        label: "SERVICE",
+                        metadata: {
+                            value: d.type,
+                            username: "",
+                        },
+                    };
+                }),
+        ],
     };
 };
 
