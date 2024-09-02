@@ -2,6 +2,17 @@ import fetch from "@/lib/data";
 import { describe, expect, test } from "vitest";
 import { DetectedTechnology } from "./parsers/types";
 
+const DOMAIN_TO_UNEXPECTED_DATA: Record<string, DetectedTechnology[]> = {
+    "changelog.com": [
+        {
+            identifier: "subdomain",
+            metadata: {
+                value: "op3.dev",
+            },
+        },
+    ],
+};
+
 const DOMAIN_TO_EXPECTED_DATA: Record<string, DetectedTechnology[]> = {
     "formkeep.com": [
         {
@@ -65,6 +76,15 @@ describe("fetching", () => {
             test(`fetches ${data.identifier} for ${domain}`, async () => {
                 const { detected_technologies } = await fetch(domain);
                 expect(detected_technologies).toContainEqual(data);
+            });
+        });
+    });
+
+    Object.entries(DOMAIN_TO_UNEXPECTED_DATA).forEach(([domain, unexpectedData]) => {
+        unexpectedData.forEach((data) => {
+            test(`does not fetch ${data.identifier} for ${domain}`, async () => {
+                const { detected_technologies } = await fetch(domain);
+                expect(detected_technologies).not.toContainEqual(data);
             });
         });
     });

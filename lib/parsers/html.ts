@@ -160,7 +160,7 @@ const SUBDOMAIN_RULE = (html: string, domain: string) => {
         }))
         .filter(
             (v) =>
-                v.value && v.value.startsWith("http") && v.value.includes(`.${domain}`)
+                v.value && v.value.startsWith("http") && new URL(v.value).hostname.includes(domain)
         )
         .map((v) => ({
             value: new URL(v.value || "").hostname,
