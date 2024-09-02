@@ -642,7 +642,7 @@ export const REGISTRY: {
     name: "Algolia",
     genre: "search",
     url: "https://www.algolia.com",
-    substrings: ['algolia.net" crossorigin'],
+    substrings: ['algolia.net" crossorigin', "AlgoliaOpts"],
   },
   bootstrap: {
     identifier: "bootstrap",
@@ -657,6 +657,13 @@ export const REGISTRY: {
     genre: "videos",
     url: "https://www.loom.com",
     txt_values: ["loom-verification", "loom-site-verification"],
+  },
+  vite: {
+    identifier: "vite",
+    name: "Vite",
+    genre: "web_framework",
+    url: "https://vitejs.dev",
+    substrings: ["/vite/"],
   },
   tailwindcss: {
     identifier: "tailwindcss",
@@ -950,12 +957,19 @@ export const REGISTRY: {
     substrings: ["shopifycdn.com"],
     spf_values: ["shops.shopify.com"],
   },
+  investorflow: {
+    identifier: "investorflow",
+    name: "InvestorFlow",
+    url: "https://www.investorflow.com",
+    genre: "marketing",
+    txt_values: ["investorflow.com"],
+  },
   rails: {
     identifier: "rails",
     name: "Ruby on Rails",
     url: "https://rubyonrails.org",
     genre: "web_framework",
-    substrings: ["data-turbo"],
+    substrings: ["data-turbo", "RAILS_ENV"],
   },
   new_relic: {
     identifier: "new_relic",
@@ -1155,7 +1169,7 @@ export const REGISTRY: {
     name: "Buttondown",
     url: "https://www.buttondown.email",
     genre: "email",
-    substrings: ["buttondown.email/"],
+    substrings: ["buttondown.email/", "buttondown.com/"],
   },
   intercom: {
     identifier: "intercom",
