@@ -8,4 +8,4 @@ bootstrap:
   python3 scripts/bootstrap.py
 
 test:
-  PINO_LEVEL=silent bun test
+  PINO_LEVEL=silent DISABLE_DATABASE=true bun test
