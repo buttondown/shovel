@@ -39,22 +39,11 @@ export async function generateMetadata(
       "Information about " +
       params.domain +
       " and its DNS records, technologies, social media and more.",
+    alternates: {
+      canonical: `/domain/${params.domain}`,
+    },
   };
 }
-
-const ServicePill = ({ service }: { service: string }) => {
-  const technology = REGISTRY[service];
-  if (!technology) {
-    return <span>{service}</span>;
-  }
-  if (technology.icon) {
-    return <div className="inline-flex items-center">{technology.icon}</div>;
-  }
-  if (technology.url) {
-    return <DomainIcon domain={new URL(technology.url).hostname} />;
-  }
-  return <span>{service}</span>;
-};
 
 export default async function Page({
   params,
@@ -68,15 +57,17 @@ export default async function Page({
 
   return (
     <div className="">
-      <a
-        href={`https://${params.domain}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex items-center gap-2 hover:bg-white/20 transition-colors font-black text-xl"
-      >
-        <DomainIcon domain={params.domain} />
-        <span>{params.domain}</span>
-      </a>
+      <h1>
+        <a
+          href={`https://${params.domain}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 hover:bg-white/20 transition-colors font-black text-xl"
+        >
+          <DomainIcon domain={params.domain} />
+          <span>{params.domain}</span>
+        </a>
+      </h1>
       <SectionHeader>DNS Records</SectionHeader>
       <table className="">
         <tbody>

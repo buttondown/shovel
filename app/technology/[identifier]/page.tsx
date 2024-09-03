@@ -20,6 +20,9 @@ export async function generateMetadata(
   return {
     title: `${service.name} - shovel.report`,
     description: `Information about ${service.name}, including domains using this technology, DNS records, social media, and more.`,
+    alternates: {
+      canonical: `/technology/${params.identifier}`,
+    },
   };
 }
 
@@ -29,55 +32,61 @@ export default async function TechnologyPage({
   params: { identifier: string };
 }) {
   const service = REGISTRY[params.identifier];
-  const data = await db
-    .selectFrom("detected_technologies")
-    .where("technology", "=", params.identifier)
-    .selectAll()
-    .distinctOn("domain")
-    .execute()
-    .then((results) => {
-      if (results.length > PAGE_SIZE) {
-        const moreCount = results.length - PAGE_SIZE;
-        return {
-          data: results.slice(0, PAGE_SIZE),
-          moreCount,
-        };
-      }
-      return {
-        data: results,
-        moreCount: 0,
-      };
-    });
-
-  const technologyCounts = await db
-    .selectFrom("detected_technologies")
-    .where(
-      "domain",
-      "in",
-      db
+  const data = process.env.DISABLE_DATABASE
+    ? { data: [], moreCount: 0 }
+    : await db
         .selectFrom("detected_technologies")
         .where("technology", "=", params.identifier)
-        .select("domain")
-    )
-    // Exclude the current technology
-    .where("technology", "!=", params.identifier)
-    .select(["technology"])
-    .select(db.fn.count("technology").as("count"))
-    .groupBy("technology")
-    .orderBy("count", "desc")
-    .execute();
+        .selectAll()
+        .distinctOn("domain")
+        .execute()
+        .then((results) => {
+          if (results.length > PAGE_SIZE) {
+            const moreCount = results.length - PAGE_SIZE;
+            return {
+              data: results.slice(0, PAGE_SIZE),
+              moreCount,
+            };
+          }
+          return {
+            data: results,
+            moreCount: 0,
+          };
+        });
 
-  const trancoCount = await db
-    .selectFrom("tranco")
-    .innerJoin(
-      "detected_technologies",
-      "tranco.domain",
-      "detected_technologies.domain"
-    )
-    .where("detected_technologies.technology", "=", params.identifier)
-    .select(db.fn.count("tranco.domain").as("count"))
-    .executeTakeFirst()
-    .then((result) => Number(result?.count || 0));
+  const technologyCounts = process.env.DISABLE_DATABASE
+    ? []
+    : await db
+        .selectFrom("detected_technologies")
+        .where(
+          "domain",
+          "in",
+          db
+            .selectFrom("detected_technologies")
+            .where("technology", "=", params.identifier)
+            .select("domain")
+        )
+        // Exclude the current technology
+        .where("technology", "!=", params.identifier)
+        .select(["technology"])
+        .select(db.fn.count("technology").as("count"))
+        .groupBy("technology")
+        .orderBy("count", "desc")
+        .execute();
+
+  const trancoCount = process.env.DISABLE_DATABASE
+    ? 0
+    : await db
+        .selectFrom("tranco")
+        .innerJoin(
+          "detected_technologies",
+          "tranco.domain",
+          "detected_technologies.domain"
+        )
+        .where("detected_technologies.technology", "=", params.identifier)
+        .select(db.fn.count("tranco.domain").as("count"))
+        .executeTakeFirst()
+        .then((result) => Number(result?.count || 0));
 
   return (
     <div className="">

@@ -3,28 +3,42 @@ import Header from "@/components/Header";
 import { db } from "@/lib/db/connection";
 import { Genre, GENRE_REGISTRY, REGISTRY } from "@/lib/services";
 
-const PAGE_SIZE = 101;
+import { Metadata, ResolvingMetadata } from "next";
 
-export default async function GenrePage({
-  params,
-}: {
+type Props = {
   params: { genre: string };
-}) {
+};
+
+export async function generateMetadata(
+  { params }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const genre = GENRE_REGISTRY[params.genre as Genre];
+
+  return {
+    title: `${genre.name} - shovel.report`,
+    description: `Information about domains using ${genre.name}, including DNS records, technologies, social media, and more.`,
+  };
+}
+
+export default async function GenrePage({ params }: Props) {
   const services = Object.values(REGISTRY)
     .filter((service) => service.genre === params.genre)
     .sort((a, b) => a.name.localeCompare(b.name));
 
-  const data = await db
-    .selectFrom("detected_technologies")
-    .where(
-      "technology",
-      "in",
-      services.map((service) => service.identifier)
-    )
-    .select(["technology"])
-    .select(db.fn.count("domain").as("count"))
-    .groupBy("technology")
-    .execute();
+  const data = process.env.DISABLE_DATABASE
+    ? []
+    : await db
+        .selectFrom("detected_technologies")
+        .where(
+          "technology",
+          "in",
+          services.map((service) => service.identifier)
+        )
+        .select(["technology"])
+        .select(db.fn.count("domain").as("count"))
+        .groupBy("technology")
+        .execute();
 
   const technologyToCount = data.reduce((acc, curr) => {
     acc[curr.technology] = Number(curr.count);

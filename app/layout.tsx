@@ -1,5 +1,17 @@
+import { CANONICAL_URL } from "@/lib/constants";
 import { Analytics } from "@vercel/analytics/react";
+import { Metadata } from "next";
 import "./globals.css";
+
+export const metadata: Metadata = {
+  metadataBase: new URL(CANONICAL_URL),
+  alternates: {
+    canonical: "/",
+    languages: {
+      "en-US": "/en-US",
+    },
+  },
+};
 
 export default function RootLayout({
   children,

@@ -22,6 +22,9 @@ export async function generateMetadata(
   return {
     title: `${service1.name} and ${service2.name} - shovel.report`,
     description: `Information about domains using both ${service1.name} and ${service2.name}, including DNS records, technologies, social media, and more.`,
+    alternates: {
+      canonical: `/technology/${params.identifier}/and/${params.subidentifier}`,
+    },
   };
 }
 

@@ -1,5 +1,5 @@
 import fetch from "@/lib/data";
-import { describe, expect, test } from "vitest";
+import { describe, expect, test } from "bun:test";
 import { DetectedTechnology } from "./parsers/types";
 
 const DOMAIN_TO_UNEXPECTED_DATA: Record<string, DetectedTechnology[]> = {

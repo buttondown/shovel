@@ -13,3 +13,4 @@ jobs:
       - uses: extractions/setup-just@v2
       - run: just install
       - run: just test
+      - run: just e2e-test
