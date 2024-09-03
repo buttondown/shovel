@@ -40,12 +40,6 @@ const DOMAIN_TO_EXPECTED_DATA: Record<string, DetectedTechnology[]> = {
             metadata: { value: "rewardful", via: "URL" },
         },
     ],
-    "milled.com": [
-        {
-            identifier: "email_octopus",
-            metadata: { via: "SPF" },
-        },
-    ],
     "buttondown.email": [
         {
             identifier: "github",
