@@ -101,7 +101,7 @@ export default async function Home() {
       <br />
       <Grid.Container>
         {Object.values(REGISTRY)
-          .toSorted((a, b) => a.identifier.localeCompare(b.identifier))
+          .sort((a, b) => a.identifier.localeCompare(b.identifier))
           .map((service) => (
             <Grid.Item
               key={service.identifier}
