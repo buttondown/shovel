@@ -8,5 +8,6 @@ export default defineConfig({
         stdout: 'ignore',
         stderr: 'pipe',
     },
-    testMatch: '*.e2e-test.ts'
+    testMatch: '*.e2e-test.ts',
+    fullyParallel: true,
 });
