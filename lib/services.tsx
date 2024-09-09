@@ -421,6 +421,13 @@ export const REGISTRY: { [key in string]: Service } = {
     genre: "hosting",
     substrings: ["s3.amazonaws.com", "NoSuchBucket"],
   },
+  cargo: {
+    identifier: "cargo",
+    name: "Cargo",
+    url: "https://www.cargo.site",
+    genre: "hosting",
+    substrings: ["__cargo_context__"],
+  },
   aws_ses: {
     identifier: "aws_ses",
     name: "AWS SES",
@@ -773,6 +780,7 @@ export const REGISTRY: { [key in string]: Service } = {
     genre: "monitoring",
     url: "https://www.statuspage.io",
     txt_values: ["stspg-customer.com"],
+    cname_values: ["stspg-customer.com"],
   },
   facebook_pixel: {
     identifier: "facebook_pixel",
@@ -1205,12 +1213,64 @@ export const REGISTRY: { [key in string]: Service } = {
     genre: "design",
     txt_values: ["whimsical="],
   },
+  mediavine: {
+    identifier: "mediavine",
+    name: "Mediavine",
+    url: "https://www.mediavine.com",
+    genre: "ads",
+    substrings: [".mediavine.com"],
+  },
+  gravity_forms: {
+    identifier: "gravity_forms",
+    name: "Gravity Forms",
+    url: "https://www.gravityforms.com",
+    genre: "form",
+    substrings: ["gravityforms.com"],
+  },
+  litespeed: {
+    identifier: "litespeed",
+    name: "LiteSpeed",
+    url: "https://www.litespeedtech.com",
+    genre: "hosting",
+    headers: {
+      key: "server",
+      value: "LiteSpeed",
+    },
+  },
+  pushengage: {
+    identifier: "pushengage",
+    name: "PushEngage",
+    url: "https://www.pushengage.com",
+    genre: "marketing",
+    substrings: ["pushengage.com"],
+  },
+  humanity: {
+    identifier: "humanity",
+    name: "Humanity",
+    url: "https://www.hu-manity.co",
+    genre: "gdpr",
+    substrings: ["//cdn.hu-manity.co"],
+  },
+  clickdimensions: {
+    identifier: "clickdimensions",
+    name: "ClickDimensions",
+    url: "https://www.clickdimensions.com",
+    genre: "marketing",
+    substrings: ["clickdimensions.com"],
+  },
   mixpanel: {
     identifier: "mixpanel",
     name: "Mixpanel",
     url: "https://www.mixpanel.com",
     genre: "analytics",
     txt_values: ["mixpanel-domain-verify"],
+  },
+  microsoft_ads: {
+    identifier: "microsoft_ads",
+    name: "Microsoft Ads",
+    url: "https://www.microsoft.com",
+    genre: "analytics",
+    substrings: ["w,d,t,r,u"],
   },
   microsoft_clarity: {
     identifier: "microsoft_clarity",
@@ -1615,6 +1675,27 @@ export const REGISTRY: { [key in string]: Service } = {
     url: "https://www.stackadapt.com",
     substrings: ["srv.stackadapt.com"],
   },
+  titan_email: {
+    identifier: "titan_email",
+    name: "Titan Email",
+    genre: "email",
+    url: "https://titan.email",
+    spf_values: ["spf.titan.email"],
+  },
+  affwp: {
+    identifier: "affwp",
+    name: "AffiliateWP",
+    genre: "marketing",
+    url: "https://affiliatewp.com",
+    substrings: ["AFFWP"],
+  },
+  jsdelivr: {
+    identifier: "jsdelivr",
+    name: "JSDelivr",
+    genre: "hosting",
+    url: "https://www.jsdelivr.com",
+    substrings: ["cdn.jsdelivr.net"],
+  },
   google_fonts: {
     identifier: "google_fonts",
     name: "Google Fonts",
@@ -1783,6 +1864,15 @@ export const REGISTRY: { [key in string]: Service } = {
     url: "https://www.framer.com",
     substrings: ["Built with Framer"],
   },
+  presslabs: {
+    identifier: "presslabs",
+    name: "Presslabs",
+    genre: "hosting",
+    url: "https://www.presslabs.com",
+    headers: {
+        "X-Presslab-Stats": "*"
+    }
+  },
   bubble: {
     identifier: "bubble",
     name: "Bubble",
@@ -1800,6 +1890,7 @@ export const REGISTRY: { [key in string]: Service } = {
       "/convertkit/",
       "f.convertkit.com",
       "app.convertkit.com",
+      "data-sr-convertkit-subscribe-form",
       ".ck.page",
     ],
   },

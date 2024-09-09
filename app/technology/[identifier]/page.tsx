@@ -2,8 +2,11 @@ import Grid from "@/components/Grid";
 import Header from "@/components/Header";
 import { db } from "@/lib/db/connection";
 import { GENRE_REGISTRY, REGISTRY } from "@/lib/services";
+import * as Dialog from "@radix-ui/react-dialog";
 
 const PAGE_SIZE = 101;
+
+const SHOVEL_PRO_URL = process.env.SHOVEL_PRO_URL;
 
 import { Metadata, ResolvingMetadata } from "next";
 
@@ -137,7 +140,32 @@ export default async function TechnologyPage({
         ))}
         {data.moreCount > 0 && (
           <Grid.Item>
-            <div className="text-xs">and {data.moreCount} more</div>
+            <div className="text-xs opacity-50">
+              {/* Note: This component should be moved to a client-side component */}
+              <Dialog.Root>
+                <Dialog.Trigger asChild>
+                  <button className="hover:underline focus:outline-none">
+                    + {data.moreCount} more
+                  </button>
+                </Dialog.Trigger>
+                <Dialog.Portal>
+                  <Dialog.Overlay className="fixed inset-0 bg-black/75" />
+                  <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-900 border border-gray-700 p-6 rounded-lg shadow-lg text-white font-mono">
+                    <Dialog.Title className="text-sm mb-1 font-bold">Upgrade to Pro</Dialog.Title>
+                    <Dialog.Description className="mb-4 text-sm text-gray-400">
+                        Get the full list for just $299.
+                    </Dialog.Description>
+                    <div className="flex justify-end">
+                      <Dialog.Close asChild>
+                        <a className="w-full py-2 bg-blue-500 text-white rounded-md text-sm font-bold hover:bg-blue-600 block text-center" href={SHOVEL_PRO_URL}>
+                          Upgrade
+                        </a>
+                      </Dialog.Close>
+                    </div>
+                  </Dialog.Content>
+                </Dialog.Portal>
+              </Dialog.Root>
+            </div>
           </Grid.Item>
         )}
       </Grid.Container>
