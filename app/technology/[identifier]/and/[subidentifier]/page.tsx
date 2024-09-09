@@ -53,9 +53,11 @@ export default async function TechnologyAndPage({
       return { data: data.slice(0, PAGE_SIZE), hasMore, total };
     });
 
-  const technologyCounts = await db
-    .selectFrom("detected_technologies")
-    .where(
+  const technologyCounts = process.env.DISABLE_DATABASE
+    ? []
+    : await db
+        .selectFrom("detected_technologies")
+        .where(
       "domain",
       "in",
       db

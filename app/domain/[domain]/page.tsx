@@ -53,7 +53,9 @@ export default async function Page({
   };
 }) {
   const data = await fetch(params.domain);
-  await reify(params.domain, data);
+  if (!process.env.DISABLE_DATABASE) {
+    await reify(params.domain, data);
+  }
 
   return (
     <div className="">

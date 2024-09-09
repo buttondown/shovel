@@ -8,9 +8,13 @@ export const metadata = {
 };
 
 export default async function Home() {
-  const data = await db
-    .selectFrom("detected_technologies")
-    .select(db.fn.countAll<number>().as("count"))
+  const data = process.env.DISABLE_DATABASE
+    ? [{
+        count: 0
+    }]
+    : await db
+        .selectFrom("detected_technologies")
+        .select(db.fn.countAll<number>().as("count"))
     .execute();
 
   return (
