@@ -176,7 +176,8 @@ type Service = {
   substrings?: string[];
   defunct?: boolean;
   headers?: {
-    [key: string]: string;
+    key: string;
+    value: string;
   };
   dns_prefix?: string;
 };
@@ -1870,7 +1871,8 @@ export const REGISTRY: { [key in string]: Service } = {
     genre: "hosting",
     url: "https://www.presslabs.com",
     headers: {
-        "X-Presslab-Stats": "*"
+        key: "X-Presslab-Stats",
+        value: "*"
     }
   },
   bubble: {
