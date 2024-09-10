@@ -100,7 +100,14 @@ const JSONLD_RULE = (html: string) => {
                 identifier: "jsonld",
                 metadata: { value: text },
             },
-            ...(JSON.parse(text)
+            ...((() => {
+                try {
+                    return JSON.parse(text)
+                } catch (error) {
+                    console.error("Error parsing JSON-LD:", error);
+                    return {};
+                }
+            })()
             ["@graph"]?.filter((i: { sameAs: string[] }) => i.sameAs)
                 .flatMap((i: any) => {
                     return i.sameAs.flatMap((url: string) => {
