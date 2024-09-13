@@ -45,6 +45,17 @@ export async function generateMetadata(
   };
 }
 
+function formatJson(json: string) {
+  try {
+    return {
+      valid: true,
+      value: JSON.stringify(JSON.parse(json || "{}"), null, 2),
+    };
+  } catch {
+    return { valid: false, value: json };
+  }
+}
+
 export default async function Page({
   params,
 }: {
@@ -56,6 +67,11 @@ export default async function Page({
   if (!process.env.DISABLE_DATABASE) {
     await reify(params.domain, data);
   }
+
+  const jsonld = data.detected_technologies.find(
+    (datum) => datum.identifier === "jsonld"
+  )?.metadata.value;
+  const formattedJsonLd = formatJson(jsonld ?? "{}");
 
   return (
     <div className="">
@@ -141,27 +157,15 @@ export default async function Page({
             </Grid.Item>
           ))}
       </Grid.Container>
-      <SectionHeader>JSON+LD</SectionHeader>
-      <ul>
-        {data.detected_technologies.find(
-          (datum) => datum.identifier === "jsonld"
-        )?.metadata && (
+      {jsonld && (
+        <>
+          <SectionHeader>JSON+LD</SectionHeader>
           <pre className="whitespace-pre max-w-full overflow-x-scroll">
-            {JSON.stringify(
-              JSON.parse(
-                data.detected_technologies.find(
-                  (datum) => datum.identifier === "jsonld"
-                )?.metadata.value || "{}"
-              ),
-              null,
-              2
-            )}
+            {formattedJsonLd.value}
           </pre>
-        )}
-        <ul className="only:block hidden opacity-50">
-          No JSON+LD record found
-        </ul>
-      </ul>
+          {!formattedJsonLd.valid && <p>(this JSON isn&apos;t valid)</p>}
+        </>
+      )}
     </div>
   );
 }
