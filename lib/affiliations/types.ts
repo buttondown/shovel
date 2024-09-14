@@ -1,4 +1,4 @@
 export type Affiliation = {
-    identifier: string;
-    metadata: Record<string, string>;
+	domain: string;
+	metadata: Record<string, string>;
 };
