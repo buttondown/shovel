@@ -8,6 +8,8 @@ const logger = pino({
     name: "cron-refresh",
 });
 
+export const revalidate = 0;
+
 const RAW_QUERY = sql<{
     domain: string;
 }>`
