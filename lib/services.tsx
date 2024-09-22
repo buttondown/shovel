@@ -356,6 +356,13 @@ export const REGISTRY: { [key in string]: Service } = {
     genre: "marketing",
     spf_values: ["aspmx.sailthru.com"],
   },
+  simple_analytics: {
+    identifier: "simple_analytics",
+    name: "Simple Analytics",
+    url: "https://simpleanalytics.com",
+    genre: "analytics",
+    substrings: ["simpleanalyticscdn.com"],
+  },
   dnsimple: {
     identifier: "dnsimple",
     name: "DNSimple",
@@ -1156,6 +1163,31 @@ export const REGISTRY: { [key in string]: Service } = {
     headers: {
       key: "text/headers/fly-request-id",
       value: "*",
+    },
+  },
+  buymeacoffee: {
+    identifier: "buymeacoffee",
+    name: "Buy Me a Coffee",
+    url: "https://www.buymeacoffee.com",
+    genre: "payments",
+    substrings: ["cdnjs.buymeacoffee.com"],
+  },
+  icloud_mail: {
+    identifier: "icloud_mail",
+    name: "iCloud Mail",
+    url: "https://www.icloud.com",
+    genre: "email",
+    mx_values: ["mx01.mail.icloud.com"],
+  },
+  blot: {
+    identifier: "blot",
+    name: "Blot",
+    url: "https://www.blot.im",
+    genre: "email",
+    substrings: ["blot.im"],
+    headers: {
+        key: "blot-server",
+        value: "*",
     },
   },
   mimecast: {

@@ -93,44 +93,49 @@ const JSONLD_RULE = (html: string) => {
 	const tag = parseHTML(html).querySelector(
 		"script[type='application/ld+json']",
 	);
-	if (tag) {
-		const text = tag.text;
-		const baseRule = [
-			{
-				identifier: "jsonld",
-				metadata: { value: text },
-			},
-			...((() => {
-				try {
-					return JSON.parse(text);
-				} catch (error) {
-					console.error("Error parsing JSON-LD:", error);
-					return {};
-				}
-			})()
-				["@graph"]?.filter((i: { sameAs: string[] }) => i.sameAs)
-				.flatMap((i: any) => {
-					return i.sameAs.flatMap((url: string) => {
-						const service = Object.values(REGISTRY).find((service) =>
-							url.includes(service.urlSubstrings?.[0] || ""),
-						);
-						if (!service) {
-							return [];
-						}
-						return [
-							{
-								identifier: service.identifier.split("?")[0],
-								metadata: {
-									username: url.split("/").pop(),
-								},
-							},
-						];
-					});
-				}) || []),
-		];
-		return baseRule;
+	if (!tag) {
+		return [];
 	}
-	return [];
+	const text = tag.text;
+	const baseRule = [
+		{
+			identifier: "jsonld",
+			metadata: { value: text },
+		},
+	];
+
+	try {
+		const parsedJson = JSON.parse(text);
+		const graph = Array.isArray(parsedJson) ? parsedJson : parsedJson["@graph"];
+
+		if (Array.isArray(graph)) {
+			const additionalRules = graph
+				.filter((item) => item && Array.isArray(item.sameAs))
+				.flatMap((item) =>
+					item.sameAs
+						.map((url: string) => {
+							const service = Object.values(REGISTRY).find((s) =>
+								url.includes(s.urlSubstrings?.[0] || ""),
+							);
+							if (service) {
+								return {
+									identifier: service.identifier.split("?")[0],
+									metadata: {
+										username: url.split("/").pop() || "",
+									},
+								};
+							}
+							return null;
+						})
+						.filter(Boolean),
+				);
+
+			baseRule.push(...additionalRules);
+		}
+	} catch (error) {
+		console.error("Error parsing or processing JSON-LD:", error);
+	}
+	return baseRule;
 };
 
 const RSS_RULE = (html: string): DetectedTechnology[] => {
@@ -159,20 +164,25 @@ const RSS_RULE = (html: string): DetectedTechnology[] => {
 	return [];
 };
 
+const isValidSubdomain = (potentialValue: string, domain: string) => {
+	if (!potentialValue.startsWith("http")) {
+		return false;
+	}
+	try {
+		const url = new URL(potentialValue);
+		return url.hostname.includes(domain) && url.hostname !== `www.${domain}`;
+	} catch (error) {
+		return false;
+	}
+};
+
 const SUBDOMAIN_RULE = (html: string, domain: string) => {
 	const subdomains = parseHTML(html)
 		.querySelectorAll("a")
 		.map((a) => ({
 			value: a.getAttribute("href"),
 		}))
-		.filter(
-			(v) =>
-				v.value &&
-				v.value.startsWith("http") &&
-				new URL(v.value).hostname.includes(domain) &&
-				new URL(v.value).hostname !== "www." + domain &&
-				new URL(v.value).hostname !== domain,
-		)
+		.filter((v) => isValidSubdomain(v.value || "", domain))
 		.map((v) => ({
 			value: new URL(v.value || "").hostname,
 		}))
