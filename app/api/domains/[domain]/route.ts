@@ -20,7 +20,6 @@ export async function GET(
 ) {
 	const rawResponse = await fetch(context.params.domain);
 	await reify(context.params.domain, rawResponse);
-	console.log(rawResponse.detected_technologies);
 
 	return Response.json({
 		domain: context.params.domain,

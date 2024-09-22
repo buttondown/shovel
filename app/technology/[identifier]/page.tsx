@@ -80,14 +80,15 @@ export default async function TechnologyPage({
   const trancoCount = process.env.DISABLE_DATABASE
     ? 0
     : await db
-        .selectFrom("tranco")
+        .selectFrom("affiliations")
         .innerJoin(
           "detected_technologies",
-          "tranco.domain",
+          "affiliations.domain",
           "detected_technologies.domain"
         )
         .where("detected_technologies.technology", "=", params.identifier)
-        .select(db.fn.count("tranco.domain").as("count"))
+        .where("affiliations.identifier", "=", "tranco")
+        .select(db.fn.count("affiliations.domain").as("count"))
         .executeTakeFirst()
         .then((result) => Number(result?.count || 0));
 

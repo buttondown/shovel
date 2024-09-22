@@ -28,7 +28,7 @@ const GENERIC_SOCIAL_MEDIA_PROVIDER = (html: string) => {
 				const username = match[match.length - 1];
 				return [
 					{
-						identifier: potentialMatch?.identifier,
+						identifier: potentialMatch?.identifier as string,
 						metadata: {
 							username: username.split("?")[0],
 						},
@@ -119,7 +119,7 @@ const JSONLD_RULE = (html: string) => {
 							);
 							if (service) {
 								return {
-									identifier: service.identifier.split("?")[0],
+									identifier: service.identifier.split("?")[0] as string,
 									metadata: {
 										username: url.split("/").pop() || "",
 									},
@@ -199,7 +199,7 @@ const SUBDOMAIN_RULE = (html: string, domain: string) => {
 
 const RULES: ((html: string, domain: string) => DetectedTechnology[])[] = [
 	...Object.values(REGISTRY).map((service) => {
-		return (html: string, domain: string) => {
+		return (html: string) => {
 			const potentialMatches = service.substrings?.filter((substring) =>
 				html.includes(substring),
 			);
