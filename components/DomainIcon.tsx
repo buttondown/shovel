@@ -4,7 +4,7 @@ const DomainIcon = ({ domain }: { domain: string }) => {
   if (DISABLE_ICONHORSE) {
     return null;
   }
-  return <img src={`https://icon.horse/icon/${domain}`} className="h-5 w-5 inline-block" />;
+  return <img src={`https://icon.horse/icon/${domain}`} className="h-5 w-5 inline-block" alt={`Icon for ${domain}`} />;
 };
 
 export default DomainIcon;
