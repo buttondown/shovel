@@ -1,12 +1,13 @@
 import Grid from "@/components/Grid";
 import Header from "@/components/Header";
 import { db } from "@/lib/db/connection";
+import fetchDomainsByTechnology from "@/lib/db/domains-by-technology";
 import { GENRE_REGISTRY, REGISTRY } from "@/lib/services";
 import * as Dialog from "@radix-ui/react-dialog";
 
-const PAGE_SIZE = 101;
-
 const SHOVEL_PRO_URL = process.env.SHOVEL_PRO_URL;
+
+const PAGE_SIZE = 100;
 
 import { Metadata, ResolvingMetadata } from "next";
 
@@ -35,27 +36,7 @@ export default async function TechnologyPage({
   params: { identifier: string };
 }) {
   const service = REGISTRY[params.identifier];
-  const data = process.env.DISABLE_DATABASE
-    ? { data: [], moreCount: 0 }
-    : await db
-        .selectFrom("detected_technologies")
-        .where("technology", "=", params.identifier)
-        .selectAll()
-        .distinctOn("domain")
-        .execute()
-        .then((results) => {
-          if (results.length > PAGE_SIZE) {
-            const moreCount = results.length - PAGE_SIZE;
-            return {
-              data: results.slice(0, PAGE_SIZE),
-              moreCount,
-            };
-          }
-          return {
-            data: results,
-            moreCount: 0,
-          };
-        });
+  const data = await fetchDomainsByTechnology(params.identifier, PAGE_SIZE);
 
   const technologyCounts = process.env.DISABLE_DATABASE
     ? []
@@ -118,10 +99,10 @@ export default async function TechnologyPage({
               {trancoCount > 0
                 ? (
                     (trancoCount * 100) /
-                    (data.data.length + data.moreCount)
+                    (data.count)
                   ).toFixed(2)
                 : "0.00"}
-              %) / {data.data.length + data.moreCount} total domains
+              %) / {data.count} total domains
             </div>
           </div>
         </>
@@ -139,14 +120,14 @@ export default async function TechnologyPage({
             <div className="text-xs">{item.domain}</div>
           </Grid.Item>
         ))}
-        {data.moreCount > 0 && (
+        {data.count > PAGE_SIZE && (
           <Grid.Item>
             <div className="text-xs opacity-50">
               {/* Note: This component should be moved to a client-side component */}
               <Dialog.Root>
                 <Dialog.Trigger asChild>
                   <button className="hover:underline focus:outline-none">
-                    + {data.moreCount} more
+                    + {data.count - PAGE_SIZE} more
                   </button>
                 </Dialog.Trigger>
                 <Dialog.Portal>
@@ -191,7 +172,7 @@ export default async function TechnologyPage({
                 {item.count} (
                 {(
                   (Number(item.count) * 100) /
-                  (data.data.length + data.moreCount)
+                  (data.count)
                 ).toFixed(2)}
                 %)
               </div>
