@@ -164,6 +164,7 @@ export const GENRE_REGISTRY: {
 type Service = {
   identifier: string;
   name: string;
+  description?: string;
   genre: Genre;
   url: string;
   icon?: React.ReactNode;
@@ -2003,6 +2004,7 @@ export const REGISTRY: { [key in string]: Service } = {
   },
   northbeam: {
     identifier: "northbeam",
+    description: "The marketing intelligence platform for profitable growth.",
     name: "Northbeam",
     genre: "analytics",
     url: "https://www.northbeam.io",

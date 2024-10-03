@@ -80,13 +80,10 @@ export default async function TechnologyPage({
           <Header url={`/technology/${params.identifier}`}>
             {service.name}
           </Header>
+          {service.description && (
+            <div className="text-md">{service.description}</div>
+          )}
           <div className="flex flex-col items-start">
-            <a
-              className="text-gray-400 capitalize text-sm inline-block hover:text-gray-300 hover:bg-white/10"
-              href={`/genre/${service.genre}`}
-            >
-              {GENRE_REGISTRY[service.genre].name}
-            </a>
             <a
               className="text-gray-400 text-sm hover:text-gray-300 hover:bg-white/10"
               target="_blank"
@@ -95,6 +92,12 @@ export default async function TechnologyPage({
               {service.url}
             </a>
             <div className="text-sm text-gray-400">
+            <a
+              className="text-gray-400 capitalize text-sm inline-block hover:text-gray-300 hover:bg-white/10 mt-4"
+              href={`/genre/${service.genre}`}
+            >
+              {GENRE_REGISTRY[service.genre].name}
+            </a> /&nbsp;
               {trancoCount} notable domains (
               {trancoCount > 0
                 ? (
