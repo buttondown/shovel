@@ -1,1 +1,1 @@
-export const CANONICAL_URL = "https://shovel.report";
+export const CANONICAL_URL = "https://www.shovel.report";
