@@ -8,12 +8,18 @@ const logger = pino({
     name: "cron-refresh",
 });
 
+// Without this comment, Next.js will cache the response
+// and therefore this endpoint does not do anything. (I really wish
+// we had a simpler way to trigger and manage these; might be worth looking
+// into Trigger at some point.)
 export const revalidate = 0;
 
+// This `sample` is a cute trick to get a random sample of domains without
+// having to do a full table scan.
 const RAW_QUERY = sql<{
     domain: string;
 }>`
-    select domain from tranco TABLESAMPLE system (0.01)
+    select domain from tranco TABLESAMPLE system (0.02)
 `;
 
 const getRandomDomains = async () => {
