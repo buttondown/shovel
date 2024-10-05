@@ -5,14 +5,6 @@ export const reify = async (
 	domain: string,
 	data: Awaited<ReturnType<typeof fetch>>,
 ) => {
-	await db
-		.insertInto("domains")
-		.values({
-			domain: domain,
-			data: JSON.stringify(data),
-		})
-		.execute();
-
 	const existingTechnologies = await db
 		.selectFrom("detected_technologies")
 		.select("technology")

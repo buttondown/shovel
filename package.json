@@ -11,16 +11,15 @@
     "e2e-test": "playwright test"
   },
   "dependencies": {
-    "@neon/serverless": "npm:@jsr/neon__serverless",
     "@radix-ui/react-dialog": "^1.1.1",
     "@sentry/nextjs": "^8",
     "@vercel/analytics": "^1.3.1",
     "fast-xml-parser": "^4.5.0",
     "fetch-h2": "^3.0.2",
     "kysely": "^0.27.4",
-    "kysely-neon": "^1.3.0",
     "next": "14.2.3",
     "node-html-parser": "^6.1.13",
+    "pg": "^8.13.0",
     "pino": "^9.2.0",
     "puppeteer": "^23.2.1",
     "react": "^18",
