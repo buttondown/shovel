@@ -29,6 +29,7 @@ export type Genre =
   | "social_media"
   | "static_site_generator"
   | "support"
+  | "url_shortener"
   | "videos"
   | "web_framework";
 
@@ -38,6 +39,10 @@ export const GENRE_REGISTRY: {
     description: string;
   };
 } = {
+  url_shortener: {
+    name: "URL Shortener",
+    description: "URL shortening services",
+  },
   static_site_generator: {
     name: "Static Site Generator",
     description: "Static site generators",
@@ -429,6 +434,13 @@ export const REGISTRY: { [key in string]: Service } = {
     url: "https://aws.amazon.com/s3",
     genre: "hosting",
     substrings: ["s3.amazonaws.com", "NoSuchBucket"],
+  },
+  aws_elb: {
+    identifier: "aws_elb",
+    name: "AWS ELB",
+    url: "https://aws.amazon.com/elasticloadbalancing",
+    genre: "hosting",
+    cname_values: ["elb.amazonaws.com"],
   },
   cargo: {
     identifier: "cargo",
@@ -1966,6 +1978,13 @@ export const REGISTRY: { [key in string]: Service } = {
     substrings: ['action="https://tinyletter.com'],
     defunct: true,
   },
+  cuttly: {
+    identifier: "cuttly",
+    name: "Cuttly",
+    genre: "url_shortener",
+    url: "https://www.cutt.ly",
+    txt_values: ["cuttly-verification-site"],
+  },
   migadu: {
     identifier: "migadu",
     name: "Migadu",
@@ -2031,5 +2050,19 @@ export const REGISTRY: { [key in string]: Service } = {
     genre: "accounting",
     url: "https://www.maxio.com",
     spf_values: ["mailer.chargify.com"],
+  },
+  atlassian: {
+    identifier: "atlassian",
+    name: "Atlassian",
+    genre: "everything",
+    url: "https://www.atlassian.com",
+    txt_values: ["atlassian-domain-verification"],
+  },
+  onepassword: {
+    identifier: "onepassword",
+    name: "1Password",
+    genre: "security",
+    url: "https://www.1password.com",
+    txt_values: ["1password-site-verification"],
   },
 } as const;

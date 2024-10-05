@@ -186,7 +186,8 @@ const SUBDOMAIN_RULE = (html: string, domain: string) => {
 		.map((v) => ({
 			value: new URL(v.value || "").hostname,
 		}))
-		.filter((v, i, a) => a.findIndex((t) => t.value === v.value) === i);
+		.filter((v, i, a) => a.findIndex((t) => t.value === v.value) === i)
+		.filter((v) => v.value !== domain);
 	return subdomains.map((subdomain) => ({
 		// Subdomains aren't a technology, but it's kind of a weird case. We do need
 		// a better abstraction here, though.
