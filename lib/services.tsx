@@ -483,6 +483,13 @@ export const REGISTRY: { [key in string]: Service } = {
     url: "https://aws.amazon.com/cloudfront/",
     genre: "cdn",
   },
+  madmimi: {
+    identifier: "madmimi",
+    name: "MadMimi",
+    url: "https://madmimi.com",
+    genre: "email",
+    substrings: ["madmimiwidget"],
+  },
   google_analytics: {
     identifier: "google_analytics",
     name: "Google Analytics",
@@ -1068,6 +1075,13 @@ export const REGISTRY: { [key in string]: Service } = {
     url: "https://www.newrelic.com",
     genre: "monitoring",
     substrings: ["newrelic.com"],
+  },
+  writeas: {
+    identifier: "writeas",
+    name: "Write.as",
+    url: "https://www.write.as",
+    genre: "cms",
+    substrings: ["cdn.writeas"],
   },
   nextjs: {
     identifier: "nextjs",
