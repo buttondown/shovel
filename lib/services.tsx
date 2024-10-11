@@ -298,6 +298,7 @@ export const REGISTRY: { [key in string]: Service } = {
     url: "https://www.substack.com",
     genre: "email",
     cname_values: ["substack-custom-domains.com"],
+    substrings: [".substack.com"],
   },
   datadog: {
     identifier: "datadog",
@@ -2030,6 +2031,27 @@ export const REGISTRY: { [key in string]: Service } = {
     url: "https://www.getrevue.co",
     substrings: ["revue-form"],
     defunct: true,
+  },
+  tinylytics: {
+    identifier: "tinylytics",
+    name: "Tinylytics",
+    genre: "analytics",
+    url: "https://www.tinylytics.app",
+    substrings: ["//tinylytics.app/embed"],
+  },
+  judgeme: {
+    identifier: "judgeme",
+    name: "Judge.me",
+    genre: "ecommerce",
+    url: "https://www.judge.me",
+    substrings: ["judge.me"],
+  },
+  pandectes: {
+    identifier: "pandectes",
+    name: "Pandectes",
+    genre: "gdpr",
+    url: "https://www.pandectes.io",
+    substrings: ["pandectes"],
   },
   tinyletter: {
     identifier: "tinyletter",
