@@ -12,6 +12,7 @@ export type Genre =
   | "design"
   | "devtools"
   | "dns"
+  | "storage"
   | "documentation"
   | "ecommerce"
   | "email"
@@ -54,6 +55,10 @@ export const GENRE_REGISTRY: {
   ads: {
     name: "Advertising",
     description: "Advertising services",
+  },
+  storage: {
+    name: "Storage",
+    description: "Storage services",
   },
   open_web: {
     name: "Open Web",
@@ -679,7 +684,7 @@ export const REGISTRY: { [key in string]: Service } = {
     name: "jQuery",
     genre: "web_framework",
     url: "https://jquery.com",
-    substrings: ["jquery.com"],
+    substrings: ["jquery.com", "jquery.min.js"],
   },
   mailerlite: {
     identifier: "mailerlite",
@@ -694,7 +699,7 @@ export const REGISTRY: { [key in string]: Service } = {
     name: "Algolia",
     genre: "search",
     url: "https://www.algolia.com",
-    substrings: ['algolia.net" crossorigin', "AlgoliaOpts"],
+    substrings: ['algolia.net" crossorigin', "AlgoliaOpts", "docsearch"],
   },
   bootstrap: {
     identifier: "bootstrap",
@@ -729,7 +734,7 @@ export const REGISTRY: { [key in string]: Service } = {
     name: "Alpine.js",
     genre: "web_framework",
     url: "https://alpinejs.dev",
-    substrings: ["x-on:click", "x-text"],
+    substrings: ["x-on:click", "x-text", "x-transition:enter"],
   },
   gandi: {
     identifier: "gandi",
@@ -802,12 +807,40 @@ export const REGISTRY: { [key in string]: Service } = {
     url: "https://oembed.com",
     substrings: ["json+oembed"],
   },
+  knowbe4: {
+    identifier: "knowbe4",
+    name: "KnowBe4",
+    genre: "security",
+    url: "https://www.knowbe4.com",
+    txt_values: ["knowbe4-site-verification"],
+  },
+  box: {
+    identifier: "box",
+    name: "Box",
+    genre: "storage",
+    url: "https://www.box.com",
+    txt_values: ["box-domain-verification"],
+  },
+  cookieyes: {
+    identifier: "cookieyes",
+    name: "CookieYes",
+    genre: "gdpr",
+    url: "https://www.cookieyes.com",
+    substrings: ["cookieyes.com"],
+  },
+  tumblr: {
+    identifier: "tumblr",
+    name: "Tumblr",
+    genre: "cms",
+    url: "https://www.tumblr.com",
+    cname_values: ["domains.tumblr.com"],
+  },
   statuspage: {
     identifier: "statuspage",
     name: "Statuspage",
     genre: "monitoring",
     url: "https://www.statuspage.io",
-    txt_values: ["stspg-customer.com"],
+    txt_values: ["stspg-customer.com", "status-page-domain-verification"],
     cname_values: ["stspg-customer.com"],
   },
   facebook_pixel: {
@@ -1008,12 +1041,26 @@ export const REGISTRY: { [key in string]: Service } = {
     genre: "security",
     txt_values: ["globalsign-domain-verification"],
   },
+  gravity_forms: {
+    identifier: "gravity_forms",
+    name: "Gravity Forms",
+    url: "https://www.gravityforms.com",
+    genre: "form",
+    substrings: ["gform_"],
+  },
   zoom: {
     identifier: "zoom",
     name: "Zoom",
     url: "https://www.zoom.us",
     genre: "videos",
-    txt_values: ["zoom-domain-verification"],
+    txt_values: ["zoom-domain-verification", "ZOOM_verify"],
+  },
+  vimeo: {
+    identifier: "vimeo",
+    name: "Vimeo",
+    url: "https://www.vimeo.com",
+    genre: "videos",
+    substrings: ["player.vimeo"],
   },
   shopify: {
     identifier: "shopify",
@@ -1515,6 +1562,13 @@ export const REGISTRY: { [key in string]: Service } = {
     url: "https://www.svelte.dev",
     genre: "web_framework",
     substrings: ["__svelte__", "__sveltekit"],
+  },
+  dropbox: {
+    identifier: "dropbox",
+    name: "Dropbox",
+    url: "https://www.dropbox.com",
+    genre: "storage",
+    txt_values: ["dropbox-domain-verification"],
   },
   dropcatch: {
     identifier: "dropcatch",
