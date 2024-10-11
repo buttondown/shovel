@@ -1041,13 +1041,6 @@ export const REGISTRY: { [key in string]: Service } = {
     genre: "security",
     txt_values: ["globalsign-domain-verification"],
   },
-  gravity_forms: {
-    identifier: "gravity_forms",
-    name: "Gravity Forms",
-    url: "https://www.gravityforms.com",
-    genre: "form",
-    substrings: ["gform_"],
-  },
   zoom: {
     identifier: "zoom",
     name: "Zoom",
@@ -1332,7 +1325,7 @@ export const REGISTRY: { [key in string]: Service } = {
     name: "Gravity Forms",
     url: "https://www.gravityforms.com",
     genre: "form",
-    substrings: ["gravityforms.com"],
+    substrings: ["gravityforms.com", "gform_"],
   },
   litespeed: {
     identifier: "litespeed",
