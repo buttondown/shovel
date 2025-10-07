@@ -1,3 +1,4 @@
+import DomainSearchForm from "@/components/DomainSearchForm";
 import Grid from "@/components/Grid";
 import { db } from "@/lib/db/connection";
 import { GENRE_REGISTRY, REGISTRY } from "@/lib/services";
@@ -9,13 +10,15 @@ export const metadata = {
 
 export default async function Home() {
   const data = process.env.DISABLE_DATABASE
-    ? [{
-        count: 0
-    }]
+    ? [
+        {
+          count: 0,
+        },
+      ]
     : await db
         .selectFrom("detected_technologies")
         .select(db.fn.countAll<number>().as("count"))
-    .execute();
+        .execute();
 
   return (
     <div className="max-w-prose">
@@ -28,6 +31,7 @@ export default async function Home() {
       of our customers&apos; websites, and we are excited to share it with you.
       <br />
       <br />
+      <DomainSearchForm />
       <br />
       <br />
       <h2 className="font-bold">How to use it</h2>
