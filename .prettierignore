@@ -1,0 +1,36 @@
+# Dependencies
+node_modules
+bun.lockb
+
+# Build outputs
+.next
+out
+dist
+build
+
+# Logs
+*.log
+
+# Environment files
+.env
+.env.*
+
+# IDE
+.vscode
+.idea
+
+# Git
+.git
+
+# Vercel
+.vercel
+
+# Public assets
+public
+
+# Test results
+playwright-report
+test-results
+
+# Coverage
+coverage

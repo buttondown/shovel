@@ -9,13 +9,15 @@ export const metadata = {
 
 export default async function Home() {
   const data = process.env.DISABLE_DATABASE
-    ? [{
-        count: 0
-    }]
+    ? [
+        {
+          count: 0,
+        },
+      ]
     : await db
         .selectFrom("detected_technologies")
         .select(db.fn.countAll<number>().as("count"))
-    .execute();
+        .execute();
 
   return (
     <div className="max-w-prose">

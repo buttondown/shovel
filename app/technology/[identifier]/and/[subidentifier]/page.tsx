@@ -3,8 +3,7 @@ import Header from "@/components/Header";
 import SectionHeader from "@/components/SectionHeader";
 import { db } from "@/lib/db/connection";
 import { REGISTRY } from "@/lib/services";
-import * as Dialog from '@radix-ui/react-dialog';
-
+import * as Dialog from "@radix-ui/react-dialog";
 
 import { Metadata, ResolvingMetadata } from "next";
 
@@ -18,7 +17,7 @@ const SHOVEL_PRO_URL = process.env.SHOVEL_PRO_URL;
 
 export async function generateMetadata(
   { params }: Props,
-  parent: ResolvingMetadata
+  parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const service1 = REGISTRY[params.identifier];
   const service2 = REGISTRY[params.subidentifier];
@@ -58,22 +57,29 @@ export default async function TechnologyAndPage({
     : await db
         .selectFrom("detected_technologies")
         .where(
-      "domain",
-      "in",
-      db
-        .selectFrom("detected_technologies as dt1")
-        .innerJoin("detected_technologies as dt2", "dt1.domain", "dt2.domain")
-        .where("dt1.technology", "=", params.identifier)
-        .where("dt2.technology", "=", params.subidentifier)
-        .select("dt1.domain")
-        .distinct()
-    )
-    .where("technology", "not in", [params.identifier, params.subidentifier])
-    .select(["technology"])
-    .select(db.fn.count("domain").as("count"))
-    .groupBy("technology")
-    .orderBy("count", "desc")
-    .execute();
+          "domain",
+          "in",
+          db
+            .selectFrom("detected_technologies as dt1")
+            .innerJoin(
+              "detected_technologies as dt2",
+              "dt1.domain",
+              "dt2.domain",
+            )
+            .where("dt1.technology", "=", params.identifier)
+            .where("dt2.technology", "=", params.subidentifier)
+            .select("dt1.domain")
+            .distinct(),
+        )
+        .where("technology", "not in", [
+          params.identifier,
+          params.subidentifier,
+        ])
+        .select(["technology"])
+        .select(db.fn.count("domain").as("count"))
+        .groupBy("technology")
+        .orderBy("count", "desc")
+        .execute();
 
   return (
     <div className="">
@@ -126,13 +132,18 @@ export default async function TechnologyAndPage({
                 <Dialog.Portal>
                   <Dialog.Overlay className="fixed inset-0 bg-black/75" />
                   <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-900 border border-gray-700 p-6 rounded-lg shadow-lg text-white font-mono">
-                    <Dialog.Title className="text-sm mb-1 font-bold">Upgrade to Pro</Dialog.Title>
+                    <Dialog.Title className="text-sm mb-1 font-bold">
+                      Upgrade to Pro
+                    </Dialog.Title>
                     <Dialog.Description className="mb-4 text-sm text-gray-400">
-                        Get the full list for just $299.
+                      Get the full list for just $299.
                     </Dialog.Description>
                     <div className="flex justify-end">
                       <Dialog.Close asChild>
-                        <a className="w-full py-2 bg-blue-500 text-white rounded-md text-sm font-bold hover:bg-blue-600 block text-center" href={SHOVEL_PRO_URL}>
+                        <a
+                          className="w-full py-2 bg-blue-500 text-white rounded-md text-sm font-bold hover:bg-blue-600 block text-center"
+                          href={SHOVEL_PRO_URL}
+                        >
                           Upgrade
                         </a>
                       </Dialog.Close>

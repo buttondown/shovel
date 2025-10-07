@@ -1254,8 +1254,8 @@ export const REGISTRY: { [key in string]: Service } = {
     genre: "email",
     substrings: ["blot.im"],
     headers: {
-        key: "blot-server",
-        value: "*",
+      key: "blot-server",
+      value: "*",
     },
   },
   mimecast: {
@@ -1978,9 +1978,9 @@ export const REGISTRY: { [key in string]: Service } = {
     genre: "hosting",
     url: "https://www.presslabs.com",
     headers: {
-        key: "X-Presslab-Stats",
-        value: "*"
-    }
+      key: "X-Presslab-Stats",
+      value: "*",
+    },
   },
   bubble: {
     identifier: "bubble",

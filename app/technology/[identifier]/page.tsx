@@ -17,7 +17,7 @@ type Props = {
 
 export async function generateMetadata(
   { params }: Props,
-  parent: ResolvingMetadata
+  parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const service = REGISTRY[params.identifier];
 
@@ -48,7 +48,7 @@ export default async function TechnologyPage({
           db
             .selectFrom("detected_technologies")
             .where("technology", "=", params.identifier)
-            .select("domain")
+            .select("domain"),
         )
         // Exclude the current technology
         .where("technology", "!=", params.identifier)
@@ -65,7 +65,7 @@ export default async function TechnologyPage({
         .innerJoin(
           "detected_technologies",
           "affiliations.domain",
-          "detected_technologies.domain"
+          "detected_technologies.domain",
         )
         .where("detected_technologies.technology", "=", params.identifier)
         .where("affiliations.identifier", "=", "tranco")
@@ -92,18 +92,16 @@ export default async function TechnologyPage({
               {service.url}
             </a>
             <div className="text-sm text-gray-400">
-            <a
-              className="text-gray-400 capitalize text-sm inline-block hover:text-gray-300 hover:bg-white/10 mt-4"
-              href={`/genre/${service.genre}`}
-            >
-              {GENRE_REGISTRY[service.genre].name}
-            </a> /&nbsp;
+              <a
+                className="text-gray-400 capitalize text-sm inline-block hover:text-gray-300 hover:bg-white/10 mt-4"
+                href={`/genre/${service.genre}`}
+              >
+                {GENRE_REGISTRY[service.genre].name}
+              </a>{" "}
+              /&nbsp;
               {trancoCount} notable domains (
               {trancoCount > 0
-                ? (
-                    (trancoCount * 100) /
-                    (data.count)
-                  ).toFixed(2)
+                ? ((trancoCount * 100) / data.count).toFixed(2)
                 : "0.00"}
               %) / {data.count} total domains
             </div>
@@ -136,13 +134,18 @@ export default async function TechnologyPage({
                 <Dialog.Portal>
                   <Dialog.Overlay className="fixed inset-0 bg-black/75" />
                   <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-900 border border-gray-700 p-6 rounded-lg shadow-lg text-white font-mono">
-                    <Dialog.Title className="text-sm mb-1 font-bold">Upgrade to Pro</Dialog.Title>
+                    <Dialog.Title className="text-sm mb-1 font-bold">
+                      Upgrade to Pro
+                    </Dialog.Title>
                     <Dialog.Description className="mb-4 text-sm text-gray-400">
-                        Get the full list for just $299.
+                      Get the full list for just $299.
                     </Dialog.Description>
                     <div className="flex justify-end">
                       <Dialog.Close asChild>
-                        <a className="w-full py-2 bg-blue-500 text-white rounded-md text-sm font-bold hover:bg-blue-600 block text-center" href={SHOVEL_PRO_URL}>
+                        <a
+                          className="w-full py-2 bg-blue-500 text-white rounded-md text-sm font-bold hover:bg-blue-600 block text-center"
+                          href={SHOVEL_PRO_URL}
+                        >
                           Upgrade
                         </a>
                       </Dialog.Close>
@@ -173,10 +176,7 @@ export default async function TechnologyPage({
                 : item.technology}
               <div className="text-xs">
                 {item.count} (
-                {(
-                  (Number(item.count) * 100) /
-                  (data.count)
-                ).toFixed(2)}
+                {((Number(item.count) * 100) / data.count).toFixed(2)}
                 %)
               </div>
             </Grid.Item>

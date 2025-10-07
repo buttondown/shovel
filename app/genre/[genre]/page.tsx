@@ -11,7 +11,7 @@ type Props = {
 
 export async function generateMetadata(
   { params }: Props,
-  parent: ResolvingMetadata
+  parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const genre = GENRE_REGISTRY[params.genre as Genre];
 
@@ -33,17 +33,20 @@ export default async function GenrePage({ params }: Props) {
         .where(
           "technology",
           "in",
-          services.map((service) => service.identifier)
+          services.map((service) => service.identifier),
         )
         .select(["technology"])
         .select(db.fn.count("domain").as("count"))
         .groupBy("technology")
         .execute();
 
-  const technologyToCount = data.reduce((acc, curr) => {
-    acc[curr.technology] = Number(curr.count);
-    return acc;
-  }, {} as Record<string, number>);
+  const technologyToCount = data.reduce(
+    (acc, curr) => {
+      acc[curr.technology] = Number(curr.count);
+      return acc;
+    },
+    {} as Record<string, number>,
+  );
 
   return (
     <div className="">

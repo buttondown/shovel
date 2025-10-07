@@ -38,7 +38,7 @@ const load: Loader = async (domain: string) => {
       } catch (error) {
         return [];
       }
-    })
+    }),
   );
   const sortedRecords = allRecords
     .flat()
