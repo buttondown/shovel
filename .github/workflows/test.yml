@@ -1,5 +1,7 @@
 name: Test
 on:
+  pull_request:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -14,3 +16,4 @@ jobs:
       - run: just install
       - run: just test
       - run: just e2e-test
+      - run: bunx prettier --check .
