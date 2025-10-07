@@ -1442,6 +1442,20 @@ export const REGISTRY: { [key in string]: Service } = {
       "spf2.mailgun.org",
     ],
   },
+  google_workspace: {
+    identifier: "google_workspace",
+    name: "Google Workspace",
+    url: "https://workspace.google.com",
+    genre: "email",
+    mx_values: [
+      "aspmx.l.google.com",
+      "alt1.aspmx.l.google.com",
+      "alt2.aspmx.l.google.com",
+      "alt3.aspmx.l.google.com",
+      "alt4.aspmx.l.google.com",
+    ],
+    spf_values: ["_spf.google.com"],
+  },
   campaign_monitor: {
     identifier: "campaign_monitor",
     name: "Campaign Monitor",
