@@ -13,3 +13,9 @@ test *args:
 
 e2e-test *args:
   PINO_LEVEL=silent DISABLE_DATABASE=true DISABLE_PUPPETEER=true DISABLE_ICONHORSE=true bun e2e-test {{args}}
+
+clara-test:
+  cd clara && bun test
+
+clara-stale:
+  cd clara && bun src/cli.ts stale
